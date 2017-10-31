@@ -1,0 +1,14 @@
+/* tuned style for carousel captions*/
+.carousel-caption h3 {
+    font-family: Garamond;
+    font-weight: bold;
+    font-size: 3em;
+    color: black;
+}
+/* Description text of carousel-caption*/
+.carousel-caption p {
+    font-family: Garamond;
+    font-weight: bold;
+    font-size: 2em;
+    color: black
+}
