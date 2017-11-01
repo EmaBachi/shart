@@ -1,4 +1,8 @@
-from flask import Flask, render_template
+# External import
+from flask import Flask, render_template, request
+
+# Internal import
+from RegisterForm import RegisterForm
 
 # Instantiate application object
 app = Flask(__name__)
@@ -13,7 +17,8 @@ def index():
 # Route for register a new user. Register endpoint can be reached by GET and POST requests
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    return render_template('register.html')
+    form = RegisterForm(request.form)
+    return render_template('register.html', form=form)
 
 
 # Check name of application
