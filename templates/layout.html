@@ -9,9 +9,13 @@
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='stylesheets/style.css') }}">
 </head>
 <body>
+    <!-- Including the navbar -->
     {% include "includes/_navbar.html" %}
     <div class="container">
+        <!-- Including flash messages -->
+        {% include 'includes/_messages.html' %}
         {% block body%}{% endblock %}
+        <!-- Including footer -->
         {% include "includes/_footer.html" %}
     </div>
 </body>

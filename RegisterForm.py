@@ -1,6 +1,6 @@
 # Registration form class using wtforms
-from wtforms import Form, StringField, PasswordField, validators
-from wtforms.fields.html5 import DateField
+from wtforms import Form, StringField, PasswordField, DateField, validators
+# from wtforms.fields.html5 import DateField
 
 
 class RegisterForm(Form):
@@ -20,7 +20,7 @@ class RegisterForm(Form):
         validators.Length(min=4, max=20)
     ])
 
-    date_of_birth = DateField('Date of Birth', [validators.DataRequired()])
+    # date_of_birth = DateField('Date of Birth', [validators.DataRequired()])
 
     country = StringField('Country', [validators.DataRequired()])
 
