@@ -1,5 +1,5 @@
 # External import
-from flask import Flask, render_template, request, flash, redirect, url_for
+from flask import Flask, render_template, request, flash, redirect, url_for, session
 from flask_pymongo import PyMongo
 from passlib.hash import sha256_crypt
 
@@ -61,10 +61,49 @@ def register():
 
 
 # User login
-@app.route('/login')
+@app.route('/login', methods=['POST', 'GET'])
 def login():
+    if request.method == 'POST':
+
+        username_candidate = request.form['username']
+        password_candidate = request.form['password']
+
+        # Retrieving data from mongodb
+        user = mongo.db.user.find_one({'username': username_candidate})
+
+        # Check if the username is correct
+        try:
+            len(user)
+
+            password_user = user['password']
+
+            # Check the password
+            if sha256_crypt.verify(password_candidate, password_user):
+                session['logged_in'] = True
+                session['username'] = username_candidate
+
+                flash('You are now logged in', 'success')
+                return redirect(url_for("index"))
+
+            else:
+                error = "Invalid password"
+                return render_template('login.html', error=error)
+
+        except TypeError:
+            error = "Invalid username"
+            return render_template('login.html', error=error)
 
     return render_template('login.html')
+
+
+@app.route('/logout')
+def logout():
+    # Remove session variable
+    session.clear()
+
+    flash('You are now logged off', 'success')
+
+    return redirect(url_for('login'))
 
 
 # Check name of application
