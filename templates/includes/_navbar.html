@@ -41,8 +41,15 @@
               </ul>
               <ul class="nav navbar-nav navbar-right">
                 {% if session.logged_in %}
-                    <li><a href="/profile">{{session.username}}</a></li>
+                    <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ session.username }} <span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="/profile">Profile</a></li>
+                    <li><a href="/profile">My Projects</a></li>
+                    <li role="separator" class="divider"></li>
                     <li><a href="/logout">Logout</a></li>
+                  </ul>
+                </li>
                 {% else %}
                     <li><a href="/register">Register</a> </li>
                     <li><a href="/login">Login</a></li>
