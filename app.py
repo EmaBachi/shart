@@ -36,19 +36,26 @@ def register():
         email = form.email.data
         password = sha256_crypt.encrypt(str(form.password.data))
 
-        # Commit
-        mongo.db.user.insert({'first_name': first_name,
-                              'surname': surname,
-                              'username': username,
-                              'country': country,
-                              'email': email,
-                              'password': password})
+        already_username = mongo.db.user.find({'username': username}).count()
 
-        # Using flash to print messages
-        flash('You are now registered and can log in', 'success')
+        # Error message
+        if already_username != 0:
+            flash('Username already chosen', 'danger')
+            return render_template('register.html', form=form)
+        else:
+            # Commit
+            mongo.db.user.insert({'first_name': first_name,
+                                  'surname': surname,
+                                  'username': username,
+                                  'country': country,
+                                  'email': email,
+                                  'password': password})
 
-        # Redirecting user to home page
-        return render_template('login.html')
+            # Using flash to print messages
+            flash('You are now registered and can log in', 'success')
+
+            # Redirecting user to home page
+            return render_template('login.html')
 
     return render_template('register.html', form=form)
 
@@ -56,7 +63,9 @@ def register():
 # User login
 @app.route('/login')
 def login():
-    render_template('login.html')
+
+    return render_template('login.html')
+
 
 # Check name of application
 if __name__ == "__main__":
