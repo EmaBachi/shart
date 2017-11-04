@@ -31,7 +31,7 @@ def register():
         first_name = form.first_name.data
         surname = form.surname.data
         username = form.username.data
-        # date_of_birth = form.date_of_birth.data
+        date_of_birth = form.date_of_birth.data.strftime("%m/%d/%Y")
         country = form.country.data
         email = form.email.data
         password = sha256_crypt.encrypt(str(form.password.data))
@@ -47,6 +47,7 @@ def register():
             mongo.db.user.insert({'first_name': first_name,
                                   'surname': surname,
                                   'username': username,
+                                  'date_of_birth': date_of_birth,
                                   'country': country,
                                   'email': email,
                                   'password': password})
