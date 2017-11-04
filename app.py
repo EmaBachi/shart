@@ -105,6 +105,10 @@ def logout():
 
     return redirect(url_for('login'))
 
+# Route for About
+@app.route('/about')
+def about():
+    return render_template('about.html')
 
 # Check name of application
 if __name__ == "__main__":
