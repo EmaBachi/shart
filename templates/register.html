@@ -16,6 +16,15 @@
         <div class="form-group">
             {{render_field(form.date_of_birth, class="form-control")}}
         </div>
+          <script>
+            $( function() {
+            $( "#date_of_birth" ).datepicker({
+                "changeYear": true,
+                "changeMonth": true,
+                "yearRange": "-100:+0"
+            });
+            } );
+        </script>
         <div class="form-group">
             {{render_field(form.country, class="form-control")}}
         </div>

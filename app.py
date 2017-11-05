@@ -56,7 +56,7 @@ def register():
             flash('You are now registered and can log in', 'success')
 
             # Redirecting user to home page
-            return render_template('login.html')
+            return render_template('register.html')
 
     return render_template('register.html', form=form)
 
