@@ -1,0 +1,15 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    <h1>Blog</h1>
+    {% for article in articles %}
+        <div>
+            <a href="article/{{article.id}}"><h2>{{article.title}}</h2></a>
+            <p style="font-style: italic; font-size: small">Created by {{article.author}}</p>
+            <div class="overflow-ellipsis">
+                {{article.body}}
+            </div>
+        </div>
+        <hr>
+    {% endfor %}
+{% endblock %}

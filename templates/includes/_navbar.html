@@ -11,7 +11,7 @@
             </div>
             <div id="navbar" class="navbar-collapse collapse">
               <ul class="nav navbar-nav">
-                <li class="active"><a href="/">Home</a></li>
+                <li><a href="/">Home</a></li>
                 <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Works <span class="caret"></span></a>
                   <ul class="dropdown-menu">
@@ -44,6 +44,9 @@
                     <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ session.username }} <span class="caret"></span></a>
                   <ul class="dropdown-menu">
+                    {% if session.adm %}
+                    <li><a href="/add_article">Add Article</a></li>
+                    {% endif %}
                     <li><a href="/profile">Profile</a></li>
                     <li><a href="/profile">My Projects</a></li>
                     <li role="separator" class="divider"></li>

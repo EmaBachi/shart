@@ -6,6 +6,7 @@ from passlib.hash import sha256_crypt
 
 # Internal import
 from RegisterForm import RegisterForm
+from ArticleForm import ArticleForm
 
 # Instantiate application object
 app = Flask(__name__)
@@ -50,7 +51,8 @@ def register():
                                   'date_of_birth': date_of_birth,
                                   'country': country,
                                   'email': email,
-                                  'password': password})
+                                  'password': password,
+                                  'adm': False})
 
             # Using flash to print messages
             flash('You are now registered and can log in', 'success')
@@ -82,6 +84,10 @@ def login():
             if sha256_crypt.verify(password_candidate, password_user):
                 session['logged_in'] = True
                 session['username'] = username_candidate
+                if user['adm'] == True:
+                    session['adm'] = True
+                else:
+                    session['adm'] = False
 
                 flash('You are now logged in', 'success')
                 return redirect(url_for("index"))
@@ -106,10 +112,50 @@ def logout():
 
     return redirect(url_for('login'))
 
+
 # Route for About
 @app.route('/about')
 def about():
     return render_template('about.html')
+
+
+# Route for Blog
+@app.route('/blog')
+def blog():
+
+    # Checking how many articles there are in db
+    result = mongo.db.article.find().count()
+
+    if result > 0:
+        # Fetching all articles
+        articles = mongo.db.article.find()
+        return render_template('blog.html', articles=articles)
+    else:
+        return render_template('blog.html')
+
+
+# Route for adding an article
+@app.route('/add_article', methods=['POST', 'GET'])
+def add_article():
+    form = ArticleForm(request.form)
+
+    if request.method == 'POST' and form.validate():
+        title = form.title.data
+        body = form.body.data
+        author = session['username']
+
+        mongo.db.article.insert({
+            'title': title,
+            'body': body,
+            'author': author
+        })
+
+        flash('Article created', 'success')
+
+        return render_template('home.html')
+
+    return render_template('add_article.html', form=form)
+
 
 # Check name of application
 if __name__ == "__main__":
