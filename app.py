@@ -1,12 +1,14 @@
 # External import
-from flask import Flask, render_template, request, flash, redirect, url_for, session
+from flask import Flask, render_template, request, flash, redirect, url_for, session, logging
 from flask_pymongo import PyMongo
 from passlib.hash import sha256_crypt
+import datetime
 
 
 # Internal import
 from RegisterForm import RegisterForm
 from ArticleForm import ArticleForm
+from CommentForm import CommentForm
 
 # Instantiate application object
 app = Flask(__name__)
@@ -134,6 +136,43 @@ def blog():
         return render_template('blog.html')
 
 
+# Route foa a single article
+@app.route('/article/<string:title>', methods=['POST', 'GET'])
+def article(title):
+    form = CommentForm(request.form)
+
+    # Retrieving article from db
+    article = mongo.db.article.find_one({'title': title})
+
+    comments = article['comments']
+
+    if request.method == 'POST' and form.validate():
+        comment_body = form.comment_body.data
+        comment_author = session['username']
+        date_python = datetime.date.today()
+        date_mongo = str(date_python)
+
+        add_comment(article, comment_body, comment_author, date_mongo)
+
+        # Retrieving article from db
+        article = mongo.db.article.find_one({'title': title})
+
+        comments = article['comments']
+
+        return render_template('article.html', article=article, form=form, comments=comments)
+
+    return render_template('article.html', article=article, form=form, comments=comments)
+
+
+def add_comment(article, comment_body, comment_author, date_mongo):
+
+    mongo.db.article.update({'title': article['title']}, {'$push': {"comments":
+                                                                        {"author": comment_author,
+                                                                         "body": comment_body,
+                                                                         "date": date_mongo}}})
+
+    return
+
 # Route for adding an article
 @app.route('/add_article', methods=['POST', 'GET'])
 def add_article():
@@ -143,11 +182,14 @@ def add_article():
         title = form.title.data
         body = form.body.data
         author = session['username']
+        date_python = datetime.date.today()
+        date_mongo = str(date_python)
 
         mongo.db.article.insert({
             'title': title,
             'body': body,
-            'author': author
+            'author': author,
+            'date': date_mongo
         })
 
         flash('Article created', 'success')

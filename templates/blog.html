@@ -4,12 +4,11 @@
     <h1>Blog</h1>
     {% for article in articles %}
         <div>
-            <a href="article/{{article.id}}"><h2>{{article.title}}</h2></a>
-            <p style="font-style: italic; font-size: small">Created by {{article.author}}</p>
+            <a href="article/{{article.title}}"><h2>{{article.title}}</h2></a>
+            <p style="font-style: italic; font-size: small">Created by {{article.author}} on {{article.date}}</p>
             <div class="overflow-ellipsis">
-                {{article.body}}
+                {{article.body | safe}}
             </div>
         </div>
-        <hr>
     {% endfor %}
 {% endblock %}

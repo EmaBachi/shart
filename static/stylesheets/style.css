@@ -36,3 +36,10 @@
   width: 1000px;
   text-overflow: ellipsis;
 }
+
+/*Style for comments */
+.comment{
+    border: 1px solid black;
+    margin: auto;
+    padding: 20px;
+}
