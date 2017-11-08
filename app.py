@@ -159,6 +159,8 @@ def article(title):
 
         comments = article['comments']
 
+        form.comment_body.data = ""
+
         return render_template('article.html', article=article, form=form, comments=comments)
 
     return render_template('article.html', article=article, form=form, comments=comments)

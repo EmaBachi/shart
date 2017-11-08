@@ -1,7 +1,9 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-    <h1>Blog</h1>
+    <div class="jumbotron-blog">
+        <img src="http://media-s3.blogosfere.it/iab/images/blog%202014_00100.jpg" alt="blog image" style="width: 1200px;height: 300px;align: center;">
+    </div>
     {% for article in articles %}
         <div>
             <a href="article/{{article.title}}"><h2>{{article.title}}</h2></a>
