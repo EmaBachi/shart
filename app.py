@@ -130,7 +130,7 @@ def blog():
 
     if result > 0:
         # Fetching all articles
-        articles = mongo.db.article.find()
+        articles = find_all_articles()
         return render_template('blog.html', articles=articles)
     else:
         return render_template('blog.html')
@@ -191,14 +191,25 @@ def add_article():
             'title': title,
             'body': body,
             'author': author,
-            'date': date_mongo
+            'date': date_mongo,
+            'comments': []
         })
 
         flash('Article created', 'success')
 
-        return render_template('home.html')
+        articles = find_all_articles()
+
+        return render_template('blog.html', articles=articles)
 
     return render_template('add_article.html', form=form)
+
+def find_all_articles():
+    articles = mongo.db.article.find()
+    return articles
+
+#route for contest
+#@app.route('/contest')
+#def contest():
 
 
 

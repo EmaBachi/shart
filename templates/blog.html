@@ -6,19 +6,11 @@
     </div>
     {% for article in articles %}
         <div>
-<<<<<<< HEAD
-            <a href="article/{{article.id}}"><h2>{{article.title}}</h2>
-            <p style="font-style: italic; font-size: small">Created by {{article.author}}</p>
-            <div class="overflow-ellipsis">
-                {{article.body}}
-            </div></a>
-=======
             <a href="article/{{article.title}}"><h2>{{article.title}}</h2></a>
             <p style="font-style: italic; font-size: small">Created by {{article.author}} on {{article.date}}</p>
             <div class="overflow-ellipsis">
                 {{article.body | safe}}
             </div>
->>>>>>> 97cdc0049fc359404a3668b9d252572ce0234027
         </div>
     {% endfor %}
 {% endblock %}
