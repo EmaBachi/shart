@@ -1,0 +1,35 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    <h1>{{article.title}}</h1>
+    <p style="font-style: italic; font-size: small">Created by {{article.author}} on {{article.date}}</p>
+    <hr>
+    <div>
+        {{article.body | safe}}
+    </div>
+    {% if session.logged_in %}
+    {% if comments|length > 0 %}
+    <h3>Comments: </h3>
+    <ul class="list-group">
+    {% for comment in comments %}
+        <li class="list-group-item">
+            <p style="font-style: italic; font-size: small">{{comment.author}} on {{comment.date}}</p>
+                <div>
+                    {{comment.body}}
+                </div>
+        </li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+    <hr>
+    <div>
+    {% from "includes/_formhelpers.html" import render_field %}
+    <form method="POST" action="">
+        <div class="form-group">
+            {{ render_field(form.comment_body, class="form-control") }}
+        </div>
+        <p><input class="btn btn-primary" type="submit" value="Summit your Comment"></p>
+    </form>
+    </div>
+    {% endif %}
+{% endblock %}

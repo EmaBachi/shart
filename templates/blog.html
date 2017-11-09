@@ -1,15 +1,24 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-    <h1>Blog</h1>
+    <div class="jumbotron-blog">
+        <img src="http://media-s3.blogosfere.it/iab/images/blog%202014_00100.jpg" alt="blog image" style="width: 1200px;height: 300px;align: center;">
+    </div>
     {% for article in articles %}
         <div>
+<<<<<<< HEAD
             <a href="article/{{article.id}}"><h2>{{article.title}}</h2>
             <p style="font-style: italic; font-size: small">Created by {{article.author}}</p>
             <div class="overflow-ellipsis">
                 {{article.body}}
             </div></a>
+=======
+            <a href="article/{{article.title}}"><h2>{{article.title}}</h2></a>
+            <p style="font-style: italic; font-size: small">Created by {{article.author}} on {{article.date}}</p>
+            <div class="overflow-ellipsis">
+                {{article.body | safe}}
+            </div>
+>>>>>>> 97cdc0049fc359404a3668b9d252572ce0234027
         </div>
-        <hr>
     {% endfor %}
 {% endblock %}

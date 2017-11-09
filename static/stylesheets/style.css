@@ -25,8 +25,13 @@
 }
 
 /* Jumbotron in about us */
-.jumbotron{
-    background-image: url('https://magazine.ngsrl.com/wp-content/uploads/2017/04/banner-powder2-1024x512.jpg');
+.jumbotron-home{
+    height: 300px;
+}
+
+/* JUmbotron in blog */
+.jumbotron-blog{
+    height: 300px;
 }
 
 /* Text feature in blog */
@@ -35,4 +40,11 @@
   overflow: hidden;
   width: 1000px;
   text-overflow: ellipsis;
+}
+
+/*Style for comments */
+.comment{
+    border: 1px solid black;
+    margin: auto;
+    padding: 20px;
 }
