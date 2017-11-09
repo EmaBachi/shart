@@ -157,6 +157,7 @@ def add_article():
     return render_template('add_article.html', form=form)
 
 
+
 # Check name of application
 if __name__ == "__main__":
     app.secret_key = 'secret123'

@@ -4,11 +4,11 @@
     <h1>Blog</h1>
     {% for article in articles %}
         <div>
-            <a href="article/{{article.id}}"><h2>{{article.title}}</h2></a>
+            <a href="article/{{article.id}}"><h2>{{article.title}}</h2>
             <p style="font-style: italic; font-size: small">Created by {{article.author}}</p>
             <div class="overflow-ellipsis">
                 {{article.body}}
-            </div>
+            </div></a>
         </div>
         <hr>
     {% endfor %}
