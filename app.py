@@ -306,7 +306,6 @@ def add_contest():
     if request.method == 'POST' and form.validate():
         title = form.title.data
         body = form.body.data
-        #type = form.type.data
         author = session['username']
         date_python = datetime.date.today()
         date_mongo = str(date_python)
@@ -314,7 +313,6 @@ def add_contest():
         mongo.db.contest.insert({
             'title': title,
             'body': body,
-           # 'type': type,
             'author': author,
             'date': date_mongo,
             'comments': []
@@ -344,7 +342,6 @@ def edit_contest(title):
     form = ContestForm(request.form)
     form.title.data= contest['title']
     form.body.data= contest['body']
-    #form.type.data= contest['type']
 
     if request.method == 'POST' and form.validate():
         title = request.form['title']
@@ -352,7 +349,7 @@ def edit_contest(title):
         author = session['username']
         date_python = datetime.date.today()
         date_mongo = str(date_python)
-        #type = request.form['type']
+
 
 
         mongo.db.contest.update({"title": title}, {'$set': { "body": body, "author": author, "date": date_mongo}})
@@ -366,34 +363,14 @@ def edit_contest(title):
     return render_template('editcontest.html', form=form)
 
 #route for deleting a contest
-@app.route('/delete_contest.html/<string:title>', methods=['POST', 'GET'])
+@app.route('/delete_contest/<string:title>', methods=['GET'])
 def delete_contest(title):
-    # Retrieving contest from db
-    contest = mongo.db.contest.find_one({'title': title})
 
-    form = ContestForm(request.form)
-    form.title.data= contest['title']
-    form.body.data= contest['body']
-    #form.type.data= contest['type']
+    mongo.db.contest.remove({"title": title})
 
-    if request.method == 'POST' and form.validate():
-        title = request.form['title']
-        body = request.form['body']
-        author = session['username']
-        date_python = datetime.date.today()
-        date_mongo = str(date_python)
-        #type = request.form['type']
+    flash('Contest deleted', 'success')
 
-
-        mongo.db.contest.update({"title": title}, {'$set': { "body": body, "author": author, "date": date_mongo}})
-
-        flash('Contest edited', 'success')
-
-        contests = find_all_contests()
-
-        return render_template('competitions.html', contests=contests)
-
-    return render_template('editcontest.html', form=form)
+    return render_template('competitions.html')
 
 # Check name of application
 if __name__ == "__main__":
