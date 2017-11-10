@@ -11,6 +11,8 @@
             <div class="overflow-ellipsis">
                 {{article.body | safe}}
             </div>
+
+            <a href="editarticle.html/{{article.title}}" class="btn btn-primary pull-right">Edit</class></a>
         </div>
     {% endfor %}
 {% endblock %}

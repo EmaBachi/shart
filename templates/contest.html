@@ -1,9 +1,36 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-
-<div>
-    {%include "includes/_contest.html" %}
-   </div>
-
+    <h1>{{contest.title}}</h1>
+    <p style="font-style: italic; font-size: small">Created by {{contest.author}} on {{contest.date}}</p>
+    <hr>
+    <div>
+        {{contest.body | safe}}
+    </div>
+    <!--<p> {{contest.type}}</p>-->
+    {% if session.logged_in %}
+    {% if comments|length > 0 %}
+    <h3>Comments: </h3>
+    <ul class="list-group">
+    {% for comment in comments %}
+        <li class="list-group-item">
+            <p style="font-style: italic; font-size: small">{{comment.author}} on {{comment.date}}</p>
+                <div>
+                    {{comment.body}}
+                </div>
+        </li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+    <hr>
+    <div>
+    {% from "includes/_formhelpers.html" import render_field %}
+    <form method="POST" action="">
+        <div class="form-group">
+            {{ render_field(form.comment_body, class="form-control") }}
+        </div>
+        <p><input class="btn btn-primary" type="submit" value="Summit your Comment"></p>
+    </form>
+    </div>
+    {% endif %}
 {% endblock %}
