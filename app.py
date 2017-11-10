@@ -210,10 +210,10 @@ def add_article():
 def find_all_articles():
     articles = mongo.db.article.find()
     return articles
+
+
 #route for editing an article
-
 @app.route('/editarticle.html/<string:title>', methods=['POST', 'GET'])
-
 def edit_article(title):
     # Retrieving article from db
     article = mongo.db.article.find_one({'title': title})
@@ -228,7 +228,6 @@ def edit_article(title):
         author = session['username']
         date_python = datetime.date.today()
         date_mongo = str(date_python)
-
 
         mongo.db.article.update({"title": title}, {'$set': { "body": body, "author": author, "date": date_mongo}})
 
@@ -258,7 +257,6 @@ def competitions():
 
 
 # Route for a single contest
-
 @app.route('/contest/<string:title>', methods=['POST', 'GET'])
 def contest(title):
         form = CommentForm(request.form)
@@ -298,7 +296,6 @@ def add_comment_contest(contest, comment_body, comment_author, date_mongo):
 
 
 #route for adding a contest
-
 @app.route('/add_contest', methods=['POST', 'GET'])
 def add_contest():
     form = ContestForm(request.form)
@@ -335,7 +332,6 @@ def find_all_contests():
 
 
 #route for editing a contest
-
 @app.route('/editcontest.html/<string:title>', methods=['POST', 'GET'])
 def edit_contest(title):
     # Retrieving contest from db
@@ -365,6 +361,7 @@ def edit_contest(title):
 
     return render_template('editcontest.html', form=form)
 
+
 #route for deleting a contest
 @app.route('/delete_contest.html/<string:title>', methods=['POST', 'GET'])
 def delete_contest(title):
@@ -384,7 +381,6 @@ def delete_contest(title):
         date_mongo = str(date_python)
         #type = request.form['type']
 
-
         mongo.db.contest.update({"title": title}, {'$set': { "body": body, "author": author, "date": date_mongo}})
 
         flash('Contest edited', 'success')
@@ -394,6 +390,7 @@ def delete_contest(title):
         return render_template('competitions.html', contests=contests)
 
     return render_template('editcontest.html', form=form)
+
 
 # Check name of application
 if __name__ == "__main__":

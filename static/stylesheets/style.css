@@ -48,3 +48,13 @@
     margin: auto;
     padding: 20px;
 }
+
+/* Icon in navbar for administrator */
+.glyphicon glyphicon-tower{
+    color: white;
+}
+
+/* Icon in navbar for user */
+.glyphicon glyphicon-user{
+    color: white;
+}
