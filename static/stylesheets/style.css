@@ -38,7 +38,7 @@
 .overflow-ellipsis {
   white-space: nowrap;
   overflow: hidden;
-  width: 1000px;
+  width: 900px;
   text-overflow: ellipsis;
 }
 
@@ -49,12 +49,7 @@
     padding: 20px;
 }
 
-/* Icon in navbar for administrator */
-.glyphicon glyphicon-tower{
-    color: white;
-}
-
-/* Icon in navbar for user */
-.glyphicon glyphicon-user{
+/* Icon color */
+.glyphicon{
     color: white;
 }

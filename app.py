@@ -117,7 +117,6 @@ def logout():
     return redirect(url_for('login'))
 
 
-
 # Route for About
 @app.route('/about')
 def about():
@@ -140,7 +139,6 @@ def blog():
 
 
 # Route foa a single article
-
 @app.route('/article/<string:title>', methods=['POST', 'GET'])
 def article(title):
     form = CommentForm(request.form)
@@ -179,6 +177,7 @@ def add_comment(article, comment_body, comment_author, date_mongo):
 
     return
 
+
 # Route for adding an article
 @app.route('/add_article', methods=['POST', 'GET'])
 def add_article():
@@ -203,17 +202,18 @@ def add_article():
 
         articles = find_all_articles()
 
-        return render_template('blog.html', articles=articles)
+        return redirect(url_for('blog'))
 
     return render_template('add_article.html', form=form)
+
 
 def find_all_articles():
     articles = mongo.db.article.find()
     return articles
 
 
-#route for editing an article
-@app.route('/editarticle.html/<string:title>', methods=['POST', 'GET'])
+# Route for editing an article
+@app.route('/edit_article.html/<string:title>', methods=['POST', 'GET'])
 def edit_article(title):
     # Retrieving article from db
     article = mongo.db.article.find_one({'title': title})
@@ -237,9 +237,10 @@ def edit_article(title):
 
         return render_template('blog.html', articles=articles)
 
-    return render_template('editarticle.html', form=form)
+    return render_template('edit_article.html', form=form)
 
-#route for deleting an article
+
+# Route for deleting an article
 @app.route('/delete_article/<string:title>', methods=['GET'])
 def delete_article(title):
 
@@ -248,8 +249,10 @@ def delete_article(title):
     flash('Article deleted', 'success')
 
     return render_template('blog.html')
+
+
 # Route for All competitions
-@app.route('/contest')
+@app.route('/competitions')
 def competitions():
 
     # Checking how many contests there are in db
@@ -293,17 +296,17 @@ def contest(title):
 
         return render_template('contest.html', contest=contest, form=form, comments=comments)
 
+
 def add_comment_contest(contest, comment_body, comment_author, date_mongo):
 
     mongo.db.contest.update({'title': contest['title']}, {'$push': {"comments":
                                                                             {"author": comment_author,
                                                                              "body": comment_body,
                                                                              "date": date_mongo}}})
-
     return
 
 
-#route for adding a contest
+# Route for adding a contest
 @app.route('/add_contest', methods=['POST', 'GET'])
 def add_contest():
     form = ContestForm(request.form)
@@ -327,7 +330,7 @@ def add_contest():
 
         contests = find_all_contests()
 
-        return render_template('competitions.html', contests=contests)
+        return redirect(url_for('competitions'))
 
     return render_template('add_contest.html', form=form)
 
@@ -337,15 +340,15 @@ def find_all_contests():
     return contests
 
 
-#route for editing a contest
-@app.route('/editcontest.html/<string:title>', methods=['POST', 'GET'])
+# Route for editing a contest
+@app.route('/edit_contest/<string:title>', methods=['POST', 'GET'])
 def edit_contest(title):
     # Retrieving contest from db
     contest = mongo.db.contest.find_one({'title': title})
 
     form = ContestForm(request.form)
-    form.title.data= contest['title']
-    form.body.data= contest['body']
+    form.title.data = contest['title']
+    form.body.data = contest['body']
 
     if request.method == 'POST' and form.validate():
         title = request.form['title']
@@ -354,9 +357,7 @@ def edit_contest(title):
         date_python = datetime.date.today()
         date_mongo = str(date_python)
 
-
-
-        mongo.db.contest.update({"title": title}, {'$set': { "body": body, "author": author, "date": date_mongo}})
+        mongo.db.contest.update({"title": title}, {'$set': {"body": body, "author": author, "date": date_mongo}})
 
         flash('Contest edited', 'success')
 
@@ -364,10 +365,10 @@ def edit_contest(title):
 
         return render_template('competitions.html', contests=contests)
 
-    return render_template('editcontest.html', form=form)
+    return render_template('edit_contest.html', form=form)
 
 
-#route for deleting a contest
+# Route for deleting a contest
 @app.route('/delete_contest/<string:title>', methods=['GET'])
 def delete_contest(title):
 
@@ -375,7 +376,7 @@ def delete_contest(title):
 
     flash('Contest deleted', 'success')
 
-    return render_template('competitions.html')
+    return redirect(url_for('competitions'))
 
 
 # Check name of application

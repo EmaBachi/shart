@@ -11,10 +11,10 @@
             <div class="overflow-ellipsis">
                 {{article.body | safe}}
             </div>
-
-            <a href="editarticle.html/{{article.title}}" class="btn btn-primary pull-right">Edit</class></a>
-            <a href="/delete_article/{{article.title}}" class="btn btn-primary pull-right">Delete</a>
-
+            <div class="pull-right">
+                <a href="edit_article.html/{{article.title}}" class="btn btn-warning">Edit</a>
+                <a href="/delete_article/{{article.title}}" class="btn btn-danger">Delete</a>
+            </div>
         </div>
 
     {% endfor %}
