@@ -13,7 +13,8 @@
             <div class="overflow-ellipsis">
                 {{contest.body | safe}}
             </div>
-            <a href="editcontest.html/{{contest.title}}" class="btn btn-primary pull-right">Edit</class></a>
+            <a href="editcontest/{{contest.title}}" class="btn btn-primary pull-right">Edit</a>
+            <a href="/delete_contest/{{contest.title}}" class="btn btn-primary pull-right">Delete</a>
 
         </div>
     {% endfor %}
