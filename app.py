@@ -240,7 +240,15 @@ def edit_article(title):
 
     return render_template('editarticle.html', form=form)
 
+#route for deleting an article
+@app.route('/delete_article/<string:title>', methods=['GET'])
+def delete_article(title):
 
+    mongo.db.article.remove({"title": title})
+
+    flash('Article deleted', 'success')
+
+    return render_template('blog.html')
 # Route for All competitions
 @app.route('/contest')
 def competitions():
