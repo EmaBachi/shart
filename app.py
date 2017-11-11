@@ -386,6 +386,27 @@ def delete_contest(title):
 # ---!!! Contests development completed !!!---
 
 
+# ---!!! Starting from that point we have the programming part related to exclusive contents !!!---
+
+# Route for exclusive contents
+@app.route('/exclusive_contents')
+def exclusive_contents():
+    return
+
+
+# Route for add some exclusive material
+@app.route('/add_exclusive_content', method=['POST', 'GET'])
+def add_exclusive_content():
+    return
+
+
+# Route for delete a particular exclusive content
+@app.route('/delete_exclusive_content/<string:title>')
+def delete_exclusive_content():
+    return
+
+# ---!!! Exclusive contents development completed !!!---
+
 # Check name of application
 if __name__ == "__main__":
     app.secret_key = 'secret123'
