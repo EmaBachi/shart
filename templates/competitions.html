@@ -12,11 +12,12 @@
             <div class="overflow-ellipsis">
                 {{contest.body | safe}}
             </div>
-            <div class="pull-right">
-                <a href="edit_contest/{{contest.title}}" class="btn btn-warning">Edit</a>
-                <a href="/delete_contest/{{contest.title}}" class="btn btn-danger">Delete</a>
-            </div>
-
+            {% if session.adm %}
+                <div class="pull-right">
+                    <a href="edit_contest/{{contest.title}}" class="btn btn-warning">Edit</a>
+                    <a href="/delete_contest/{{contest.title}}" class="btn btn-danger">Delete</a>
+                </div>
+            {% endif %}
         </div>
     {% endfor %}
 

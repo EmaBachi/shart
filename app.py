@@ -9,8 +9,8 @@ import datetime
 from RegisterForm import RegisterForm
 from ArticleForm import ArticleForm
 from CommentForm import CommentForm
-
 from ContestForm import ContestForm
+
 
 # Instantiate application object
 app = Flask(__name__)
@@ -62,7 +62,7 @@ def register():
             flash('You are now registered and can log in', 'success')
 
             # Redirecting user to home page
-            return render_template('home.html')
+            return redirect(url_for('index'))
 
     return render_template('register.html', form=form)
 
@@ -123,6 +123,9 @@ def about():
     return render_template('about.html')
 
 
+# ---!!! Starting from that point we have the programming part related to the blog !!!---
+
+
 # Route for Blog
 @app.route('/blog')
 def blog():
@@ -135,10 +138,17 @@ def blog():
         articles = find_all_articles()
         return render_template('blog.html', articles=articles)
     else:
+        flash('No article found', 'danger')
         return render_template('blog.html')
 
 
-# Route foa a single article
+# Custom function that retrieves all tha articles from DB
+def find_all_articles():
+    articles = mongo.db.article.find()
+    return articles
+
+
+# Route for a single article
 @app.route('/article/<string:title>', methods=['POST', 'GET'])
 def article(title):
     form = CommentForm(request.form)
@@ -146,34 +156,27 @@ def article(title):
     # Retrieving article from db
     article = mongo.db.article.find_one({'title': title})
 
-    comments = article['comments']
-
     if request.method == 'POST' and form.validate():
         comment_body = form.comment_body.data
         comment_author = session['username']
-        date_python = datetime.date.today()
-        date_mongo = str(date_python)
+        date_mongo = str(datetime.date.today())
 
+        # Calling a custom function to add the comment
         add_comment(article, comment_body, comment_author, date_mongo)
 
-        # Retrieving article from db
-        article = mongo.db.article.find_one({'title': title})
+        return redirect(url_for("article", title=article['title']))
 
-        comments = article['comments']
-
-        form.comment_body.data = ""
-
-        return render_template('article.html', article=article, form=form, comments=comments)
-
-    return render_template('article.html', article=article, form=form, comments=comments)
+    return render_template('article.html', article=article, form=form, comments=article['comments'])
 
 
+# Custom function to add a comment to an article
 def add_comment(article, comment_body, comment_author, date_mongo):
 
-    mongo.db.article.update({'title': article['title']}, {'$push': {"comments":
-                                                                        {"author": comment_author,
-                                                                         "body": comment_body,
-                                                                         "date": date_mongo}}})
+    # MongoDB query to push an item into an array
+    mongo.db.article.update({'title': article['title']},
+                            {'$push': {"comments": {"author": comment_author,
+                                                    "body": comment_body,
+                                                    "date": date_mongo}}})
 
     return
 
@@ -190,6 +193,7 @@ def add_article():
         date_python = datetime.date.today()
         date_mongo = str(date_python)
 
+        # MongoDB query to insert a new article
         mongo.db.article.insert({
             'title': title,
             'body': body,
@@ -200,55 +204,59 @@ def add_article():
 
         flash('Article created', 'success')
 
-        articles = find_all_articles()
-
+        # Redirecting user to the blog page
         return redirect(url_for('blog'))
 
     return render_template('add_article.html', form=form)
 
 
-def find_all_articles():
-    articles = mongo.db.article.find()
-    return articles
-
-
 # Route for editing an article
-@app.route('/edit_article.html/<string:title>', methods=['POST', 'GET'])
+@app.route('/edit_article/<string:title>', methods=['POST', 'GET'])
 def edit_article(title):
-    # Retrieving article from db
-    article = mongo.db.article.find_one({'title': title})
-
     form = ArticleForm(request.form)
-    form.title.data= article['title']
-    form.body.data= article['body']
 
     if request.method == 'POST' and form.validate():
         title = request.form['title']
         body = request.form['body']
         author = session['username']
-        date_python = datetime.date.today()
-        date_mongo = str(date_python)
+        date_mongo = str(datetime.date.today())
 
-        mongo.db.article.update({"title": title}, {'$set': { "body": body, "author": author, "date": date_mongo}})
+        # MongoDB query to modify the body of the article
+        mongo.db.article.update({"title": title},
+                                {'$set':   {"body": body,
+                                            "author": author,
+                                            "date": date_mongo}})
 
         flash('article edited', 'success')
 
-        articles= find_all_articles()
+        return redirect(url_for('blog'))
 
-        return render_template('blog.html', articles=articles)
+    else:
+        article = mongo.db.article.find_one({'title': title})
 
-    return render_template('edit_article.html', form=form)
+        form.title.data = article['title']
+        form.body.data = article['body']
+
+        return render_template('edit_article.html', form=form)
 
 
 # Route for deleting an article
 @app.route('/delete_article/<string:title>', methods=['GET'])
 def delete_article(title):
 
+    # MongoDB query to delete an article starting from its title
     mongo.db.article.remove({"title": title})
 
     flash('Article deleted', 'success')
 
-    return render_template('blog.html')
+    # Redirecting user to the blog page
+    return redirect(url_for('blog'))
+
+
+# ---!!! Blog development completed !!!---
+
+
+# ---!!! Starting from that point we have the programming part related to contests !!!---
 
 
 # Route for All competitions
@@ -263,8 +271,14 @@ def competitions():
         contests = find_all_contests()
         return render_template('competitions.html', contests=contests)
     else:
-        flash('No contest found','danger')
+        flash('No contest found', 'danger')
         return render_template('competitions.html')
+
+
+# Custom function to retrieve contests from db
+def find_all_contests():
+    contests = mongo.db.contest.find()
+    return contests
 
 
 # Route for a single contest
@@ -280,29 +294,22 @@ def contest(title):
         if request.method == 'POST' and form.validate():
             comment_body = form.comment_body.data
             comment_author = session['username']
-            date_python = datetime.date.today()
-            date_mongo = str(date_python)
+            date_mongo = str(datetime.date.today())
 
             add_comment_contest(contest, comment_body, comment_author, date_mongo)
 
-            # Retrieving contest from db
-            contest = mongo.db.contest.find_one({'title': title})
-
-            comments = contest['comments']
-
-            form.comment_body.data = ""
-
-            return render_template('contest.html', contest=contest, form=form, comments=comments)
+            return redirect(url_for('contest', title=contest['title']))
 
         return render_template('contest.html', contest=contest, form=form, comments=comments)
 
 
 def add_comment_contest(contest, comment_body, comment_author, date_mongo):
 
-    mongo.db.contest.update({'title': contest['title']}, {'$push': {"comments":
-                                                                            {"author": comment_author,
-                                                                             "body": comment_body,
-                                                                             "date": date_mongo}}})
+    mongo.db.contest.update({'title': contest['title']},
+                            {'$push':   {"comments":
+                                                {"author": comment_author,
+                                                "body": comment_body,
+                                                "date": date_mongo}}})
     return
 
 
@@ -315,8 +322,7 @@ def add_contest():
         title = form.title.data
         body = form.body.data
         author = session['username']
-        date_python = datetime.date.today()
-        date_mongo = str(date_python)
+        date_mongo = str(datetime.date.today())
 
         mongo.db.contest.insert({
             'title': title,
@@ -328,44 +334,42 @@ def add_contest():
 
         flash('Contest created', 'success')
 
-        contests = find_all_contests()
-
         return redirect(url_for('competitions'))
 
     return render_template('add_contest.html', form=form)
 
 
-def find_all_contests():
-    contests = mongo.db.contest.find()
-    return contests
-
-
 # Route for editing a contest
 @app.route('/edit_contest/<string:title>', methods=['POST', 'GET'])
 def edit_contest(title):
-    # Retrieving contest from db
-    contest = mongo.db.contest.find_one({'title': title})
-
     form = ContestForm(request.form)
-    form.title.data = contest['title']
-    form.body.data = contest['body']
 
     if request.method == 'POST' and form.validate():
         title = request.form['title']
         body = request.form['body']
         author = session['username']
-        date_python = datetime.date.today()
-        date_mongo = str(date_python)
+        date_mongo = str(datetime.date.today())
 
-        mongo.db.contest.update({"title": title}, {'$set': {"body": body, "author": author, "date": date_mongo}})
+        # MongoDB query to modify an article
+        mongo.db.contest.update({"title": title},
+                                {'$set':
+                                     {"body": body,
+                                      "author": author,
+                                      "date": date_mongo}})
 
         flash('Contest edited', 'success')
 
-        contests = find_all_contests()
+        # Redirecting user to the contests' main page
+        return redirect(url_for('competitions'))
+    else:
+        # Retrieving contest from db
+        contest = mongo.db.contest.find_one({'title': title})
 
-        return render_template('competitions.html', contests=contests)
+        # Filling form fields with data from db
+        form.title.data = contest['title']
+        form.body.data = contest['body']
 
-    return render_template('edit_contest.html', form=form)
+        return render_template('edit_contest.html', form=form)
 
 
 # Route for deleting a contest
@@ -377,6 +381,9 @@ def delete_contest(title):
     flash('Contest deleted', 'success')
 
     return redirect(url_for('competitions'))
+
+
+# ---!!! Contests development completed !!!---
 
 
 # Check name of application
