@@ -1,8 +1,9 @@
 # External import
-from flask import Flask, render_template, request, flash, redirect, url_for, session, logging
+from flask import Flask, render_template, request, flash, redirect, url_for, session, logging, send_from_directory
 from flask_pymongo import PyMongo
 from passlib.hash import sha256_crypt
 import datetime
+import os
 
 
 # Internal import
@@ -15,10 +16,13 @@ from ContestForm import ContestForm
 # Instantiate application object
 app = Flask(__name__)
 
+# Path to uploaded exclusive content
+UPLOAD_FOLDER = 'C:/Users/Alessia/Desktop/videos'
+app.config["UPLOAD_FOLDER"]= UPLOAD_FOLDER
+
 # DB Configuration
 app.config["MONGO1_DBNAME"] = 'shart'
 mongo = PyMongo(app, config_prefix='MONGO1')
-
 
 # Route for home
 @app.route('/')
@@ -395,15 +399,49 @@ def exclusive_contents():
 
 
 # Route for add some exclusive material
-@app.route('/add_exclusive_content', method=['POST', 'GET'])
+@app.route('/add_exclusive_content', methods=[ 'GET','POST'])
 def add_exclusive_content():
-    return
+    if request.method == "POST":
+        app.logger.info('dentro post di add_exclusive')
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        if file.filename == '':
+            flash('No selected file')
+            return
+        else:
+            app.logger.info('prima scrittura database')
+            path = os.path.join(app.config['UPLOAD_FOLDER'],file.filename)
+            mongo.db.exclusive_videos.insert({
+                'path': path,
+                'file_name': file.filename
+            })
+
+            # to save the path in the folder
+            file.save(path)
+            return redirect(url_for('video_gallery'))
+
+    return render_template("upload_video.html")
 
 
-# Route for delete a particular exclusive content
-@app.route('/delete_exclusive_content/<string:title>')
-def delete_exclusive_content():
-    return
+# Route for displaying a single video
+@app.route('/video/<video_name>')
+def video(video_name):
+    app.logger.info('dentro metodo video')
+    path = mongo.db.exclusive_videos.find_one({'file_name': video_name})
+    head, tail= os.path.split(path["path"])
+    return send_from_directory(head,video_name)
+
+
+# Route for the videogallery
+@app.route('/video_gallery')
+def video_gallery():
+
+    app.logger.info('dentro metodo gallery')
+    video_names= os.listdir(app.config['UPLOAD_FOLDER'])
+    return render_template('video_gallery.html', video_names=video_names)
+
 
 # ---!!! Exclusive contents development completed !!!---
 

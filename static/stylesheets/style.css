@@ -53,3 +53,9 @@
 .glyphicon{
     color: white;
 }
+
+/* Video Gallery */
+.video_gallery{
+    width: 200px;
+    height: 200px
+}
