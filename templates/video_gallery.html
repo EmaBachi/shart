@@ -2,12 +2,14 @@
 
 {% block body %}
     <h1> Thumbnail Video Gallery</h1>
-        {% for video_name in video_names %}
-        <a href="/video/{{video_name}}">{{video_name}}</a>
-        <hr>
-        <div >
+        {% for video in videos %}
+        <ul class="list-group">
+	    <li class="list-group-item"><h3><a href="/video/{{video.video_name}}">{{video.video_name}}</a></h3>
+			<video class="video_gallery" src="{{ url_for('video', video_name=video.file_name)}}" type="video/mp4"></video>
+                <span class="glyphicon glyphicon-play-circle"></span>
+            <p>{{ video.description }}</p>
+        </li>
+        </ul>
 
-        <video class="video_gallery" src="{{ url_for('video', video_name=video_name)}}" type="video/mp4"></video>
-        </div>
         {% endfor %}
 {% endblock %}

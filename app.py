@@ -413,9 +413,13 @@ def add_exclusive_content():
         else:
             app.logger.info('prima scrittura database')
             path = os.path.join(app.config['UPLOAD_FOLDER'],file.filename)
+            description=request.form['description']
+            video_name=request.form['video_name']
             mongo.db.exclusive_videos.insert({
                 'path': path,
-                'file_name': file.filename
+                'file_name': file.filename,
+                'description': description,
+                'video_name': video_name
             })
 
             # to save the path in the folder
@@ -437,10 +441,9 @@ def video(video_name):
 # Route for the videogallery
 @app.route('/video_gallery')
 def video_gallery():
+    videos = mongo.db.exclusive_videos.find()
 
-    app.logger.info('dentro metodo gallery')
-    video_names= os.listdir(app.config['UPLOAD_FOLDER'])
-    return render_template('video_gallery.html', video_names=video_names)
+    return render_template('video_gallery.html', videos=videos)
 
 
 # ---!!! Exclusive contents development completed !!!---
