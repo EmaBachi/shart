@@ -18,7 +18,11 @@ app = Flask(__name__)
 
 # Path to uploaded exclusive content
 UPLOAD_FOLDER = 'C:/Users/Alessia/Desktop/videos'
+
+UPLOAD_FOLDER_IMAGE = 'C:/Users/Alessia/Desktop/images'
 app.config["UPLOAD_FOLDER"]= UPLOAD_FOLDER
+app.config["UPLOAD_FOLDER_IMAGE"]= UPLOAD_FOLDER_IMAGE
+
 
 # DB Configuration
 app.config["MONGO1_DBNAME"] = 'shart'
@@ -402,7 +406,6 @@ def exclusive_contents():
 @app.route('/add_exclusive_content', methods=[ 'GET','POST'])
 def add_exclusive_content():
     if request.method == "POST":
-        app.logger.info('dentro post di add_exclusive')
         if 'file' not in request.files:
             flash('No file part')
             return redirect(request.url)
@@ -411,7 +414,6 @@ def add_exclusive_content():
             flash('No selected file')
             return
         else:
-            app.logger.info('prima scrittura database')
             path = os.path.join(app.config['UPLOAD_FOLDER'],file.filename)
             description=request.form['description']
             video_name=request.form['video_name']
@@ -447,6 +449,60 @@ def video_gallery():
 
 
 # ---!!! Exclusive contents development completed !!!---
+
+# Route for the profile
+@app.route('/profile')
+def profile():
+    username= session['username']
+    user = mongo.db.user.find_one({'username': username})
+    print(user)
+    return render_template('account_profile.html',user=user)
+
+# Route for uploading profile image
+@app.route('/upload_image', methods=[ 'GET','POST'])
+def upload_image():
+    if request.method == "POST":
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        if file.filename == '':
+            flash('No selected file')
+            return
+        else:
+            path = os.path.join(app.config['UPLOAD_FOLDER_IMAGE'],file.filename)
+            username = session['username']
+            user = mongo.db.user.find_one({'username':username})
+            mongo.db.user.update({"username": username},
+                                    {'$set':
+                                         {
+                                            'path': path,
+                                            'image_name': file.filename}})
+
+
+            # to save the path in the folder
+            file.save(path)
+            print(path)
+            return render_template("account_profile.html",user = user)
+
+    return render_template("upload_image.html")
+
+# Route for displaying a single image
+@app.route('/<image_name>')
+def image(image_name):
+
+    return send_from_directory("C:\Users\Alessia\Desktop\images",image_name)
+
+# Route for displaying images
+
+@app.route('/display_image')
+def display_image():
+    username= session['username']
+    user = mongo.db.user.find_one({'username': username})
+    image = user.path
+    return render_template('account_profile.html', image=image)
+
+
 
 # Check name of application
 if __name__ == "__main__":
