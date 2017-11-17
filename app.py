@@ -395,7 +395,7 @@ def exclusive_contents():
 
 
 # Route for add some exclusive material
-@app.route('/add_exclusive_content', method=['POST', 'GET'])
+@app.route('/add_exclusive_content', methods=['POST', 'GET'])
 def add_exclusive_content():
     return
 
