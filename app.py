@@ -488,10 +488,42 @@ def upload_image():
     return render_template("upload_image.html")
 
 # Route for displaying a single image
+
 @app.route('/<image_name>')
 def image(image_name):
 
     return send_from_directory("C:\Users\Alessia\Desktop\images",image_name)
+
+
+# Route to change the passw
+
+@app.route('/password',methods=['GET','POST'])
+def password():
+
+    username= session['username']
+    user = mongo.db.user.find_one({'username': username})
+    if request.method == "POST":
+        if 'password' not in request.form:
+            flash('No password')
+            return redirect(request.url)
+        password = request.form['password']
+        if password == '':
+            flash('Error')
+            return
+        else:
+
+            username = session['username']
+            mongo.db.user.update({"username": username},
+                                    {'$set':
+                                         {
+                                            'password': password}})
+        return render_template("account_profile.html",user=user)
+        
+    return render_template("change_password.html")
+
+
+
+
 
 # Route for displaying images
 
