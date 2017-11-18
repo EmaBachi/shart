@@ -518,7 +518,7 @@ def password():
                                          {
                                             'password': password}})
         return render_template("account_profile.html",user=user)
-        
+
     return render_template("change_password.html")
 
 

@@ -1,28 +1,90 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-<div class="container">
-                <hr>
-                <div class="row">
-                    <div class="col-md-7">
-                   <img src="{{url_for('image', image_name=user.image_name)}}" alt="Alternate Text" class="img-responsive" />
+    <div class="container">
+        <div class="row profile">
+
+		    <div class="col-md-3">
+			    <div class="profile-sidebar">
+                    <div class="profile-sidebar">
+                        <!-- pic -->
+
+
+				        <div class="profile-userpic">
+                            <img src="{{url_for('image', image_name=user.image_name)}}" alt="Alternate Text" class="img-responsive" />
+                        </div>
                         <p class="text-center small">
-                        <p><a href="/upload_image" class="btn btn-default btn-sm">Upload Photo</a></p>
 
-                    </div>
+				        <div class="profile-userbuttons">
+                             <p><a href="/upload_image" class="btn btn-default btn-sm">Upload Photo</a></p>
 
-                    <div class="col-md-7">
-                        <span>{{ user.username }}</span>
-                        <p class="text-muted small"> {{ user.email }}</p>
-                    </div>
-                    <div class="col-md-7">
-                        <a href="/password" class="btn btn-default btn-sm">Change Password</a>
-                    </div>
-                    <div class="col-md-7">
+                        </div>
+                        <!-->
+                        <!-- profile title-->
+                        <div class="profile-usertitle">
+
+
+					    <div class="profile-usertitle-name">
+                            <span>{{ user.username }}</span>
+                        </div>
+
+					    <div class="profile-usertitle-job">
+                            <p class="text-muted small"> {{ user.email }}</p>
+                        </div>
+
+                        </div>
+                    <!-->
+                <!-- buttons -->
+				<div class="profile-userbuttons">
                         <!-- signout  doesn't work yet-->
-                        <a href="/signout" class="btn btn-default btn-sm pull-left">Sign Out</a>
-                    </div>
-                </div>
+                        <a href="/signout" class="btn btn-default btn-sm">Sign Out</a>
 
-</div>
+                </div>
+                    <!-->
+                <!-- MENU -->
+                <div class="profile-usermenu">
+					<ul class="nav">
+						<li class="active">
+							<a href="#bio">
+							<i class="glyphicon glyphicon-home"></i>
+							Biography </a>
+						</li>
+						<li class="active">
+							<a href="#settings">
+							<i class="glyphicon glyphicon-user"></i>
+							Account Settings </a>
+						</li>
+						<li class="active">
+							<a href="#projects">
+							<i class="glyphicon glyphicon-ok"></i>
+							My projects </a>
+						</li>
+						
+					</ul>
+				</div>
+                </div><!-- END MENU -->
+                </div>
+            </div>
+                <!-- profile content -->
+                <div class="profile-content">
+
+                <h1 id="bio">Biography</h1>
+                    <p> WRITE.....</p>
+
+                    <h2 id="settings">Account settings</h2>
+                    <ul>
+                        <li>Click if you want to change your password
+
+				        <div class="profile-userbuttons">
+                            <a href="/password" class="btn btn-default btn-sm">Change Password</a>
+                        </div>
+                        </li>
+                    </ul>
+                    <h3 id="projects">My projects</h3>
+                </div>
+                <!-- end profile content-->
+
+        </div>
+
+    </div>
 {% endblock %}
