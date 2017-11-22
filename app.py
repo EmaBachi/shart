@@ -1,8 +1,9 @@
 # External import
-from flask import Flask, render_template, request, flash, redirect, url_for, session, logging
+from flask import Flask, render_template, request, flash, redirect, url_for, session, logging, send_from_directory
 from flask_pymongo import PyMongo
 from passlib.hash import sha256_crypt
 import datetime
+import os
 
 
 # Internal import
@@ -15,10 +16,17 @@ from ContestForm import ContestForm
 # Instantiate application object
 app = Flask(__name__)
 
+# Path to uploaded exclusive content
+UPLOAD_FOLDER = 'C:/Users/Alessia/Desktop/videos'
+
+UPLOAD_FOLDER_IMAGE = 'C:/Users/Alessia/Desktop/images'
+app.config["UPLOAD_FOLDER"]= UPLOAD_FOLDER
+app.config["UPLOAD_FOLDER_IMAGE"]= UPLOAD_FOLDER_IMAGE
+
+
 # DB Configuration
 app.config["MONGO1_DBNAME"] = 'shart'
 mongo = PyMongo(app, config_prefix='MONGO1')
-
 
 # Route for home
 @app.route('/')
@@ -395,17 +403,134 @@ def exclusive_contents():
 
 
 # Route for add some exclusive material
-@app.route('/add_exclusive_content', methods=['POST', 'GET'])
+@app.route('/add_exclusive_content', methods=['GET', 'POST'])
 def add_exclusive_content():
-    return
+    if request.method == "POST":
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        if file.filename == '':
+            flash('No selected file')
+            return
+        else:
+            path = os.path.join(app.config['UPLOAD_FOLDER'],file.filename)
+            description=request.form['description']
+            video_name=request.form['video_name']
+            mongo.db.exclusive_videos.insert({
+                'path': path,
+                'file_name': file.filename,
+                'description': description,
+                'video_name': video_name
+            })
+
+            # to save the path in the folder
+            file.save(path)
+            return redirect(url_for('video_gallery'))
+
+    return render_template("upload_video.html")
 
 
-# Route for delete a particular exclusive content
-@app.route('/delete_exclusive_content/<string:title>')
-def delete_exclusive_content():
-    return
+# Route for displaying a single video
+@app.route('/video/<video_name>')
+def video(video_name):
+    app.logger.info('dentro metodo video')
+    path = mongo.db.exclusive_videos.find_one({'file_name': video_name})
+    head, tail= os.path.split(path["path"])
+    return send_from_directory(head,video_name)
+
+
+# Route for the videogallery
+@app.route('/video_gallery')
+def video_gallery():
+    videos = mongo.db.exclusive_videos.find()
+
+    return render_template('video_gallery.html', videos=videos)
+
 
 # ---!!! Exclusive contents development completed !!!---
+
+# Route for the profile
+@app.route('/profile')
+def profile():
+    username= session['username']
+    user = mongo.db.user.find_one({'username': username})
+    print(user)
+    return render_template('account_profile.html',user=user)
+
+
+# Route for uploading profile image
+@app.route('/upload_image', methods=[ 'GET','POST'])
+def upload_image():
+    if request.method == "POST":
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        if file.filename == '':
+            flash('No selected file')
+            return
+        else:
+            path = os.path.join(app.config['UPLOAD_FOLDER_IMAGE'],file.filename)
+            username = session['username']
+            user = mongo.db.user.find_one({'username':username})
+            mongo.db.user.update({"username": username},
+                                    {'$set':
+                                         {
+                                            'path': path,
+                                            'image_name': file.filename}})
+
+
+            # to save the path in the folder
+            file.save(path)
+            print(path)
+            return render_template("account_profile.html",user = user)
+
+    return render_template("upload_image.html")
+
+
+# Route for displaying a single image
+
+@app.route('/<image_name>')
+def image(image_name):
+
+    return send_from_directory("C:\Users\Alessia\Desktop\images",image_name)
+
+
+# Route to change the password
+@app.route('/password', methods=['GET', 'POST'])
+def password():
+
+    username = session['username']
+    user = mongo.db.user.find_one({'username': username})
+    if request.method == "POST":
+        if 'password' not in request.form:
+            flash('No password')
+            return redirect(request.url)
+        password = request.form['password']
+        if password == '':
+            flash('Error')
+            return
+        else:
+
+            username = session['username']
+            mongo.db.user.update({"username": username},
+                                    {'$set':
+                                         {
+                                            'password': password}})
+        return render_template("account_profile.html", user=user)
+        
+    return render_template("change_password.html")
+
+
+# Route for displaying images
+@app.route('/display_image')
+def display_image():
+    username = session['username']
+    user = mongo.db.user.find_one({'username': username})
+    image = user.path
+    return render_template('account_profile.html', image=image)
+
 
 # Check name of application
 if __name__ == "__main__":
