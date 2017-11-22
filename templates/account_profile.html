@@ -1,90 +1,27 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-    <div class="container">
-        <div class="row profile">
-
-		    <div class="col-md-3">
-			    <div class="profile-sidebar">
-                    <div class="profile-sidebar">
-                        <!-- pic -->
 
 
-				        <div class="profile-userpic">
-                            <img src="{{url_for('image', image_name=user.image_name)}}" alt="Alternate Text" class="img-responsive" />
-                        </div>
-                        <p class="text-center small">
-
-				        <div class="profile-userbuttons">
-                             <p><a href="/upload_image" class="btn btn-default btn-sm">Upload Photo</a></p>
-
-                        </div>
-                        <!-->
-                        <!-- profile title-->
-                        <div class="profile-usertitle">
-
-
-					    <div class="profile-usertitle-name">
-                            <span>{{ user.username }}</span>
-                        </div>
-
-					    <div class="profile-usertitle-job">
-                            <p class="text-muted small"> {{ user.email }}</p>
-                        </div>
-
-                        </div>
-                    <!-->
-                <!-- buttons -->
-				<div class="profile-userbuttons">
-                        <!-- signout  doesn't work yet-->
-                        <a href="/signout" class="btn btn-default btn-sm">Sign Out</a>
-
-                </div>
-                    <!-->
-                <!-- MENU -->
-                <div class="profile-usermenu">
-					<ul class="nav">
-						<li class="active">
-							<a href="#bio">
-							<i class="glyphicon glyphicon-home"></i>
-							Biography </a>
-						</li>
-						<li class="active">
-							<a href="#settings">
-							<i class="glyphicon glyphicon-user"></i>
-							Account Settings </a>
-						</li>
-						<li class="active">
-							<a href="#projects">
-							<i class="glyphicon glyphicon-ok"></i>
-							My projects </a>
-						</li>
-						
-					</ul>
-				</div>
-                </div><!-- END MENU -->
-                </div>
-            </div>
-                <!-- profile content -->
-                <div class="profile-content">
-
-                <h1 id="bio">Biography</h1>
-                    <p> WRITE.....</p>
-
-                    <h2 id="settings">Account settings</h2>
-                    <ul>
-                        <li>Click if you want to change your password
-
-				        <div class="profile-userbuttons">
-                            <a href="/password" class="btn btn-default btn-sm">Change Password</a>
-                        </div>
-                        </li>
-                    </ul>
-                    <h3 id="projects">My projects</h3>
-                </div>
-                <!-- end profile content-->
-
+<div class="rela-block container">
+    <div class="rela-block profile-card">
+        <div class="profile-pic" id="profile_pic"></div>
+        <div class="rela-block profile-name-container">
+            <div class="rela-block user-name" id="user_name">User Name Here</div>
+            <div class="rela-block user-desc" id="user_description">User Description Here</div>
         </div>
+        <div class="rela-block profile-card-stats">
+            <div class="floated profile-stat works" id="num_works">28<br></div>
+            <div class="floated profile-stat followers" id="num_followers">112<br></div>
+            <div class="floated profile-stat following" id="num_following">245<br></div>
+        </div>
+    </div>
+    <div class="rela-block content">
+    <!-- jinja code needed here    <div class="rela-inline image"></div>-->
 
     </div>
+
+</div>
+
+
 {% endblock %}

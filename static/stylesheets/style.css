@@ -59,12 +59,12 @@
     width: 200px;
     height: 200px
 }
-.profile {
+/*.profile {
   margin: 20px 0;
 }
 
 /* Profile sidebar */
-.profile-sidebar {
+/*.profile-sidebar {
   padding: 20px 0 10px 0;
   background: #fff;
 }
@@ -103,13 +103,13 @@
   margin-top: 10px;
 }
 /* Profile Content */
-.profile-content {
+/*.profile-content {
   padding: 20px;
   background: #fff;
   min-height: 460px;
 }
 /* profile menu */
-.profile-usermenu {
+/*.profile-usermenu {
   margin-top: 30px;
 }
 
@@ -146,7 +146,7 @@
   background-color: #f6f9fb;
   border-left: 2px solid #5b9bd1;
   margin-left: -2px;
-}
+}*/
 /* end profile menu */
 
 .video-list-thumbs .glyphicon-play-circle{
@@ -176,4 +176,245 @@
         height: 22px;
         margin: 8px 0 0;
     }
+}
+
+/* profile */
+* {
+  box-sizing: border-box;
+  -webkit-transition: 0.3s cubic-bezier(0.75, 0, 0.2, 1), color 0.3s ease;
+  transition: 0.3s cubic-bezier(0.75, 0, 0.2, 1), color 0.3s ease;
+}
+.rela-block {
+  display: block;
+  position: relative;
+  margin: auto;
+  top: ;
+  left: ;
+  right: ;
+  bottom: ;
+}
+.rela-inline {
+  display: inline-block;
+  position: relative;
+  margin: auto;
+  top: ;
+  left: ;
+  right: ;
+  bottom: ;
+}
+.floated {
+  display: inline-block;
+  position: relative;
+  margin: false;
+  top: ;
+  left: ;
+  right: ;
+  bottom: ;
+  float: left;
+}
+.floated.right {
+    float: right;
+}
+
+.post-image {
+  height: 100%;
+  max-height: 400px;
+  width: 480px;
+  border: 20px solid #fff;
+  box-shadow: 0 4px 8px -2px rgba(0,0,0,0.25);
+  background-size: cover !important;
+  cursor: pointer;
+}
+.desc-title {
+  font-family: "Montserrat";
+  font-size: 24px;
+  letter-spacing: 2px;
+  font-weight: 400;
+  line-height: 28px;
+  margin-bottom: 5px;
+}
+.desc-author {
+  font-family: "Montserrat";
+  font-size: 18px;
+  letter-spacing: 2px;
+  font-weight: 400;
+  line-height: 24px;
+  color: #999;
+  margin-bottom: 10px;
+}
+.close {
+  z-index: 100;
+  display: false;
+  position: absolute;
+  margin: false;
+  top: 10px;
+  left: ;
+  right: 15px;
+  bottom: ;
+  font-family: "Montserrat";
+  font-size: 24px;
+  letter-spacing: 0px;
+  font-weight: 400;
+  line-height: 30px;
+  cursor: pointer;
+  color: #444;
+  padding: 5px;
+}
+.logo {
+  font-family: "Yellowtail";
+  font-size: 34px;
+  letter-spacing: 0px;
+  font-weight: 400;
+  line-height: 70px;
+  margin: 0 30px;
+  cursor: pointer;
+}
+.logo:hover {
+  color: #2ebaae;
+}
+.search-container {
+  padding-right: 15px;
+  margin-left: 0px;
+}
+.sign-div {
+  margin: 0px;
+  width: 180px;
+  -webkit-transition: 0.3s cubic-bezier(0.75, 0, 0.2, 1), opacity 0.15s 0.3s cubic-bezier(0.75, 0, 0.2, 1);
+  transition: 0.3s cubic-bezier(0.75, 0, 0.2, 1), opacity 0.15s 0.3s cubic-bezier(0.75, 0, 0.2, 1);
+}
+.sign-div li {
+  padding: 0 0 0 20px;
+}
+.sign-div.active {
+  width: 0px;
+  opacity: 0;
+  -webkit-transition: 0.15s cubic-bezier(0.75, 0, 0.2, 1), width 0.3s 0.15s cubic-bezier(0.75, 0, 0.2, 1);
+  transition: 0.15s cubic-bezier(0.75, 0, 0.2, 1), width 0.3s 0.15s cubic-bezier(0.75, 0, 0.2, 1);
+}
+.icon {
+  height: 40px;
+  width: 40px;
+  margin: 0 6px;
+  vertical-align: middle;
+  cursor: pointer;
+  background-size: 30px !important;
+}
+.icon.search-icon {
+  background: url("https://cdn1.iconfinder.com/data/icons/hawcons/32/698627-icon-111-search-128.png") no-repeat;
+  background-position: 3px 3px;
+}
+.profile-card {
+  width: calc(100% - 40px);
+  padding-top: 100px;
+  margin: 70px auto 30px;
+  background-color: #fff;
+  box-shadow: 0 2px 6px -2px rgba(0,0,0,0.26);
+}
+.profile-pic {
+  display: false;
+  position: absolute;
+  margin: false;
+  top: -90px;
+  left: 50%;
+  right: false;
+  bottom: false;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+  height: 180px;
+  width: 180px;
+  border: 10px solid #fff;
+  border-radius: 100%;
+  background: url("https://pbs.twimg.com/media/CdbiubzVIAANj8J.jpg") center no-repeat;
+  background-size: cover;
+}
+.profile-name-container {
+  margin: 0 auto 10px;
+  padding: 10px;
+  text-align: center;
+}
+.user-name {
+  font-family: "Montserrat";
+  font-size: 24px;
+  letter-spacing: 3px;
+  font-weight: 400;
+  line-height: 30px;
+  margin-bottom: 12px;
+}
+.user-desc {
+  letter-spacing: 1px;
+  color: #999;
+}
+.profile-card-stats {
+  height: 75px;
+  padding: 10px 0px;
+  text-align: center;
+  overflow: hidden;
+}
+.profile-stat {
+  height: 100%;
+  width: 33.3333%;
+}
+.profile-stat:after {
+  color: #999;
+}
+.works::after {
+  content: "works";
+}
+.followers::after {
+  content: "followers";
+}
+.following::after {
+  content: "following";
+}
+.image {
+  width: 240px;
+  height: 200px;
+  cursor: pointer;
+  margin: 0 20px 40px;
+  overflow: hidden;
+  border-radius: 5px;
+  border: 10px solid #fff;
+  box-shadow: 0 2px 6px -2px rgba(0,0,0,0.26);
+  background-color: rgba(0,0,0,0.4);
+  background-size: cover !important;
+  -webkit-transition: 0.2s cubic-bezier(0.5, 0, 0.2, 1);
+  transition: 0.2s cubic-bezier(0.5, 0, 0.2, 1);
+}
+.image:hover {
+  -webkit-transform: scale(1.06);
+          transform: scale(1.06);
+  box-shadow: 0 2px 18px -2px rgba(0,0,0,0.3);
+}
+.image.hidden {
+  height: 0;
+  width: 0px;
+  margin: 0px;
+  border: 0px solid #fff;
+}
+.button {
+  font-family: 'Montserrat';
+  font-size: 14px;
+  letter-spacing: 4px;
+  font-weight: 900;
+  line-height: 20px;
+  min-width: 200px;
+  padding: 20px 40px;
+  color: #444;
+  text-align: center;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: 1px solid #bbb;
+  margin: 0 20px;
+}
+.button:hover {
+  color: #2ebaae;
+  border: 1px solid #2ebaae;
+}
+.button.inactive {
+  color: #bbb;
+  cursor: default;
+}
+.button.inactive:hover {
+  color: #bbb;
+  border: 1px solid #bbb;
 }
