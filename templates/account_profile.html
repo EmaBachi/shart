@@ -5,10 +5,16 @@
 
 <div class="rela-block container">
     <div class="rela-block profile-card">
-        <div class="profile-pic" id="profile_pic"></div>
+        <div>
+            <img class="profile-pic" src="{{ url_for('image', image_name=user.image_name) }}"/>
+        </div>
         <div class="rela-block profile-name-container">
-            <div class="rela-block user-name" id="user_name">User Name Here</div>
-            <div class="rela-block user-desc" id="user_description">User Description Here</div>
+            <div class="rela-block"><a href="/upload_image" class="btn btn-default">Change Image</a></div>
+            <p></p>
+            <div class="rela-block user-name" id="user_name">{{ user.username }}</div>
+            <div class="rela-block user-desc" id="user_description">{{ user.description}}
+            <p><a href="/change_description" class="btn btn-default">Change your Bio</a></p>
+            </div>
         </div>
         <div class="rela-block profile-card-stats">
             <div class="floated profile-stat works" id="num_works">28<br></div>

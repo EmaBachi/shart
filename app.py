@@ -17,11 +17,11 @@ from ContestForm import ContestForm
 app = Flask(__name__)
 
 # Path to uploaded exclusive content
-UPLOAD_FOLDER = 'C:/Users/Alessia/Desktop/videos'
+UPLOAD_FOLDER_VIDEO = '/home/emanuele/Scrivania/Shart_Contents/videos'
 
-UPLOAD_FOLDER_IMAGE = 'C:/Users/Alessia/Desktop/images'
-app.config["UPLOAD_FOLDER"]= UPLOAD_FOLDER
-app.config["UPLOAD_FOLDER_IMAGE"]= UPLOAD_FOLDER_IMAGE
+UPLOAD_FOLDER_IMAGE = '/home/emanuele/Scrivania/Shart_Contents/images'
+app.config["UPLOAD_FOLDER_VIDEO"] = UPLOAD_FOLDER_VIDEO
+app.config["UPLOAD_FOLDER_IMAGE"] = UPLOAD_FOLDER_IMAGE
 
 
 # DB Configuration
@@ -414,7 +414,7 @@ def add_exclusive_content():
             flash('No selected file')
             return
         else:
-            path = os.path.join(app.config['UPLOAD_FOLDER'],file.filename)
+            path = os.path.join(app.config['UPLOAD_FOLDER_VIDEO'],file.filename)
             description=request.form['description']
             video_name=request.form['video_name']
             mongo.db.exclusive_videos.insert({
@@ -434,9 +434,8 @@ def add_exclusive_content():
 # Route for displaying a single video
 @app.route('/video/<video_name>')
 def video(video_name):
-    app.logger.info('dentro metodo video')
     path = mongo.db.exclusive_videos.find_one({'file_name': video_name})
-    head, tail= os.path.split(path["path"])
+    head, tail = os.path.split(path["path"])
     return send_from_directory(head,video_name)
 
 
@@ -450,17 +449,20 @@ def video_gallery():
 
 # ---!!! Exclusive contents development completed !!!---
 
+
+# ---!!! Profile developing !!!---
+
 # Route for the profile
 @app.route('/profile')
 def profile():
-    username= session['username']
+    username = session['username']
     user = mongo.db.user.find_one({'username': username})
     print(user)
-    return render_template('account_profile.html',user=user)
+    return render_template('account_profile.html', user=user)
 
 
 # Route for uploading profile image
-@app.route('/upload_image', methods=[ 'GET','POST'])
+@app.route('/upload_image', methods=['GET', 'POST'])
 def upload_image():
     if request.method == "POST":
         if 'file' not in request.files:
@@ -484,44 +486,44 @@ def upload_image():
             # to save the path in the folder
             file.save(path)
             print(path)
-            return render_template("account_profile.html",user = user)
+            return redirect(url_for('profile'))
 
     return render_template("upload_image.html")
 
 
-# Route for displaying a single image
-
 @app.route('/<image_name>')
 def image(image_name):
-
-    return send_from_directory("C:\Users\Alessia\Desktop\images",image_name)
+    return send_from_directory(UPLOAD_FOLDER_IMAGE, image_name)
 
 
 # Route to change the password
-@app.route('/password', methods=['GET', 'POST'])
-def password():
+@app.route('/change_password', methods=['GET', 'POST'])
+def change_password():
 
     username = session['username']
     user = mongo.db.user.find_one({'username': username})
     if request.method == "POST":
-        if 'password' not in request.form:
-            flash('No password')
+        if 'new_password' not in request.form:
+            flash('No password', 'danger')
             return redirect(request.url)
-        password = request.form['password']
-        if password == '':
-            flash('Error')
-            return
+        if sha256_crypt.verify(request.form['old_password'], user['password']):
+            password = sha256_crypt.encrypt(str(request.form['new_password']))
+            if password == '':
+                flash('Error: ypu have to insert a new password', 'danger')
+                return
+            else:
+                flash('Password successfully changed', 'success')
+                username = session['username']
+                mongo.db.user.update({"username": username},
+                                        {'$set':
+                                             {
+                                                'password': password}})
+            return render_template("account_profile.html", user=user)
         else:
-
-            username = session['username']
-            mongo.db.user.update({"username": username},
-                                    {'$set':
-                                         {
-                                            'password': password}})
-        return render_template("account_profile.html", user=user)
+            flash('Your old password does not match', 'danger')
+            return redirect(request.url)
 
     return render_template("change_password.html")
-
 
 
 # Route for displaying images
@@ -531,6 +533,27 @@ def display_image():
     user = mongo.db.user.find_one({'username': username})
     image = user.path
     return render_template('account_profile.html', image=image)
+
+
+# Route for change the user's description
+@app.route('/change_description', methods=['GET', 'POST'])
+def change_description():
+
+    username = session['username']
+
+    if request.method == 'POST':
+
+        description = request.form['description']
+
+        mongo.db.user.update({'username': username}, {'$set': {
+            'description': description
+        }})
+
+        return redirect(url_for('profile'))
+
+    user = mongo.db.user.find({'username': username})
+
+    return render_template('change_description.html', user=user)
 
 
 # Check name of application
