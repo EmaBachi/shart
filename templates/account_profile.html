@@ -1,28 +1,27 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-<div class="container">
-                <hr>
-                <div class="row">
-                    <div class="col-md-7">
-                   <img src="{{url_for('image', image_name=user.image_name)}}" alt="Alternate Text" class="img-responsive" />
-                        <p class="text-center small">
-                        <p><a href="/upload_image" class="btn btn-default btn-sm">Upload Photo</a></p>
 
-                    </div>
 
-                    <div class="col-md-7">
-                        <span>{{ user.username }}</span>
-                        <p class="text-muted small"> {{ user.email }}</p>
-                    </div>
-                    <div class="col-md-7">
-                        <a href="/password" class="btn btn-default btn-sm">Change Password</a>
-                    </div>
-                    <div class="col-md-7">
-                        <!-- signout  doesn't work yet-->
-                        <a href="/signout" class="btn btn-default btn-sm pull-left">Sign Out</a>
-                    </div>
-                </div>
+<div class="rela-block container">
+    <div class="rela-block profile-card">
+        <div class="profile-pic" id="profile_pic"></div>
+        <div class="rela-block profile-name-container">
+            <div class="rela-block user-name" id="user_name">User Name Here</div>
+            <div class="rela-block user-desc" id="user_description">User Description Here</div>
+        </div>
+        <div class="rela-block profile-card-stats">
+            <div class="floated profile-stat works" id="num_works">28<br></div>
+            <div class="floated profile-stat followers" id="num_followers">112<br></div>
+            <div class="floated profile-stat following" id="num_following">245<br></div>
+        </div>
+    </div>
+    <div class="rela-block content">
+    <!-- jinja code needed here    <div class="rela-inline image"></div>-->
+
+    </div>
 
 </div>
+
+
 {% endblock %}
