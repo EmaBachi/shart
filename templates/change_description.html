@@ -1,10 +1,12 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-    <h1> Change Bio </h1>
-    <form method="POST" >
-        <label>Your new Bio</label>
-        <p><input type="text" name="description" class="form-control" value="{{ user.description }}"></p>
-        <p><input type="submit" value="Change Bio" class="btn btn-primary"></p>
+    <h1>Change Your Bio</h1>
+    {% from "includes/_formhelpers.html" import render_field %}
+    <form method="POST" action="">
+        <div class="form-group">
+            {{render_field(form.description, class="form-control")}}
+        </div>
+        <p><input type="submit" class="btn btn-primary" value="Change your Bio"></p>
     </form>
 {% endblock %}

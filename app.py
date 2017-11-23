@@ -11,6 +11,8 @@ from RegisterForm import RegisterForm
 from ArticleForm import ArticleForm
 from CommentForm import CommentForm
 from ContestForm import ContestForm
+from ChangePasswordForm import ChangePasswordForm
+from ChangeDescriptionForm import ChangeDescriptionForm
 
 
 # Instantiate application object
@@ -436,7 +438,7 @@ def add_exclusive_content():
 def video(video_name):
     path = mongo.db.exclusive_videos.find_one({'file_name': video_name})
     head, tail = os.path.split(path["path"])
-    return send_from_directory(head,video_name)
+    return send_from_directory(head, video_name)
 
 
 # Route for the videogallery
@@ -499,17 +501,18 @@ def image(image_name):
 # Route to change the password
 @app.route('/change_password', methods=['GET', 'POST'])
 def change_password():
+    form = ChangePasswordForm(request.form)
 
-    username = session['username']
-    user = mongo.db.user.find_one({'username': username})
     if request.method == "POST":
-        if 'new_password' not in request.form:
-            flash('No password', 'danger')
+        username = session['username']
+        user = mongo.db.user.find_one({'username': username})
+        if form.new_password.data == '':
+            flash('No new password', 'danger')
             return redirect(request.url)
-        if sha256_crypt.verify(request.form['old_password'], user['password']):
-            password = sha256_crypt.encrypt(str(request.form['new_password']))
+        if sha256_crypt.verify(form.old_password.data, user['password']):
+            password = sha256_crypt.encrypt(str(form.new_password.data))
             if password == '':
-                flash('Error: ypu have to insert a new password', 'danger')
+                flash('Error: you have to insert a new password', 'danger')
                 return
             else:
                 flash('Password successfully changed', 'success')
@@ -523,7 +526,7 @@ def change_password():
             flash('Your old password does not match', 'danger')
             return redirect(request.url)
 
-    return render_template("change_password.html")
+    return render_template("change_password.html", form=form)
 
 
 # Route for displaying images
@@ -538,12 +541,13 @@ def display_image():
 # Route for change the user's description
 @app.route('/change_description', methods=['GET', 'POST'])
 def change_description():
+    form = ChangeDescriptionForm(request.form)
 
     username = session['username']
 
     if request.method == 'POST':
 
-        description = request.form['description']
+        description = form.description.data
 
         mongo.db.user.update({'username': username}, {'$set': {
             'description': description
@@ -551,9 +555,15 @@ def change_description():
 
         return redirect(url_for('profile'))
 
-    user = mongo.db.user.find({'username': username})
+    user = mongo.db.user.find_one({'username': username})
 
-    return render_template('change_description.html', user=user)
+    try:
+        description = user['description']
+        form.description.data = description
+    except TypeError:
+        form.description.data = ''
+
+    return render_template('change_description.html', form=form)
 
 
 # Check name of application
