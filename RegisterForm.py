@@ -1,5 +1,5 @@
 # Registration form class using wtforms
-from wtforms import Form, StringField, PasswordField, validators, DateField
+from wtforms import Form, StringField, PasswordField, validators, DateField, SelectField
 
 
 class RegisterForm(Form):
@@ -18,6 +18,13 @@ class RegisterForm(Form):
         validators.DataRequired(),
         validators.Length(min=4, max=20)
     ])
+
+    type = SelectField('You want to join our community as:', choices=[('Choose an Option', 'Choose an Option'),
+                                                    ('Gallery Owner', 'Gallery Owner'),
+                                                     ('Job Scout', 'Job Scout'),
+                                                     ('Architect', 'Architect'),
+                                                     ('Designer', 'Designer'),
+                                                     ('Writer', 'Writer')])
 
     date_of_birth = DateField('Date of Birth', format="%m/%d/%Y")
 

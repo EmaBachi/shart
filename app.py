@@ -46,6 +46,8 @@ def register():
         first_name = form.first_name.data
         surname = form.surname.data
         username = form.username.data
+        type = form.type.data
+        app.logger.info(type)
         date_of_birth = form.date_of_birth.data.strftime("%m/%d/%Y")
         country = form.country.data
         email = form.email.data
@@ -62,6 +64,7 @@ def register():
             mongo.db.user.insert({'first_name': first_name,
                                   'surname': surname,
                                   'username': username,
+                                  'type': type,
                                   'date_of_birth': date_of_birth,
                                   'country': country,
                                   'email': email,
@@ -279,7 +282,9 @@ def competitions():
     if result > 0:
         # Fetching all contests
         contests = find_all_contests()
-        return render_template('competitions.html', contests=contests)
+        today = datetime.date.today().strftime("%m/%d/%Y")
+        app.logger.info(today)
+        return render_template('competitions.html', contests=contests, today=today)
     else:
         flash('No contest found', 'danger')
         return render_template('competitions.html')
@@ -332,13 +337,17 @@ def add_contest():
         title = form.title.data
         body = form.body.data
         author = session['username']
-        date_mongo = str(datetime.date.today())
+        enroll_deadline = form.enroll_deadline.data.strftime("%m/%d/%Y")
+        presentation_deadline = form.presentation_deadline.data.strftime("%m/%d/%Y")
+        type = form.type.data
 
         mongo.db.contest.insert({
             'title': title,
             'body': body,
             'author': author,
-            'date': date_mongo,
+            'enroll_deadline': enroll_deadline,
+            'presentation_deadline': presentation_deadline,
+            'type': type,
             'comments': []
         })
 
@@ -560,7 +569,7 @@ def change_description():
     try:
         description = user['description']
         form.description.data = description
-    except TypeError:
+    except KeyError:
         form.description.data = ''
 
     return render_template('change_description.html', form=form)

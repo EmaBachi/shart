@@ -2,12 +2,13 @@
 
 {% block body %}
     <h1>{{contest.title}}</h1>
-    <p style="font-style: italic; font-size: small">Created by {{contest.author}} on {{contest.date}}</p>
+    <h3>Contest for {{contest.type}}</h3>
+    <p>Enroll Deadline: <strong>{{contest.enroll_deadline}}</strong>; Presentation Deadline: <strong>{{contest.presentation_deadline}}</strong></p>
     <hr>
     <div>
         {{contest.body | safe}}
     </div>
-    <!--<p> {{contest.type}}</p>-->
+    <p style="font-style: italic; font-size: small">Created by {{contest.author}}</p>
     {% if session.logged_in %}
     {% if comments|length > 0 %}
     <h3>Comments: </h3>

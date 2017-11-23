@@ -8,12 +8,17 @@
     {% for contest in contests %}
         <div>
             <a href="contest/{{contest.title}}"><h2>{{contest.title}}</h2></a>
-            <p style="font-style: italic; font-size: small">Created by {{contest.author}} on {{contest.date}}</p>
+            <h3>Contest for {{contest.type}}</h3>
+            <p>Enroll Deadline: <strong>{{contest.enroll_deadline}}</strong>; Presentation Deadline: <strong>{{contest.presentation_deadline}}</strong></p>
             <div class="overflow-ellipsis">
                 {{contest.body | safe}}
             </div>
+            <p style="font-style: italic; font-size: small">Created by {{contest.author}}</p>
             {% if session.adm %}
                 <div class="pull-right">
+                    {% if contest.enroll_deadline >= today %}
+                    <a href="/join_contest/{{contest.title}}" class="btn btn-primary">Join Contest</a>
+                    {% endif %}
                     <a href="edit_contest/{{contest.title}}" class="btn btn-warning">Edit</a>
                     <a href="/delete_contest/{{contest.title}}" class="btn btn-danger">Delete</a>
                 </div>
