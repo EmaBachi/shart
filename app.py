@@ -18,6 +18,7 @@ from ChangeDescriptionForm import ChangeDescriptionForm
 # Instantiate application object
 app = Flask(__name__)
 
+
 # Path to uploaded exclusive content
 UPLOAD_FOLDER_VIDEO = '/home/emanuele/Scrivania/Shart_Contents/videos'
 
@@ -27,8 +28,10 @@ UPLOAD_FOLDER_IMAGE = '/home/emanuele/Scrivania/Shart_Contents/images'
 # Path to contest folder
 UPLOAD_FOLDER_CONTEST = '/home/emanuele/Scrivania/Shart_Contents/contests'
 
+# Application Configuration
 app.config["UPLOAD_FOLDER_VIDEO"] = UPLOAD_FOLDER_VIDEO
 app.config["UPLOAD_FOLDER_IMAGE"] = UPLOAD_FOLDER_IMAGE
+app.config["UPLOAD_FOLDER_CONTEST"] = UPLOAD_FOLDER_CONTEST
 
 
 # DB Configuration
@@ -311,6 +314,8 @@ def contest(title):
 
         comments = contest['comments']
 
+        not_allow_to_upload = os.path.isfile(UPLOAD_FOLDER_CONTEST+"/"+title+"/"+session['username'])
+
         if request.method == 'POST' and form.validate():
             comment_body = form.comment_body.data
             comment_author = session['username']
@@ -320,7 +325,7 @@ def contest(title):
 
             return redirect(url_for('contest', title=contest['title']))
 
-        return render_template('contest.html', contest=contest, form=form, comments=comments)
+        return render_template('contest.html', contest=contest, form=form, comments=comments, not_allow_to_upload=not_allow_to_upload)
 
 
 def add_comment_contest(contest, comment_body, comment_author, date_mongo):
@@ -346,6 +351,7 @@ def add_contest():
         presentation_deadline = form.presentation_deadline.data.strftime("%m/%d/%Y")
         type = form.type.data
 
+        # Storing the contest in db
         mongo.db.contest.insert({
             'title': title,
             'body': body,
@@ -353,14 +359,26 @@ def add_contest():
             'enroll_deadline': enroll_deadline,
             'presentation_deadline': presentation_deadline,
             'type': type,
+            'competitors': [],
             'comments': []
         })
+
+        # Create a directory in the server to store all the projects related to the contest
+        create_directory_for_contest(title)
 
         flash('Contest created', 'success')
 
         return redirect(url_for('competitions'))
 
     return render_template('add_contest.html', form=form)
+
+
+# Function for create a new directory in the contest path
+def create_directory_for_contest(title):
+    directory = UPLOAD_FOLDER_CONTEST+"/"+title
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    return
 
 
 # Route for editing a contest
@@ -405,6 +423,43 @@ def delete_contest(title):
     flash('Contest deleted', 'success')
 
     return redirect(url_for('competitions'))
+
+
+# Route for joining a contest
+@app.route('/join_contest/<string:title>')
+def join_contest(title):
+
+    mongo.db.contest.update({"title": title}, {'$push': {'competitors': session['username']}})
+
+    flash('You have joined the contest. Now work hard to achieve the VICTORY', 'success')
+
+    return redirect(url_for('competitions'))
+
+
+# Route for upload a project in the contest folder
+@app.route('/upload_project_contest/<string:title>', methods=['GET', 'POST'])
+def upload_project_contest(title):
+
+    if request.method == 'POST':
+
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        if file.filename == '':
+            flash('No selected file')
+            return
+        else:
+            path = os.path.join(UPLOAD_FOLDER_CONTEST+"/"+title, session['username'])
+
+            # to save the path in the folder
+            file.save(path)
+
+            flash('Project Uploaded. Cross your Fingers', 'success')
+
+            return redirect(url_for('contest', title=title))
+
+    return render_template('upload_project_contest.html')
 
 
 # ---!!! Contests development completed !!!---

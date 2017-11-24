@@ -17,7 +17,9 @@
             {% if session.adm %}
                 <div class="pull-right">
                     {% if contest.enroll_deadline >= today %}
-                    <a href="/join_contest/{{contest.title}}" class="btn btn-primary">Join Contest</a>
+                        {% if session.username not in contest.competitors %}
+                            <a href="/join_contest/{{contest.title}}" class="btn btn-primary">Join Contest</a>
+                        {% endif %}
                     {% endif %}
                     <a href="edit_contest/{{contest.title}}" class="btn btn-warning">Edit</a>
                     <a href="/delete_contest/{{contest.title}}" class="btn btn-danger">Delete</a>

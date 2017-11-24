@@ -10,6 +10,13 @@
     </div>
     <p style="font-style: italic; font-size: small">Created by {{contest.author}}</p>
     {% if session.logged_in %}
+
+    {% if session.username not in contest.competitors %}
+    <a href="/join_contest/{{contest.title}}" class="btn btn-primary">Join Contest</a>
+    {% endif %}
+    {% if session.username in contest.competitors and not_allow_to_upload == false %}
+    <a href="/upload_project_contest/{{contest.title}}" class="btn btn-primary">Upload Project in Contest</a>
+    {% endif %}
     {% if comments|length > 0 %}
     <h3>Comments: </h3>
     <ul class="list-group">
