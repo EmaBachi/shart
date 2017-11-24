@@ -21,7 +21,12 @@ app = Flask(__name__)
 # Path to uploaded exclusive content
 UPLOAD_FOLDER_VIDEO = '/home/emanuele/Scrivania/Shart_Contents/videos'
 
+# Path to profile images
 UPLOAD_FOLDER_IMAGE = '/home/emanuele/Scrivania/Shart_Contents/images'
+
+# Path to contest folder
+UPLOAD_FOLDER_CONTEST = '/home/emanuele/Scrivania/Shart_Contents/contests'
+
 app.config["UPLOAD_FOLDER_VIDEO"] = UPLOAD_FOLDER_VIDEO
 app.config["UPLOAD_FOLDER_IMAGE"] = UPLOAD_FOLDER_IMAGE
 
