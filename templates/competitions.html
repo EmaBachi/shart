@@ -14,17 +14,17 @@
                 {{contest.body | safe}}
             </div>
             <p style="font-style: italic; font-size: small">Created by {{contest.author}}</p>
-            {% if session.adm %}
                 <div class="pull-right">
                     {% if contest.enroll_deadline >= today %}
                         {% if session.username not in contest.competitors %}
                             <a href="/join_contest/{{contest.title}}" class="btn btn-primary">Join Contest</a>
                         {% endif %}
                     {% endif %}
+                    {% if session.adm %}
                     <a href="edit_contest/{{contest.title}}" class="btn btn-warning">Edit</a>
                     <a href="/delete_contest/{{contest.title}}" class="btn btn-danger">Delete</a>
+                    {% endif %}
                 </div>
-            {% endif %}
         </div>
     {% endfor %}
 

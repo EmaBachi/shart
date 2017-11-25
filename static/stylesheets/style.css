@@ -98,7 +98,7 @@
 .rela-block {
   display: block;
   position: relative;
-  margin: auto;
+  margin: 40px 40px 40px;
 }
 .rela-inline {
   display: inline-block;
@@ -265,7 +265,7 @@
   width: 240px;
   height: 200px;
   cursor: pointer;
-  margin: 0 20px 40px;
+  margin: 0 50px 10px;
   overflow: hidden;
   border-radius: 5px;
   border: 10px solid #fff;

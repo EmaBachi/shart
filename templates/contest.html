@@ -17,6 +17,16 @@
     {% if session.username in contest.competitors and not_allow_to_upload == false %}
     <a href="/upload_project_contest/{{contest.title}}" class="btn btn-primary">Upload Project in Contest</a>
     {% endif %}
+    <p></p>
+    <div class="rela-block content">
+    {% for file in files_in_contest_directory %}
+            <div class="rela-inline">
+                <img class="image" src="{{ url_for('image_contest', title=contest.title, file_name=file)}}" height="180px" width="240px">
+                <p></p>
+                <p style="text-align: center">Project by <a href="/image_contest/{{contest.title}}/{{file}}">{{file}}</a></p>
+            </div>
+    {% endfor %}
+    </div>
     {% if comments|length > 0 %}
     <h3>Comments: </h3>
     <ul class="list-group">

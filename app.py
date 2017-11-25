@@ -291,7 +291,6 @@ def competitions():
         # Fetching all contests
         contests = find_all_contests()
         today = datetime.date.today().strftime("%m/%d/%Y")
-        app.logger.info(today)
         return render_template('competitions.html', contests=contests, today=today)
     else:
         flash('No contest found', 'danger')
@@ -314,7 +313,10 @@ def contest(title):
 
         comments = contest['comments']
 
-        not_allow_to_upload = os.path.isfile(UPLOAD_FOLDER_CONTEST+"/"+title+"/"+session['username'])
+        if 'username' in session.keys():
+            not_allow_to_upload = os.path.isfile(UPLOAD_FOLDER_CONTEST+"/"+title+"/"+session['username'])
+        else:
+            not_allow_to_upload = True
 
         if request.method == 'POST' and form.validate():
             comment_body = form.comment_body.data
@@ -325,7 +327,14 @@ def contest(title):
 
             return redirect(url_for('contest', title=contest['title']))
 
-        return render_template('contest.html', contest=contest, form=form, comments=comments, not_allow_to_upload=not_allow_to_upload)
+        files_in_contest_directory = []
+        for (dir_path, dir_names, file) in os.walk(UPLOAD_FOLDER_CONTEST+"/"+title):
+            files_in_contest_directory.extend(file)
+            break
+
+        return render_template('contest.html', contest=contest, form=form,
+                               comments=comments, not_allow_to_upload=not_allow_to_upload,
+                               files_in_contest_directory=files_in_contest_directory)
 
 
 def add_comment_contest(contest, comment_body, comment_author, date_mongo):
@@ -462,15 +471,24 @@ def upload_project_contest(title):
     return render_template('upload_project_contest.html')
 
 
+@app.route('/image_contest/<string:title>/<string:file_name>')
+def image_contest(title, file_name):
+    return send_from_directory(UPLOAD_FOLDER_CONTEST+"/"+title, file_name)
+
+
+@app.route('/user_contest')
+def user_contest():
+    username = session['username']
+
+    contests = mongo.db.contest.find({'competitors': username})
+    today = datetime.date.today().strftime("%m/%d/%Y")
+    return render_template('competitions.html', contests=contests, today=today)
+
+
 # ---!!! Contests development completed !!!---
 
 
 # ---!!! Starting from that point we have the programming part related to exclusive contents !!!---
-
-# Route for exclusive contents
-@app.route('/exclusive_contents')
-def exclusive_contents():
-    return
 
 
 # Route for add some exclusive material
