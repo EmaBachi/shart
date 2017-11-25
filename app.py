@@ -318,6 +318,8 @@ def contest(title):
         else:
             not_allow_to_upload = True
 
+        today = datetime.date.today().strftime("%m/%d/%Y")
+
         if request.method == 'POST' and form.validate():
             comment_body = form.comment_body.data
             comment_author = session['username']
@@ -334,7 +336,8 @@ def contest(title):
 
         return render_template('contest.html', contest=contest, form=form,
                                comments=comments, not_allow_to_upload=not_allow_to_upload,
-                               files_in_contest_directory=files_in_contest_directory)
+                               files_in_contest_directory=files_in_contest_directory,
+                               today=today)
 
 
 def add_comment_contest(contest, comment_body, comment_author, date_mongo):

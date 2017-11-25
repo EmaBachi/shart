@@ -11,7 +11,7 @@
     <p style="font-style: italic; font-size: small">Created by {{contest.author}}</p>
     {% if session.logged_in %}
 
-    {% if session.username not in contest.competitors %}
+    {% if session.username not in contest.competitors and contest.enroll_deadline >= today %}
     <a href="/join_contest/{{contest.title}}" class="btn btn-primary">Join Contest</a>
     {% endif %}
     {% if session.username in contest.competitors and not_allow_to_upload == false %}
