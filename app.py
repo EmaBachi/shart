@@ -32,6 +32,7 @@ UPLOAD_FOLDER_CONTEST = '/home/emanuele/Scrivania/Shart_Contents/contests'
 app.config["UPLOAD_FOLDER_VIDEO"] = UPLOAD_FOLDER_VIDEO
 app.config["UPLOAD_FOLDER_IMAGE"] = UPLOAD_FOLDER_IMAGE
 app.config["UPLOAD_FOLDER_CONTEST"] = UPLOAD_FOLDER_CONTEST
+app.config["USE_X_SENDFILE "] = True
 
 
 # DB Configuration
@@ -526,9 +527,11 @@ def add_exclusive_content():
 # Route for displaying a single video
 @app.route('/video/<video_name>')
 def video(video_name):
-    path = mongo.db.exclusive_videos.find_one({'file_name': video_name})
+    path = mongo.db.exclusive_videos.find_one({'video_name': video_name})
     head, tail = os.path.split(path["path"])
-    return send_from_directory(head, video_name)
+    app.logger.info(head)
+    app.logger.info(tail)
+    return send_from_directory(UPLOAD_FOLDER_VIDEO, tail)
 
 
 # Route for the videogallery

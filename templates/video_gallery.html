@@ -5,7 +5,7 @@
         {% for video in videos %}
         <ul class="list-group">
 	    <li class="list-group-item"><h3><a href="/video/{{video.video_name}}">{{video.video_name}}</a></h3>
-			<video class="video_gallery" src="{{ url_for('video', video_name=video.file_name)}}" type="video/mp4"></video>
+			<video class="video_gallery" src="{{ url_for('video', video_name=video.video_name)}}" type="video/mp4"></video>
                 <span class="glyphicon glyphicon-play-circle"></span>
             <p>{{ video.description }}</p>
         </li>
