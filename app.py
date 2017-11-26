@@ -111,7 +111,6 @@ def login():
                 session['logged_in'] = True
                 session['username'] = username_candidate
 
-
                 if user['adm'] == True:
                     session['adm'] = True
                 else:
