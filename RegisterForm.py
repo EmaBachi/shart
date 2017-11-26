@@ -20,11 +20,8 @@ class RegisterForm(Form):
     ])
 
     type = SelectField('You want to join our community as:', choices=[('Choose an Option', 'Choose an Option'),
-                                                    ('Gallery Owner', 'Gallery Owner'),
-                                                     ('Job Scout', 'Job Scout'),
-                                                     ('Architect', 'Architect'),
-                                                     ('Designer', 'Designer'),
-                                                     ('Writer', 'Writer')])
+                                                    ('Artist', 'Artist'),
+                                                     ('Job Scout', 'Job Scout')])
 
     date_of_birth = DateField('Date of Birth', format="%m/%d/%Y")
 

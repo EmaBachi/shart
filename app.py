@@ -13,7 +13,7 @@ from CommentForm import CommentForm
 from ContestForm import ContestForm
 from ChangePasswordForm import ChangePasswordForm
 from ChangeDescriptionForm import ChangeDescriptionForm
-
+from JobForm import JobForm
 
 # Instantiate application object
 app = Flask(__name__)
@@ -110,10 +110,17 @@ def login():
             if sha256_crypt.verify(password_candidate, password_user):
                 session['logged_in'] = True
                 session['username'] = username_candidate
+
+
                 if user['adm'] == True:
                     session['adm'] = True
                 else:
                     session['adm'] = False
+
+                if user['type'] == 'Job Scout':
+                    session['scout'] = True
+                else:
+                    session['scout'] = False
 
                 flash('You are now logged in', 'success')
                 return redirect(url_for("index"))
@@ -657,6 +664,56 @@ def change_description():
         form.description.data = ''
 
     return render_template('change_description.html', form=form)
+
+
+# ---!!! job section developing !!!---
+
+@app.route('/add_job', methods=['GET','POST'])
+def add_job():
+    form = JobForm(request.form)
+
+    if request.method == 'POST':
+        title = form.title.data
+        location = form.location.data
+        app.logger.info(location)
+        jobtype = form.jobtype.data
+        companyname = form.companyname.data
+        description = form.description.data
+        author = session['username']
+
+        app.logger.info(title)
+
+        # MongoDB query to insert a new article
+        mongo.db.job.insert({
+            'title': title,
+            'location': location,
+            'author': author,
+            'jobtype' : jobtype,
+            'description' : description,
+            'companyname' : companyname
+        })
+
+        flash('Job posted', 'success')
+
+        # Redirecting user to the blog page
+        return redirect(url_for('jobs'))
+
+
+    return render_template("post_job.html",form=form)
+
+# Route for displaying all jobs
+@app.route('/jobs')
+def jobs():
+    # Checking how many jobs there are in db
+    result = mongo.db.job.find().count()
+
+    if result > 0:
+        # Fetching all contests
+        jobs = mongo.db.job.find()
+        return render_template('jobs.html', jobs=jobs)
+    else:
+        flash('No job found', 'danger')
+        return render_template('jobs.html')
 
 
 # Check name of application

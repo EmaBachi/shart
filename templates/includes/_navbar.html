@@ -19,16 +19,8 @@
                     <li><a href="/projects">Projects</a></li>
                   </ul>
                 </li>
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Job <span class="caret"></span></a>
-                  <ul class="dropdown-menu">
-                    <li class="dropdown-header">Scout</li>
-                    <li><a href="/post_job">Post a Job</a></li>
-                    <li role="separator" class="divider"></li>
-                    <li class="dropdown-header">Job Seeker</li>
-                    <li><a href="/find_job">Find a Job</a></li>
-                  </ul>
-                </li>
+                  <li><a href="/jobs">Jobs</a></li>
+
                 <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Extra <span class="caret"></span></a>
                   <ul class="dropdown-menu">
@@ -48,6 +40,9 @@
                     <li><a href="/add_article">Add Article</a></li>
                     <li><a href="/add_contest">Add Contest</a></li>
                     <li><a href="/add_exclusive_content">Add Video</a></li>
+                      {% if session.scout %}
+                      <li><a href="/add_job">Add a job</a></li>
+                          {% endif %}
                   </ul>
                 </li>
                 {% endif %}

@@ -1,0 +1,46 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    <h1> JOB LIST </h1>
+    {% for job in jobs %}
+
+<div class="container">
+    <div class="row padding-top-1">
+        <div class="col-sm-12 col-md-6 col-lg-12 main-card no-paddings display-flex">
+            <div class="col-sm-12 col-md-2 col-lg-2 background-green status prealertado">
+                <div class="row status-text">
+                    <h4>{{ job.title }}</h4>
+                </div>
+                <div class="status-id">
+                    <p><strong>{{ job.location }}</strong></p>
+
+                </div>
+            </div>
+             <div class="col-sm-12 col-md-9 white-card box-shadow display-flex">
+
+
+
+                <div class="col-sm-12 col-md-3 padding-top-2 padding-bottom-2 display-inline-grid" style="background: #fafafa;">
+                    <div><p class="text-bold margin-bottom-0">Job Type</p>
+                    <p class="margin-bottom-0">{{ job.jobtype }}</p></div>
+
+                </div>
+                <div class="col-sm-12 col-md-3 padding-top-2 padding-bottom-2 display-inline-grid">
+                    <div class="col-md-12 no-paddings">
+                        <div class="col-md-6 no-paddings">
+                        <p class="text-bold margin-bottom-0">Company Name</p>
+                        <p class="margin-bottom-0">{{ job.companyname }}</p>
+                    </div>
+                        <div class="col-md-6 no-paddings">
+                        <p class="text-bold margin-bottom-0">Description</p>
+                        <p class="margin-bottom-0">{{ job.description }}</p>
+                        </div>
+                    </div>
+                </div>
+             </div>
+        </div>
+    </div>
+</div>
+    {% endfor %}
+
+{% endblock %}
