@@ -19,9 +19,9 @@ class RegisterForm(Form):
         validators.Length(min=4, max=20)
     ])
 
-    type = SelectField('You want to join our community as:', choices=[('Choose an Option', 'Choose an Option'),
+    type = SelectField('You want to join our community as:', choices=[
                                                     ('Artist', 'Artist'),
-                                                     ('Job Scout', 'Job Scout')])
+                                                     ('Gallery Owner', 'Gallery Owner')])
 
     date_of_birth = DateField('Date of Birth', format="%m/%d/%Y")
 

@@ -3,7 +3,7 @@
 {% block body %}
 
    <div class="jumbotron-blog">
-        <img src="http://artbistro.monster.com/nfs/artbistro/attachment_images/0029/6206/iStock_000014844533XSmall_crop380w.jpg" alt="blog image" style="width: 1200px;height: 300px;align: center;">
+        <img src="{{url_for('static', filename='images/contest.jpg')}}" alt="blog image" style="width: 1150px;height: 300px;align: center;">
     </div>
     {% for contest in contests %}
         <div>

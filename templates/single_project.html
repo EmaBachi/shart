@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    <div>
+        {% from "includes/_formhelpers.html" import render_field %}
+        <h2>{{project.title}}</h2>
+        <p style="font-style: italic; font-size: small">Idea by {{project.author}}</p>
+        <div class="overflow-ellipsis">
+            {{project.description}}
+        </div>
+        <p></p>
+        <div class="form-group">
+            {{ render_field(form.appliers, class="form-control") }}
+        </div>
+        {% if project.collaborators|length < project.max_number and session.username == project.author %}
+        <div class="pull-right">
+            <a href="/projects/{{project.title}}" class="btn btn-primary">Select Collaborators</a>
+
+        {% endif %}
+    </div>
+
+{% endblock %}

@@ -14,6 +14,8 @@ from ContestForm import ContestForm
 from ChangePasswordForm import ChangePasswordForm
 from ChangeDescriptionForm import ChangeDescriptionForm
 from JobForm import JobForm
+from ProjectForm import ProjectForm
+from CollaboratorsForm import CollaboratorsForm
 
 # Instantiate application object
 app = Flask(__name__)
@@ -116,10 +118,15 @@ def login():
                 else:
                     session['adm'] = False
 
-                if 'type' in user.keys() and user['type'] == 'Job Scout':
+                if 'type' in user.keys() and user['type'] == 'Gallery Owner':
                     session['scout'] = True
+                    session['artist'] = False
+                elif 'type' in user.keys() and user['type'] == 'Artist':
+                    session['artist'] = True
+                    session['scout'] = False
                 else:
                     session['scout'] = False
+                    session['artist'] = False
 
                 flash('You are now logged in', 'success')
                 return redirect(url_for("index"))
@@ -706,7 +713,6 @@ def add_job():
         # Redirecting user to the blog page
         return redirect(url_for('jobs'))
 
-
     return render_template("post_job.html",form=form)
 
 # Route for displaying all jobs
@@ -722,6 +728,92 @@ def jobs():
     else:
         flash('No job found', 'danger')
         return render_template('jobs.html')
+
+
+# ---!!! Jobs section fully implemented !!!---
+
+# ---!!! Share folder for projects !!!---
+
+@app.route('/projects')
+def projects():
+
+    projects = mongo.db.project.find({})
+
+    return render_template('projects.html', projects=projects)
+
+
+@app.route('/user_projects')
+def user_projects():
+
+    projects = mongo.db.project.find({'$or': [{'author': session['username']}, {'collaborators': {'$in': [session['username']]}}]})
+
+    return render_template('projects.html', projects=projects)
+
+
+@app.route('/add_project', methods=['POST', 'GET'])
+def add_project():
+
+    form = ProjectForm(request.form)
+
+    if request.method == 'POST':
+
+        title = form.title.data
+        description = form.description.data
+        max_number = form.max_number.data
+        app.logger.info(form.skills.data)
+        skills = form.skills.data
+        author = session['username']
+        appliers = []
+        collaborators = []
+        status = 'WIP'
+
+        mongo.db.project.insert({
+            'title': title,
+            'description': description,
+            'author': author,
+            'max_number': max_number,
+            'skills': skills,
+            'appliers': appliers,
+            'collaborators': collaborators,
+            'status': status
+        })
+
+        return redirect(url_for('projects'))
+
+    return render_template('add_project.html', form=form)
+
+
+@app.route('/join_project/<string:title>')
+def join_project(title):
+
+    mongo.db.project.update({'title': title}, {'$push': {'appliers': session['username']}})
+
+    flash('You apply for the project', 'success')
+
+    return redirect(url_for('projects'))
+
+
+@app.route('/projects/<string:title>', methods=['POST', 'GET'])
+def single_project(title):
+    form = CollaboratorsForm(request.form)
+
+    project = mongo.db.project.find_one({'title': title})
+
+    app.logger.info(project)
+
+    appliers = project['appliers']
+
+    if request.method == 'POST':
+
+        return redirect(url_for('home'))
+
+    else:
+
+        form.push_appliers(appliers)
+
+        return render_template('single_project.html', project=project, form=form)
+
+
 
 
 # Check name of application

@@ -2,7 +2,7 @@
 
 {% block body %}
     <div class="jumbotron-blog">
-        <img src="http://media-s3.blogosfere.it/iab/images/blog%202014_00100.jpg" alt="blog image" style="width: 1200px;height: 300px;align: center;">
+        <img src="{{url_for('static', filename='images/blog.jpg')}}" alt="blog image" style="width: 1150px;height: 300px;align: center;">
     </div>
     {% for article in articles %}
         <div>

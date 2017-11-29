@@ -14,7 +14,9 @@ class JobForm(Form):
     ])
 
     description = TextAreaField('description')
+
     companyname = StringField('company name')
+
     jobtype = SelectField('Select the job type:', choices=[('Part Time', 'Part Time'),
                                                     ('Full Time', 'Full Time'),
                                                      ('Contract', 'Contract')])
