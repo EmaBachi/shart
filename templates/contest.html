@@ -14,16 +14,16 @@
     {% if session.username not in contest.competitors and contest.enroll_deadline >= today %}
     <a href="/join_contest/{{contest.title}}" class="btn btn-primary">Join Contest</a>
     {% endif %}
-    {% if session.username in contest.competitors and not_allow_to_upload == false %}
+    {% if session.username in contest.competitors and not_allowed_to_upload == false %}
     <a href="/upload_project_contest/{{contest.title}}" class="btn btn-primary">Upload Project in Contest</a>
     {% endif %}
     <p></p>
     <div class="rela-block content">
-    {% for file in files_in_contest_directory %}
+    {% for image in images %}
             <div class="rela-inline">
-                <img class="image" src="{{ url_for('image_contest', title=contest.title, file_name=file)}}" height="180px" width="240px">
+                <img class="image" src="{{ url_for('image_contest', title=contest.title, file_name=image)}}" height="180px" width="240px">
                 <p></p>
-                <p style="text-align: center">Project by <a href="/image_contest/{{contest.title}}/{{file}}">{{file}}</a></p>
+                <p style="text-align: center">Project by <a href="/image_contest/{{contest.title}}/{{image}}">{% set list1 = image.split('.') %} {{list1[0]}}</a></p>
             </div>
     {% endfor %}
     </div>

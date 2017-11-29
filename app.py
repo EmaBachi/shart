@@ -116,7 +116,7 @@ def login():
                 else:
                     session['adm'] = False
 
-                if user['type'] == 'Job Scout':
+                if 'type' in user.keys() and user['type'] == 'Job Scout':
                     session['scout'] = True
                 else:
                     session['scout'] = False
@@ -320,10 +320,18 @@ def contest(title):
 
         comments = contest['comments']
 
-        if 'username' in session.keys():
-            not_allow_to_upload = os.path.isfile(UPLOAD_FOLDER_CONTEST+"/"+title+"/"+session['username'])
-        else:
-            not_allow_to_upload = True
+        images = contest['files']
+
+        not_allowed_to_upload = False
+
+        for image in images:
+            list = image.split('.')
+            username_candidate = list[0]
+            if session['username'] == username_candidate:
+                not_allowed_to_upload = True
+                break
+
+        app.logger.info(not_allowed_to_upload)
 
         today = datetime.date.today().strftime("%m/%d/%Y")
 
@@ -336,15 +344,8 @@ def contest(title):
 
             return redirect(url_for('contest', title=contest['title']))
 
-        files_in_contest_directory = []
-        for (dir_path, dir_names, file) in os.walk(UPLOAD_FOLDER_CONTEST+"/"+title):
-            files_in_contest_directory.extend(file)
-            break
-
-        return render_template('contest.html', contest=contest, form=form,
-                               comments=comments, not_allow_to_upload=not_allow_to_upload,
-                               files_in_contest_directory=files_in_contest_directory,
-                               today=today)
+        return render_template('contest.html', contest=contest, form=form, comments=comments,
+                               today=today, images=images, not_allowed_to_upload=not_allowed_to_upload)
 
 
 def add_comment_contest(contest, comment_body, comment_author, date_mongo):
@@ -378,6 +379,8 @@ def add_contest():
             'enroll_deadline': enroll_deadline,
             'presentation_deadline': presentation_deadline,
             'type': type,
+            'folder': title,
+            'files': [],
             'competitors': [],
             'comments': []
         })
@@ -466,10 +469,16 @@ def upload_project_contest(title):
             return redirect(request.url)
         file = request.files['file']
         if file.filename == '':
-            flash('No selected file')
-            return
+            flash('No selected file', 'danger')
+            return redirect(request.url)
         else:
-            path = os.path.join(UPLOAD_FOLDER_CONTEST+"/"+title, session['username'])
+            parts = file.filename.split('.')
+            extension = parts[1]
+            image_to_save = session['username']+"."+extension
+
+            mongo.db.contest.update({'title': title}, {'$push': {'files': image_to_save}})
+
+            path = os.path.join(UPLOAD_FOLDER_CONTEST+"/"+title, image_to_save)
 
             # to save the path in the folder
             file.save(path)
