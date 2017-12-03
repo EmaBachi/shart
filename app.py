@@ -521,42 +521,24 @@ def user_contest():
 @app.route('/add_exclusive_content', methods=['GET', 'POST'])
 def add_exclusive_content():
     if request.method == "POST":
-        if 'file' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
-        file = request.files['file']
-        if file.filename == '':
-            flash('No selected file')
-            return
-        else:
-            path = os.path.join(app.config['UPLOAD_FOLDER_VIDEO'],file.filename)
-            description=request.form['description']
-            video_name=request.form['video_name']
-            mongo.db.exclusive_videos.insert({
-                'path': path,
-                'file_name': file.filename,
-                'description': description,
-                'video_name': video_name
-            })
 
-            # to save the path in the folder
-            file.save(path)
-            return redirect(url_for('video_gallery'))
+        description = request.form['description']
+        video_name = request.form['video_name']
+        url_video = request.form['url_video']
+
+        mongo.db.exclusive_videos.insert({
+            'description': description,
+            'video_name': video_name,
+            'url_video': url_video
+        })
+
+        # to save the path in the folder
+        return redirect(url_for('video_gallery'))
 
     return render_template("upload_video.html")
 
 
-# Route for displaying a single video
-@app.route('/video/<video_name>')
-def video(video_name):
-    path = mongo.db.exclusive_videos.find_one({'video_name': video_name})
-    head, tail = os.path.split(path["path"])
-    app.logger.info(head)
-    app.logger.info(tail)
-    return send_from_directory(UPLOAD_FOLDER_VIDEO, tail)
-
-
-# Route for the videogallery
+# Route for the video gallery
 @app.route('/video_gallery')
 def video_gallery():
     videos = mongo.db.exclusive_videos.find()
