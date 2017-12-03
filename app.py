@@ -334,7 +334,7 @@ def contest(title):
         for image in images:
             list = image.split('.')
             username_candidate = list[0]
-            if session['username'] == username_candidate:
+            if 'username' in session and session['username'] == username_candidate:
                 not_allowed_to_upload = True
                 break
 
