@@ -327,7 +327,12 @@ def contest(title):
 
         comments = contest['comments']
 
-        images = contest['files']
+        files = contest['files']
+
+        images = []
+
+        for file in files:
+            images.append(file['file_name'])
 
         not_allowed_to_upload = False
 
@@ -337,8 +342,6 @@ def contest(title):
             if 'username' in session and session['username'] == username_candidate:
                 not_allowed_to_upload = True
                 break
-
-        app.logger.info(not_allowed_to_upload)
 
         today = datetime.date.today().strftime("%m/%d/%Y")
 
@@ -352,7 +355,7 @@ def contest(title):
             return redirect(url_for('contest', title=contest['title']))
 
         return render_template('contest.html', contest=contest, form=form, comments=comments,
-                               today=today, images=images, not_allowed_to_upload=not_allowed_to_upload)
+                               today=today, files=files, not_allowed_to_upload=not_allowed_to_upload)
 
 
 def add_comment_contest(contest, comment_body, comment_author, date_mongo):
@@ -483,7 +486,9 @@ def upload_project_contest(title):
             extension = parts[1]
             image_to_save = session['username']+"."+extension
 
-            mongo.db.contest.update({'title': title}, {'$push': {'files': image_to_save}})
+            mongo.db.contest.update({'title': title}, {'$push': {'files': {'file_name': image_to_save,
+                                                                           'like': 0,
+                                                                           'unlike': 0}}})
 
             path = os.path.join(UPLOAD_FOLDER_CONTEST+"/"+title, image_to_save)
 
@@ -509,6 +514,22 @@ def user_contest():
     contests = mongo.db.contest.find({'competitors': username})
     today = datetime.date.today().strftime("%m/%d/%Y")
     return render_template('competitions.html', contests=contests, today=today)
+
+
+@app.route('/contest/<string:title>/<string:name>/like')
+def like(title, name):
+
+    mongo.db.contest.update({'title': title, 'files.file_name': name}, {'$inc': {'files.$.like': 1}})
+
+    return redirect(url_for('contest', title=title))
+
+
+@app.route('/contest/<string:title>/<string:name>/unlike')
+def unlike(title, name):
+
+    mongo.db.contest.update({'title': title, 'files.file_name': name}, {'$inc': {'files.$.unlike': 1}})
+
+    return redirect(url_for('contest', title=title))
 
 
 # ---!!! Contests development completed !!!---
@@ -555,7 +576,7 @@ def video_gallery():
 def profile():
     username = session['username']
     user = mongo.db.user.find_one({'username': username})
-    print(user)
+
     return render_template('account_profile.html', user=user)
 
 

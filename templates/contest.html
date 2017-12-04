@@ -19,11 +19,23 @@
     {% endif %}
     <p></p>
     <div class="rela-block content">
-    {% for image in images %}
+    {% for file in files %}
             <div class="rela-inline">
-                <img class="image" src="{{ url_for('image_contest', title=contest.title, file_name=image)}}" height="180px" width="240px">
+                <img class="image" src="{{ url_for('image_contest', title=contest.title, file_name=file.file_name)}}" height="180px" width="240px">
                 <p></p>
-                <p style="text-align: center">Project by <a href="/image_contest/{{contest.title}}/{{image}}">{% set list1 = image.split('.') %} {{list1[0]}}</a></p>
+                <p style="text-align: center">Project by <a href="/image_contest/{{contest.title}}/{{file.file_name}}">{% set list1 = file.file_name.split('.') %} {{list1[0]}}</a></p>
+                <p style="text-align: center">
+                    <strong>{{file.like | int}}</strong> Like  <strong>{{file.unlike | int}}</strong> Unlike
+                </p>
+                <p style="text-align: center">
+                    <a href="/contest/{{contest.title}}/{{file.file_name}}/like">
+                        <span class="glyphicon glyphicon-thumbs-up"></span>
+                    </a>
+                    <a href="/contest/{{contest.title}}/{{file.file_name}}/unlike">
+                         <span class="glyphicon glyphicon-thumbs-down"></span>
+                    </a>
+                </p>
+
             </div>
     {% endfor %}
     </div>

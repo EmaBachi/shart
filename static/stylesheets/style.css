@@ -59,15 +59,28 @@
   color: black;
 }
 
+/* Icon in contest */
+.glyphicon-thumbs-up{
+  color: black;
+}
+
+.glyphicon-thumbs-down{
+  color: black;
+  margin-left: 10px;
+}
 
 
 /* Video Gallery */
-
 .video {
   align: center;
   margin-right: 200px;
   margin-left: 200px;
+  margin-top: 60px;
 
+}
+
+.iframe-video{
+  margin-top: 25px;
 }
 
 /* profile */
@@ -234,13 +247,13 @@
   color: #999;
 }
 .works::after {
-  content: "works";
+  content: "Works";
 }
-.followers::after {
-  content: "followers";
+.contests::after {
+  content: "Contests";
 }
-.following::after {
-  content: "following";
+.wip::after {
+  content: "Wip";
 }
 .image {
   width: 240px;
