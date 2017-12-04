@@ -22,7 +22,7 @@ app = Flask(__name__)
 
 
 # Path to uploaded exclusive content
-UPLOAD_FOLDER_VIDEO = '/home/emanuele/Scrivania/Shart_Contents/videos'
+UPLOAD_FOLDER_VIDEO = 'C:\Users\Alessia\Desktop\dvideo'
 
 # Path to profile images
 UPLOAD_FOLDER_IMAGE = '/home/emanuele/Scrivania/Shart_Contents/images'
@@ -531,7 +531,6 @@ def add_exclusive_content():
             'video_name': video_name,
             'url_video': url_video
         })
-
         # to save the path in the folder
         return redirect(url_for('video_gallery'))
 
@@ -797,6 +796,15 @@ def single_project(title):
 
 
 
+# Route for searching
+# -----------!!!!!!! WE HAVE TO MAKE THE PROFILES VISIBLE!!!
+@app.route('/search', methods=['POST','GET'])
+def search():
+    if request.method == 'POST':
+        username = request.form['q']
+        app.logger.info(username)
+
+    return render_template("about.html")
 
 # Check name of application
 if __name__ == "__main__":
