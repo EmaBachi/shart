@@ -54,6 +54,13 @@
     color: white;
 }
 
+/* Icon color in about */
+.glyphicon-heart, .glyphicon-globe, .glyphicon-lock, .glyphicon-euro, .glyphicon-random, .glyphicon-leaf{
+  color: black;
+}
+
+
+
 /* Video Gallery */
 .video_gallery{
     width: 200px;

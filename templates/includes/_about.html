@@ -1,7 +1,7 @@
 
 <!-- Jumbotron session -->
 <div class="jumbotron-home">
-  <img src="https://magazine.ngsrl.com/wp-content/uploads/2017/04/banner-powder2-1024x512.jpg" alt="about image" style="width: 1200px;height: 250px;">
+  <img src="{{url_for('static', filename='images/about.jpg')}}" alt="about image" style="width: 1200px;height: 250px;">
   <div class="collapse navbar-collapse" id="myNavbar">
           <ul class="nav navbar-nav navbar-right">
             <li><a href="#who">WHO</a></li>
@@ -14,7 +14,7 @@
 <!-- Who session -->
 <div class="container-fluid bg-1 text-center">
   <h1 id="who" class="margin">Who?</h1>
-    <img src="" class="img-responsive img-circle margin" style="display:inline" alt="LOGO" width="350" height="350">
+    <img src="{{url_for('static', filename='images/logo.png')}}" class="img-responsive img-circle margin" style="display:inline" alt="LOGO" width="350" height="350">
 
 
     <h2>ShArt</h2>
@@ -57,7 +57,7 @@
   <br>
   <div class="row">
     <div class="col-sm-4">
-      <span class="glyphicon glyphicon-picture"></span>
+      <span class="glyphicon glyphicon-leaf"></span>
       <h4>ART</h4>
       <p>Our aim is to spread art</p>
     </div>
@@ -75,7 +75,7 @@
     <br><br>
   <div class="row">
     <div class="col-sm-4">
-      <span class="glyphicon glyphicon-user"></span>
+      <span class="glyphicon glyphicon-globe"></span>
       <h4>COLLABORATIONS</h4>
       <p>Find your best team</p>
     </div>
@@ -85,7 +85,7 @@
       <p>Our shared folders are safe</p>
     </div>
     <div class="col-sm-4">
-      <span class="glyphicon glyphicon-wrench"></span>
+      <span class="glyphicon glyphicon-random"></span>
       <h4>HARD WORK</h4>
       <p>The more you work hard, the more you get</p>
     </div>

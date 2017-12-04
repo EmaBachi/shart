@@ -18,7 +18,7 @@
     </div>
 
        <div class="item">
-        <img src="http://progettoalbatrosnews.altervista.org/wp-content/uploads/2015/08/assicurazione-architetti.jpg" alt="architect image" style="width: 1200px;height: 500px;align: center;">
+        <img src="{{url_for('static', filename='images/architect_carousel.jpg')}}" alt="architect image" style="width: 1200px;height: 500px;align: center;">
       <div class="carousel-caption">
         <h3>Architects</h3>
         <p>Boost your creativity with shArt</p>
@@ -26,13 +26,19 @@
     </div>
 
     <div class="item">
-        <img src="http://farm9.staticflickr.com/8217/8301773103_4968bfd001.jpg" alt="writer image" style="width: 1200px;height: 500px;align: center;">
+        <img src="{{url_for('static', filename='images/writer_carousel.jpg')}}" alt="writer image" style="width: 1200px;height: 500px;align: center;">
       <div class="carousel-caption">
         <h3>Writers</h3>
         <p>Find brand new inspirations for your next masterpiece</p>
       </div>
     </div>
   </div>
+
+  <script>
+      $('#myCarousel').carousel({
+  interval: 1000 * 3
+  });
+  </script>
 
   <!-- Left and right controls -->
   <a class="left carousel-control" href="#myCarousel" data-slide="prev">
