@@ -9,13 +9,15 @@
             {{project.description}}
         </div>
         <p></p>
+        {% if project.collaborators|length < project.max_number and session.username == project.author %}
+        <form method="POST" action="">
         <div class="form-group">
             {{ render_field(form.appliers, class="form-control") }}
+            <div class="pull-right">
+            <input type="submit" class="btn btn-primary" value="Select Collaborators">
         </div>
-        {% if project.collaborators|length < project.max_number and session.username == project.author %}
-        <div class="pull-right">
-            <a href="/projects/{{project.title}}" class="btn btn-primary">Select Collaborators</a>
-
+        </div>
+        </form>
         {% endif %}
     </div>
 

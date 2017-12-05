@@ -589,6 +589,8 @@ def profile():
 
     contest_images = retrieve_images_contests(user['username'])
 
+    project_images = retrieve_images_projects(user['username'])
+
     return render_template('account_profile.html', user=user, contest_images=contest_images)
 
 
@@ -611,6 +613,11 @@ def retrieve_images_contests(username):
                 images.append(file)
 
     return images
+
+
+# Function for retrieving projects images
+def retrieve_images_projects(username):
+    return
 
 
 # Route for uploading profile image
@@ -839,7 +846,9 @@ def single_project(title):
 
     if request.method == 'POST':
 
-        return redirect(url_for('home'))
+        put_in_collaborators(form.appliers.data, project['title'])
+
+        return redirect(url_for('single_project', title=project['title']))
 
     else:
 
@@ -847,6 +856,14 @@ def single_project(title):
 
         return render_template('single_project.html', project=project, form=form)
 
+
+# Function for put in collaborators some aplliers
+def put_in_collaborators(appliers, title):
+
+    mongo.db.project.update({'title': title}, {'$push': {'collaborators': {'$each': appliers}}})
+    mongo.db.project.update({'title': title}, {'$pullAll': {'appliers': appliers}})
+
+    return
 
 
 # Route for searching

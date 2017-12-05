@@ -7,15 +7,12 @@
 
                 <div class="video">
 	            <li style="list-style-type: none"><h3>{{video.video_name}}</h3>
-
-
-                <iframe class="iframe-video" width="420" height="315" src="{{video.url_video}}" frameborder="0" allowfullscreen></iframe>
-
-
-                <p class="pull-right">{{video.description}}</p></li>
+                    <p></p>
+                    <p>{{video.description}}</p>
+                    <iframe class="iframe-video" width="420" height="315" src="{{video.url_video}}" frameborder="0" allowfullscreen></iframe>
+                </li>
                 </div>
                 <hr>
-
 
             {% endfor %}
     </ul>
