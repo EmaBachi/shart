@@ -24,8 +24,26 @@
             <div class="floated profile-stat wip" id="num_following">245<br></div>
         </div>
     </div>
+    <h3 class="contest-title-profile">Contests</h3>
     <div class="rela-block content">
-    
+    {% for contest_image in contest_images %}
+        <div class="rela-inline">
+                <img class="image" src="{{ url_for('image_contest', title=contest_image.secondary_folder, file_name=contest_image.file_name)}}" height="180px" width="240px">
+                <p></p>
+                <p style="text-align: center">
+                    <strong>{{contest_image.like | int}}</strong> Like  <strong>{{contest_image.unlike | int}}</strong> Unlike
+                </p>
+                <p style="text-align: center">
+                    <a href="/contest/{{contest_image.secondary_folder}}/{{contest_image.file_name}}/like">
+                        <span class="glyphicon glyphicon-thumbs-up"></span>
+                    </a>
+                    <a href="/contest/{{contest_image.secondary_folder}}/{{contest_image.file_name}}/unlike">
+                         <span class="glyphicon glyphicon-thumbs-down"></span>
+                    </a>
+                </p>
+
+            </div>
+    {% endfor %}
     </div>
 
 </div>

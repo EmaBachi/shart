@@ -486,9 +486,19 @@ def upload_project_contest(title):
             extension = parts[1]
             image_to_save = session['username']+"."+extension
 
-            mongo.db.contest.update({'title': title}, {'$push': {'files': {'file_name': image_to_save,
-                                                                           'like': 0,
-                                                                           'unlike': 0}}})
+            # Storing file in contest document with some specific informations
+            mongo.db.contest.update({'title': title},
+                                    {'$push':
+                                         {'files':
+                                              { 'user': session['username'],
+                                                'primary_folder': UPLOAD_FOLDER_CONTEST,
+                                                'secondary_folder': title,
+                                                'file_name': image_to_save,
+                                                'like': 0,
+                                                'unlike': 0
+                                                }
+                                          }
+                                     })
 
             path = os.path.join(UPLOAD_FOLDER_CONTEST+"/"+title, image_to_save)
 
@@ -577,7 +587,29 @@ def profile():
     username = session['username']
     user = mongo.db.user.find_one({'username': username})
 
-    return render_template('account_profile.html', user=user)
+    contest_images = retrieve_images_contests(user['username'])
+
+    return render_template('account_profile.html', user=user, contest_images=contest_images)
+
+
+# Function for retrieving contests images
+def retrieve_images_contests(username):
+
+    query = mongo.db.contest.find({
+        'files.user': username
+    },
+        {
+            '_id': 0,
+            'files': 1
+        })
+
+    images = []
+
+    for item in query:
+        for file in item['files']:
+            images.append(file)
+
+    return images
 
 
 # Route for uploading profile image
@@ -600,7 +632,6 @@ def upload_image():
                                          {
                                             'path': path,
                                             'image_name': file.filename}})
-
 
             # to save the path in the folder
             file.save(path)

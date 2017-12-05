@@ -64,6 +64,11 @@
   color: black;
 }
 
+/* Contest h3 in profiles */
+.contest-title-profile{
+  left: 50%;
+}
+
 .glyphicon-thumbs-down{
   color: black;
   margin-left: 10px;
