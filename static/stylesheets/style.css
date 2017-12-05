@@ -97,7 +97,7 @@
 .rela-block {
   display: block;
   position: relative;
-  margin: 40px 40px 40px;
+  margin: 30px 0px;
 }
 .rela-inline {
   display: inline-block;

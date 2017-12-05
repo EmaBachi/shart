@@ -607,7 +607,8 @@ def retrieve_images_contests(username):
 
     for item in query:
         for file in item['files']:
-            images.append(file)
+            if file['user'] == username:
+                images.append(file)
 
     return images
 
