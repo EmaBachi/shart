@@ -28,7 +28,7 @@ UPLOAD_FOLDER_IMAGE = '/home/emanuele/Scrivania/Shart_Contents/images'
 UPLOAD_FOLDER_CONTEST = '/home/emanuele/Scrivania/Shart_Contents/contests'
 
 # Path to project folder
-UPLOAD_FOLDER_PROJECT = '/home/emanuele/Scrivania/Shart_Contents/projects'
+UPLOAD_FOLDER_PROJECT = 'C:\Users\Alessia\Desktop\projects'
 
 
 # Application Configuration
@@ -804,9 +804,19 @@ def jobs():
 @app.route('/projects')
 def projects():
 
-    projects = mongo.db.project.find({})
+    # Checking how many projects there are in db
+    result = mongo.db.project.find({'$or':[{'status':'WIP'},{'status':'In search'}]}).count()
 
-    return render_template('projects.html', projects=projects)
+    if result > 0:
+        # Fetching all projects
+
+        projects = mongo.db.project.find({'$or':[{'status':'WIP'},{'status':'In search'}]})
+        return render_template('projects.html',projects=projects)
+    else:
+        flash('No project found', 'danger')
+        return render_template('projects.html')
+
+
 
 
 @app.route('/user_projects')
@@ -872,7 +882,7 @@ def single_project(title):
     if request.method == 'POST':
 
         put_in_collaborators(form.appliers.data, project['title'])
-
+        flash('Great! Your collaborators are ready','success')
         if project['max_number'] == len(form.appliers.data):
             create_directory_for_project(project['title'])
             change_status_of_project(project['title'], 'WIP')
@@ -912,11 +922,11 @@ def change_status_of_project(title_project, status):
 
 
 # Route for displaying single project when you click on the final image
-@app.route('/projects/<string:title>', methods=['POST', 'GET'])
+@app.route('/image_project/<string:title>', methods=['POST', 'GET'])
 def image_project(title):
     project = mongo.db.project.find_one({'title': title})
 
-    return render_template('image_project.html', project=project )
+    return render_template('image_project.html', project=project)
 
 
 # Route for upload file in a specific project
@@ -998,7 +1008,7 @@ def complete_project(title):
     else:
         file_name = request.form['file_name']
         change_status_of_project(title, 'finished')
-        store_final_image(file_name)
+        store_final_image(title, file_name)
         return redirect(url_for('image_project', title=title))
 
 
@@ -1009,15 +1019,28 @@ def store_final_image(title, file_name):
     },
         {
             "$set": {
-                'final_image': {
-                    'primary_folder': UPLOAD_FOLDER_PROJECT,
-                    'secondary_folder': title,
-                    'file_name': file_name
-                }
+                'final_image': file_name
             }
         })
 
     return
+
+
+# Route for Complete works
+@app.route('/complete_works')
+def complete_works():
+
+    # Checking how many complete projects there are in db
+    result = mongo.db.project.find({'status':'finished'}).count()
+
+    if result > 0:
+        # Fetching all complete projects
+
+        projects = mongo.db.project.find({'status':'finished'})
+        return render_template('complete_works.html',projects=projects)
+    else:
+        flash('No project found', 'danger')
+        return render_template('complete_works.html')
 
 
 # Route for searching

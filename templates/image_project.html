@@ -4,10 +4,12 @@
   <h1>{{ project.title }}</h1>
 
      <h2>{{ project.description }}</h2>
-    <!--<label>JINJA---project.final_image}}
-        </label>
-    <img>-->
+    <img src="{{url_for('send_file_of_project', title=project.title, file_name=project.final_image)}}">
 
-    <p>This project was created by {{ project.author }}</p>
-    <p>Collaborators: {{ project.collaborators }}</p>
+    <p>This project was created by <a href="/profile/{{project.author}}">{{project.author}}</a></p>
+    <p>Collaborators:
+
+        {% for collaborator in project.collaborators %}
+            <a href="/profile/{{collaborator}}">{{collaborator}}</a>
+        {% endfor %}</p>
 {% endblock %}

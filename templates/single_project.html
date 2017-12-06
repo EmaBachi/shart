@@ -4,7 +4,7 @@
     <div>
         {% from "includes/_formhelpers.html" import render_field %}
         <h2>{{project.title}}</h2>
-        <p style="font-style: italic; font-size: small">Idea by {{project.author}}</p>
+        <p style="font-style: italic; font-size: small">Idea by <a href="/profile/{{project.author}}">{{project.author}}</a></p>
         <div class="overflow-ellipsis">
             {{project.description}}
         </div>
