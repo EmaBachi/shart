@@ -25,7 +25,7 @@ app = Flask(__name__)
 UPLOAD_FOLDER_IMAGE = '/home/emanuele/Scrivania/Shart_Contents/images'
 
 # Path to contest folder
-UPLOAD_FOLDER_CONTEST = 'C:\Users\Alessia\Desktop\contest'
+UPLOAD_FOLDER_CONTEST = '/home/emanuele/Scrivania/Shart_Contents/contests'
 
 # Path to project folder
 UPLOAD_FOLDER_PROJECT = 'C:\Users\Alessia\Desktop\projects'
@@ -406,7 +406,7 @@ def add_contest():
 
 # Function for create a new directory in the contest path
 def create_directory_for_contest(title):
-    directory = UPLOAD_FOLDER_CONTEST+"\\"+title
+    directory = UPLOAD_FOLDER_CONTEST+"/"+title
     if not os.path.exists(directory):
         os.makedirs(directory)
     return
@@ -499,7 +499,7 @@ def upload_project_contest(title):
                                           }
                                      })
 
-            path = os.path.join(UPLOAD_FOLDER_CONTEST+"\\"+title, image_to_save)
+            path = os.path.join(UPLOAD_FOLDER_CONTEST+"/"+title, image_to_save)
 
             # to save the path in the folder
             file.save(path)
@@ -885,7 +885,7 @@ def single_project(title):
         flash('Great! Your collaborators are ready','success')
         if project['max_number'] == len(form.appliers.data):
             create_directory_for_project(project['title'])
-            change_status_of_project(project['title'])
+            change_status_of_project(project['title'], 'WIP')
 
         return redirect(url_for('single_project', title=project['title']))
 
@@ -916,16 +916,18 @@ def create_directory_for_project(title_project):
 
 
 # Function for change status of project from 'in search' to 'wip'
-def change_status_of_project(title_project):
-    mongo.db.project.update({'title': title_project}, {'$set': {'status': 'WIP'}})
+def change_status_of_project(title_project, status):
+    mongo.db.project.update({'title': title_project}, {'$set': {'status': status}})
     return
+
 
 # Route for displaying single project when you click on the final image
 @app.route('/image_project/<string:title>', methods=['POST', 'GET'])
 def image_project(title):
     project = mongo.db.project.find_one({'title': title})
 
-    return render_template('image_project.html', project=project )
+    return render_template('image_project.html', project=project)
+
 
 # Route for upload file in a specific project
 @app.route('/projects/<string:title>/upload_file_project', methods=['POST', 'GET'])
@@ -941,29 +943,10 @@ def upload_file_project(title):
             return redirect(url_for('single_project', title=title))
         else:
             date_mongo = str(datetime.date.today())
-            description = request.form['description']
 
-            mongo.db.project.update(
-                {
-                    'title': title
-                },
-                {
-                    '$push': {
-                        'files': {
-                            'primary_folder': UPLOAD_FOLDER_PROJECT,
-                            'secondary_folder': title,
-                            'file_name': file.filename,
-                            'user': session['username'],
-                            'date': date_mongo,
-                            'description': description
-                        }
-                    }
-                }
-            )
+            store_file_in_db(title, file.filename, date_mongo, request.form['description'])
 
-            path = os.path.join(UPLOAD_FOLDER_PROJECT + "/" + title, file.filename)
-
-            file.save(path)
+            store_file_in_machine(title, file)
 
             flash('File Uploaded', 'success')
 
@@ -972,14 +955,78 @@ def upload_file_project(title):
     return render_template('upload_file_project.html')
 
 
+# Function for store file in db
+def store_file_in_db(title, file_name, date, description):
+    mongo.db.project.update(
+        {
+            'title': title
+        },
+        {
+            '$push': {
+                'files': {
+                    'primary_folder': UPLOAD_FOLDER_PROJECT,
+                    'secondary_folder': title,
+                    'file_name': file_name,
+                    'user': session['username'],
+                    'date': date,
+                    'description': description
+                }
+            }
+        }
+    )
+
+    return
+
+
+# Function for store file in the machine
+def store_file_in_machine(title, file):
+    path = os.path.join(UPLOAD_FOLDER_PROJECT + "/" + title, file.filename)
+    file.save(path)
+    return
+
+
+# Route for send files to user
 @app.route('/projects/<string:title>/<string:file_name>')
 def send_file_of_project(title, file_name):
     return send_from_directory(UPLOAD_FOLDER_PROJECT + "/" + title, file_name)
 
 
+# Route for complete the project
+@app.route('/projects/<string:title>/complete_project', methods=['POST', 'GET'])
+def complete_project(title):
+    project = mongo.db.project.find_one({'title': title})
+
+    if request.method == 'GET':
+        files = []
+
+        for file in project['files']:
+            list = file['file_name'].split('.')
+            if len(list) > 1 and (list[1] == "jpg" or list[1] == 'jpeg' or list[1] == 'png'):
+                files.append(file)
+
+        return render_template('complete_project.html', files=files, project=project)
+    else:
+        file_name = request.form['file_name']
+        change_status_of_project(title, 'finished')
+        store_final_image(title, file_name)
+        return redirect(url_for('image_project', title=title))
+
+
+# storing final image in db
+def store_final_image(title, file_name):
+    mongo.db.project.update({
+        'title': title
+    },
+        {
+            "$set": {
+                'final_image': file_name
+            }
+        })
+
+    return
+
 
 # Route for Complete works
-
 @app.route('/complete_works')
 def complete_works():
 
