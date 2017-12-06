@@ -8,7 +8,9 @@
     <div>
         {{contest.body | safe}}
     </div>
-    <p style="font-style: italic; font-size: small">Created by {{contest.author}}</p>
+    <!--<p style="font-style: italic; font-size: small">Created by JINJAcontest.author}}</p>-->
+
+    <p style="font-style: italic; font-size: small">Created by <a href="/profile/{{contest.author}}">{{contest.author}}</a></p>
     {% if session.logged_in %}
 
     {% if session.username not in contest.competitors and contest.enroll_deadline >= today %}
@@ -21,9 +23,10 @@
     <div class="rela-block content">
     {% for file in files %}
             <div class="rela-inline">
-                <img class="image" src="{{ url_for('image_contest', title=contest.title, file_name=file.file_name)}}" height="180px" width="240px">
+                <a href="/image_contest/{{ contest.title }}/{{ file.file_name }}"><img class="image" src="{{ url_for('image_contest', title=contest.title, file_name=file.file_name)}}" height="180px" width="240px"></a>
                 <p></p>
-                <p style="text-align: center">Project by <a href="/image_contest/{{contest.title}}/{{file.file_name}}">{% set list1 = file.file_name.split('.') %} {{list1[0]}}</a></p>
+                {% set list1 = file.file_name.split('.') %}
+                <p style="text-align: center">Project by <a href="/profile/{{list1[0]}}"> {{list1[0]}}</a></p>
                 <p style="text-align: center">
                     <strong>{{file.like | int}}</strong> Like  <strong>{{file.unlike | int}}</strong> Unlike
                 </p>

@@ -25,7 +25,7 @@ app = Flask(__name__)
 UPLOAD_FOLDER_IMAGE = '/home/emanuele/Scrivania/Shart_Contents/images'
 
 # Path to contest folder
-UPLOAD_FOLDER_CONTEST = '/home/emanuele/Scrivania/Shart_Contents/contests'
+UPLOAD_FOLDER_CONTEST = '/home/emanuele/Scrivania/Shart_Contents/images/contests'
 
 # Path to project folder
 UPLOAD_FOLDER_PROJECT = '/home/emanuele/Scrivania/Shart_Contents/projects'
@@ -406,7 +406,7 @@ def add_contest():
 
 # Function for create a new directory in the contest path
 def create_directory_for_contest(title):
-    directory = UPLOAD_FOLDER_CONTEST+"/"+title
+    directory = UPLOAD_FOLDER_CONTEST+"\\"+title
     if not os.path.exists(directory):
         os.makedirs(directory)
     return
@@ -499,7 +499,7 @@ def upload_project_contest(title):
                                           }
                                      })
 
-            path = os.path.join(UPLOAD_FOLDER_CONTEST+"/"+title, image_to_save)
+            path = os.path.join(UPLOAD_FOLDER_CONTEST+"\\"+title, image_to_save)
 
             # to save the path in the folder
             file.save(path)
@@ -570,15 +570,45 @@ def add_exclusive_content():
 # Route for the video gallery
 @app.route('/video_gallery')
 def video_gallery():
-    videos = mongo.db.exclusive_videos.find()
+    # Checking how many videos there are in db
+    result = mongo.db.exclusive_videos.find().count()
+    if result > 0:
+        # Fetching all videos
+        videos = mongo.db.exclusive_videos.find()
+        today = datetime.date.today().strftime("%m/%d/%Y")
+        return render_template('video_gallery.html',videos=videos)
+    else:
+        flash('No video found', 'danger')
+        return render_template('video_gallery.html')
 
-    return render_template('video_gallery.html', videos=videos)
+# Route for deleting a video
 
+@app.route('/delete_video/<string:title>', methods=['GET'])
+def delete_video(title):
+
+    # MongoDB query to delete an article starting from its title
+    mongo.db.exclusive_videos.remove({"video_name": title})
+
+    flash('Video deleted', 'success')
+
+    # Redirecting user to the blog page
+    return redirect(url_for('video_gallery'))
 
 # ---!!! Exclusive contents development completed !!!---
 
 
 # ---!!! Profile developing !!!---
+
+# Route for the profile
+@app.route('/profile/<string:username>')
+def other_profile(username):
+    user = mongo.db.user.find_one({'username': username})
+
+    contest_images = retrieve_images_contests(user['username'])
+
+    project_images = retrieve_images_projects(user['username'])
+
+    return render_template('account_profile.html', user=user, contest_images=contest_images)
 
 # Route for the profile
 @app.route('/profile')
@@ -880,6 +910,12 @@ def change_status_of_project(title_project):
     mongo.db.project.update({'title': title_project}, {'$set': {'status': 'WIP'}})
     return
 
+# Route for displaying single project when you click on the final image
+@app.route('/projects/<string:title>', methods=['POST', 'GET'])
+def image_project(title):
+    project = mongo.db.project.find_one({'title': title})
+
+    return render_template('image_project.html', project=project )
 
 # Route for upload file in a specific project
 @app.route('/projects/<string:title>/upload_file_project', methods=['POST', 'GET'])
