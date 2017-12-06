@@ -52,6 +52,18 @@
     </table>
     {% endif %}
     <br>
-    <p><a href="/projects/{{project.title}}/upload_file_project" class="btn btn-primary">Page to Upload Files</a></p>
+    <br>
+    <table class="table table-striped">
+    <tbody>
+      <tr>
+          {% if project.status != 'finished' %}
+          <td><a href="/projects/{{project.title}}/upload_file_project" class="btn btn-primary">Page to Upload Files</a></td>
+          {% endif %}
+          {% if session.username == project.author and project.status != 'finished' %}
+          <td><a href="/projects/{{project.title}}/complete_project" class="btn btn-primary">Complete the Project</a></td>
+          {% endif %}
+      </tr>
+    </tbody>
+    </table>
     {% endif %}
 {% endblock %}

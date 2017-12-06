@@ -1,0 +1,30 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    {% if files|length > 0 and project.author == session.username %}
+    <form method="POST" action="">
+    <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>File</th>
+        <th>Author</th>
+        <th>Description</th>
+        <th>Date</th>
+          <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for file in files %}
+      <tr>
+          <td><input type="text" name="file_name" value="{{file.file_name}}" readonly></td>
+        <td>{{file.user}}</td>
+        <td>{{file.description}}</td>
+        <td>{{file.date}}</td>
+        <td><input type="submit" value="Select This Image"></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+    </form>
+    {% endif %}
+{% endblock %}
