@@ -25,7 +25,7 @@ app = Flask(__name__)
 UPLOAD_FOLDER_IMAGE = '/home/emanuele/Scrivania/Shart_Contents/images'
 
 # Path to contest folder
-UPLOAD_FOLDER_CONTEST = '/home/emanuele/Scrivania/Shart_Contents/contests'
+UPLOAD_FOLDER_CONTEST = 'C:\Users\Alessia\Desktop\contest'
 
 # Path to project folder
 UPLOAD_FOLDER_PROJECT = 'C:\Users\Alessia\Desktop\projects'
@@ -1044,14 +1044,17 @@ def complete_works():
 
 
 # Route for searching
-# -----------!!!!!!! WE HAVE TO MAKE THE PROFILES VISIBLE!!!
+
 @app.route('/search', methods=['POST','GET'])
 def search():
     if request.method == 'POST':
         username = request.form['q']
-
-    return render_template("about.html")
-
+        user = mongo.db.user.find_one({'username': username})
+        if user is not None:
+            return redirect(url_for('other_profile',username=username))
+        else:
+            flash('No user found', 'danger')
+            return render_template('home.html')
 
 # Check name of application
 if __name__ == "__main__":
