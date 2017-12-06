@@ -19,6 +19,14 @@
         </div>
         </form>
         {% endif %}
+        {% if session.username != project.author and session.artist and project.collaborators|length < project.max_number and session.username not in project.appliers %}
+        <div class="pull-right">
+            <a href="/join_project/{{project.title}}" class="btn btn-primary">Apply</a>
+        </div>
+        {% elif session.username in project.appliers%}
+        <p class="pull-right">Already applied for this project</p>
+        {% endif %}
+
     </div>
 
 {% endblock %}

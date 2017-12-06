@@ -21,20 +21,21 @@ from CollaboratorsForm import CollaboratorsForm
 app = Flask(__name__)
 
 
-# Path to uploaded exclusive content
-UPLOAD_FOLDER_VIDEO = 'C:\Users\Alessia\Desktop\dvideo'
-
 # Path to profile images
 UPLOAD_FOLDER_IMAGE = '/home/emanuele/Scrivania/Shart_Contents/images'
 
 # Path to contest folder
 UPLOAD_FOLDER_CONTEST = '/home/emanuele/Scrivania/Shart_Contents/contests'
 
+# Path to project folder
+UPLOAD_FOLDER_PROJECT = '/home/emauele/Scrivania/Shart_Contents/projects'
+
+
 # Application Configuration
 app.config["UPLOAD_FOLDER_VIDEO"] = UPLOAD_FOLDER_VIDEO
 app.config["UPLOAD_FOLDER_IMAGE"] = UPLOAD_FOLDER_IMAGE
 app.config["UPLOAD_FOLDER_CONTEST"] = UPLOAD_FOLDER_CONTEST
-app.config["USE_X_SENDFILE "] = True
+app.config["UPLOAD_FOLDER_PROJECT"] = UPLOAD_FOLDER_PROJECT
 
 
 # DB Configuration
@@ -806,7 +807,8 @@ def add_project():
         author = session['username']
         appliers = []
         collaborators = []
-        status = 'WIP'
+        status = 'In search'
+        files = []
 
         mongo.db.project.insert({
             'title': title,
@@ -816,7 +818,8 @@ def add_project():
             'skills': skills,
             'appliers': appliers,
             'collaborators': collaborators,
-            'status': status
+            'status': status,
+            'files': files
         })
 
         return redirect(url_for('projects'))
@@ -848,6 +851,10 @@ def single_project(title):
 
         put_in_collaborators(form.appliers.data, project['title'])
 
+        if project['max_numbers'] == len(project['appliers']):
+            create_directory_for_project(project['title'])
+            change_status_of_project(project['title'])
+
         return redirect(url_for('single_project', title=project['title']))
 
     else:
@@ -863,6 +870,19 @@ def put_in_collaborators(appliers, title):
     mongo.db.project.update({'title': title}, {'$push': {'collaborators': {'$each': appliers}}})
     mongo.db.project.update({'title': title}, {'$pullAll': {'appliers': appliers}})
 
+    return
+
+
+# Function for create directory for the project
+def create_directory_for_project(title_project):
+    directory = UPLOAD_FOLDER_PROJECT + "/" + title_project
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    return
+
+# Function for change status of project from 'in search' to 'wip'
+def change_function_of_project(title_project):
+    mongo.db.project.update({'title': title_project}, {'$set': {'status': 'WIP'}})
     return
 
 
