@@ -13,7 +13,7 @@
             <div class="overflow-ellipsis">
                 {{contest.body | safe}}
             </div>
-            <p style="font-style: italic; font-size: small">Created by {{contest.author}}</p>
+            <p style="font-style: italic; font-size: small">Created by <a href="/profile/{{contest.author}}">{{contest.author}}</a></p>
                 <div class="pull-right">
                     {% if contest.enroll_deadline >= today %}
                         {% if session.username not in contest.competitors %}

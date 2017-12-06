@@ -1,0 +1,13 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+  <h1>{{ project.title }}</h1>
+
+     <h2>{{ project.description }}</h2>
+    <!--<label>JINJA---project.final_image}}
+        </label>
+    <img>-->
+
+    <p>This project was created by {{ project.author }}</p>
+    <p>Collaborators: {{ project.collaborators }}</p>
+{% endblock %}

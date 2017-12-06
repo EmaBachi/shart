@@ -21,20 +21,20 @@ from CollaboratorsForm import CollaboratorsForm
 app = Flask(__name__)
 
 
-# Path to uploaded exclusive content
-UPLOAD_FOLDER_VIDEO = 'C:\Users\Alessia\Desktop\dvideo'
-
 # Path to profile images
 UPLOAD_FOLDER_IMAGE = '/home/emanuele/Scrivania/Shart_Contents/images'
 
 # Path to contest folder
-UPLOAD_FOLDER_CONTEST = '/home/emanuele/Scrivania/Shart_Contents/contests'
+UPLOAD_FOLDER_CONTEST = 'C:\Users\Alessia\Desktop\contest'
+
+# Path to project folder
+UPLOAD_FOLDER_PROJECT = '/home/emauele/Scrivania/Shart_Contents/projects'
+
 
 # Application Configuration
-app.config["UPLOAD_FOLDER_VIDEO"] = UPLOAD_FOLDER_VIDEO
 app.config["UPLOAD_FOLDER_IMAGE"] = UPLOAD_FOLDER_IMAGE
 app.config["UPLOAD_FOLDER_CONTEST"] = UPLOAD_FOLDER_CONTEST
-app.config["USE_X_SENDFILE "] = True
+app.config["UPLOAD_FOLDER_PROJECT"] = UPLOAD_FOLDER_PROJECT
 
 
 # DB Configuration
@@ -407,7 +407,7 @@ def add_contest():
 
 # Function for create a new directory in the contest path
 def create_directory_for_contest(title):
-    directory = UPLOAD_FOLDER_CONTEST+"/"+title
+    directory = UPLOAD_FOLDER_CONTEST+"\\"+title
     if not os.path.exists(directory):
         os.makedirs(directory)
     return
@@ -500,7 +500,7 @@ def upload_project_contest(title):
                                           }
                                      })
 
-            path = os.path.join(UPLOAD_FOLDER_CONTEST+"/"+title, image_to_save)
+            path = os.path.join(UPLOAD_FOLDER_CONTEST+"\\"+title, image_to_save)
 
             # to save the path in the folder
             file.save(path)
@@ -571,15 +571,45 @@ def add_exclusive_content():
 # Route for the video gallery
 @app.route('/video_gallery')
 def video_gallery():
-    videos = mongo.db.exclusive_videos.find()
+    # Checking how many videos there are in db
+    result = mongo.db.exclusive_videos.find().count()
+    if result > 0:
+        # Fetching all videos
+        videos = mongo.db.exclusive_videos.find()
+        today = datetime.date.today().strftime("%m/%d/%Y")
+        return render_template('video_gallery.html',videos=videos)
+    else:
+        flash('No video found', 'danger')
+        return render_template('video_gallery.html')
 
-    return render_template('video_gallery.html', videos=videos)
+# Route for deleting a video
 
+@app.route('/delete_video/<string:title>', methods=['GET'])
+def delete_video(title):
+
+    # MongoDB query to delete an article starting from its title
+    mongo.db.exclusive_videos.remove({"video_name": title})
+
+    flash('Video deleted', 'success')
+
+    # Redirecting user to the blog page
+    return redirect(url_for('video_gallery'))
 
 # ---!!! Exclusive contents development completed !!!---
 
 
 # ---!!! Profile developing !!!---
+
+# Route for the profile
+@app.route('/profile/<string:username>')
+def other_profile(username):
+    user = mongo.db.user.find_one({'username': username})
+
+    contest_images = retrieve_images_contests(user['username'])
+
+    project_images = retrieve_images_projects(user['username'])
+
+    return render_template('account_profile.html', user=user, contest_images=contest_images)
 
 # Route for the profile
 @app.route('/profile')
@@ -806,7 +836,8 @@ def add_project():
         author = session['username']
         appliers = []
         collaborators = []
-        status = 'WIP'
+        status = 'In search'
+        files = []
 
         mongo.db.project.insert({
             'title': title,
@@ -816,7 +847,8 @@ def add_project():
             'skills': skills,
             'appliers': appliers,
             'collaborators': collaborators,
-            'status': status
+            'status': status,
+            'files': files
         })
 
         return redirect(url_for('projects'))
@@ -848,7 +880,13 @@ def single_project(title):
 
         put_in_collaborators(form.appliers.data, project['title'])
 
+
         flash('Great! Your collaborators are ready', 'success')
+
+        if project['max_number'] == len(project['appliers']):
+            create_directory_for_project(project['title'])
+            change_status_of_project(project['title'])
+
 
         return redirect(url_for('single_project', title=project['title']))
 
@@ -867,6 +905,25 @@ def put_in_collaborators(appliers, title):
 
     return
 
+
+# Function for create directory for the project
+def create_directory_for_project(title_project):
+    directory = UPLOAD_FOLDER_PROJECT + "/" + title_project
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    return
+
+# Function for change status of project from 'in search' to 'wip'
+def change_status_of_project(title_project):
+    mongo.db.project.update({'title': title_project}, {'$set': {'status': 'WIP'}})
+    return
+
+# Route for displaying single project when you click on the final image
+@app.route('/projects/<string:title>', methods=['POST', 'GET'])
+def image_project(title):
+    project = mongo.db.project.find_one({'title': title})
+
+    return render_template('image_project.html', project=project )
 
 # Route for searching
 # -----------!!!!!!! WE HAVE TO MAKE THE PROFILES VISIBLE!!!
