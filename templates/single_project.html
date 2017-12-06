@@ -26,7 +26,32 @@
         {% elif session.username in project.appliers%}
         <p class="pull-right">Already applied for this project</p>
         {% endif %}
-
     </div>
-
+    {% if (session.username in project.collaborators or session.username == project.author) and project.status == 'WIP' %}
+    {% if files|length > 0 %}
+    <br>
+    <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>File</th>
+        <th>Author</th>
+        <th>Description</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for file in files %}
+      <tr>
+          <td><a href="/projects/{{project.title}}/{{file.file_name}}">{{file.file_name}}</a></td>
+        <td>{{file.user}}</td>
+        <td>{{file.description}}</td>
+        <td>{{file.date}}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+    {% endif %}
+    <br>
+    <p><a href="/projects/{{project.title}}/upload_file_project" class="btn btn-primary">Page to Upload Files</a></p>
+    {% endif %}
 {% endblock %}

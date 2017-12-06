@@ -1,0 +1,12 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    <h1>This is the place where you can upload all files related to your project</h1>
+    <form method="POST"  enctype="multipart/form-data">
+        <label>File Description</label>
+        <p><input type="text" class="form-group" name="description"></p>
+        <p><input type="file" name="file" class="btn btn-primary"></p>
+        <p><input type="submit" value="upload" class="btn btn-primary"></p>
+    </form>
+
+{% endblock %}

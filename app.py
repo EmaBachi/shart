@@ -28,11 +28,10 @@ UPLOAD_FOLDER_IMAGE = '/home/emanuele/Scrivania/Shart_Contents/images'
 UPLOAD_FOLDER_CONTEST = '/home/emanuele/Scrivania/Shart_Contents/contests'
 
 # Path to project folder
-UPLOAD_FOLDER_PROJECT = '/home/emauele/Scrivania/Shart_Contents/projects'
+UPLOAD_FOLDER_PROJECT = '/home/emanuele/Scrivania/Shart_Contents/projects'
 
 
 # Application Configuration
-app.config["UPLOAD_FOLDER_VIDEO"] = UPLOAD_FOLDER_VIDEO
 app.config["UPLOAD_FOLDER_IMAGE"] = UPLOAD_FOLDER_IMAGE
 app.config["UPLOAD_FOLDER_CONTEST"] = UPLOAD_FOLDER_CONTEST
 app.config["UPLOAD_FOLDER_PROJECT"] = UPLOAD_FOLDER_PROJECT
@@ -59,7 +58,6 @@ def register():
         surname = form.surname.data
         username = form.username.data
         type = form.type.data
-        app.logger.info(type)
         date_of_birth = form.date_of_birth.data.strftime("%m/%d/%Y")
         country = form.country.data
         email = form.email.data
@@ -732,13 +730,10 @@ def add_job():
     if request.method == 'POST':
         title = form.title.data
         location = form.location.data
-        app.logger.info(location)
         jobtype = form.jobtype.data
         companyname = form.companyname.data
         description = form.description.data
         author = session['username']
-
-        app.logger.info(title)
 
         # MongoDB query to insert a new article
         mongo.db.job.insert({
@@ -802,7 +797,6 @@ def add_project():
         title = form.title.data
         description = form.description.data
         max_number = form.max_number.data
-        app.logger.info(form.skills.data)
         skills = form.skills.data
         author = session['username']
         appliers = []
@@ -843,15 +837,13 @@ def single_project(title):
 
     project = mongo.db.project.find_one({'title': title})
 
-    app.logger.info(project)
-
     appliers = project['appliers']
 
     if request.method == 'POST':
 
         put_in_collaborators(form.appliers.data, project['title'])
 
-        if project['max_numbers'] == len(project['appliers']):
+        if project['max_number'] == len(form.appliers.data):
             create_directory_for_project(project['title'])
             change_status_of_project(project['title'])
 
@@ -859,9 +851,11 @@ def single_project(title):
 
     else:
 
+        files = project['files']
+
         form.push_appliers(appliers)
 
-        return render_template('single_project.html', project=project, form=form)
+        return render_template('single_project.html', project=project, form=form, files=files)
 
 
 # Function for put in collaborators some aplliers
@@ -880,10 +874,61 @@ def create_directory_for_project(title_project):
         os.makedirs(directory)
     return
 
+
 # Function for change status of project from 'in search' to 'wip'
-def change_function_of_project(title_project):
+def change_status_of_project(title_project):
     mongo.db.project.update({'title': title_project}, {'$set': {'status': 'WIP'}})
     return
+
+
+# Route for upload file in a specific project
+@app.route('/projects/<string:title>/upload_file_project', methods=['POST', 'GET'])
+def upload_file_project(title):
+
+    if request.method == 'POST':
+        if 'file' not in request.files:
+            flash('No file part', 'danger')
+            return redirect(url_for('single_project', title=title))
+        file = request.files['file']
+        if file.filename == '':
+            flash('No selected file', 'danger')
+            return redirect(url_for('single_project', title=title))
+        else:
+            date_mongo = str(datetime.date.today())
+            description = request.form['description']
+
+            mongo.db.project.update(
+                {
+                    'title': title
+                },
+                {
+                    '$push': {
+                        'files': {
+                            'primary_folder': UPLOAD_FOLDER_PROJECT,
+                            'secondary_folder': title,
+                            'file_name': file.filename,
+                            'user': session['username'],
+                            'date': date_mongo,
+                            'description': description
+                        }
+                    }
+                }
+            )
+
+            path = os.path.join(UPLOAD_FOLDER_PROJECT + "/" + title, file.filename)
+
+            file.save(path)
+
+            flash('File Uploaded', 'success')
+
+            return redirect(url_for('single_project', title=title))
+
+    return render_template('upload_file_project.html')
+
+
+@app.route('/projects/<string:title>/<string:file_name>')
+def send_file_of_project(title, file_name):
+    return send_from_directory(UPLOAD_FOLDER_PROJECT + "/" + title, file_name)
 
 
 # Route for searching
@@ -892,9 +937,9 @@ def change_function_of_project(title_project):
 def search():
     if request.method == 'POST':
         username = request.form['q']
-        app.logger.info(username)
 
     return render_template("about.html")
+
 
 # Check name of application
 if __name__ == "__main__":
