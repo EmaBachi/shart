@@ -848,6 +848,8 @@ def single_project(title):
 
         put_in_collaborators(form.appliers.data, project['title'])
 
+        flash('Great! Your collaborators are ready', 'success')
+
         return redirect(url_for('single_project', title=project['title']))
 
     else:
