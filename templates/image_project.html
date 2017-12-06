@@ -8,6 +8,10 @@
         </label>
     <img>-->
 
-    <p>This project was created by {{ project.author }}</p>
-    <p>Collaborators: {{ project.collaborators }}</p>
+    <p>This project was created by <a href="/profile/{{project.author}}">{{project.author}}</a></p>
+    <p>Collaborators:
+
+        {% for collaborator in project.collaborators %}
+            <a href="/profile/{{collaborator}}">{{collaborator}}</a>
+        {% endfor %}</p>
 {% endblock %}

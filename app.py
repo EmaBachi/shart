@@ -25,10 +25,10 @@ app = Flask(__name__)
 UPLOAD_FOLDER_IMAGE = '/home/emanuele/Scrivania/Shart_Contents/images'
 
 # Path to contest folder
-UPLOAD_FOLDER_CONTEST = '/home/emanuele/Scrivania/Shart_Contents/images/contests'
+UPLOAD_FOLDER_CONTEST = 'C:\Users\Alessia\Desktop\contest'
 
 # Path to project folder
-UPLOAD_FOLDER_PROJECT = '/home/emanuele/Scrivania/Shart_Contents/projects'
+UPLOAD_FOLDER_PROJECT = 'C:\Users\Alessia\Desktop\projects'
 
 
 # Application Configuration
@@ -804,9 +804,19 @@ def jobs():
 @app.route('/projects')
 def projects():
 
-    projects = mongo.db.project.find({})
+    # Checking how many projects there are in db
+    result = mongo.db.project.find({'status':'WIP'}).count()
 
-    return render_template('projects.html', projects=projects)
+    if result > 0:
+        # Fetching all projects
+
+        projects = mongo.db.project.find({'$or':[{'status':'WIP'},{'status':'In search'}]})
+        return render_template('projects.html',projects=projects)
+    else:
+        flash('No project found', 'danger')
+        return render_template('projects.html')
+
+
 
 
 @app.route('/user_projects')
@@ -872,7 +882,7 @@ def single_project(title):
     if request.method == 'POST':
 
         put_in_collaborators(form.appliers.data, project['title'])
-
+        flash('Great! Your collaborators are ready','success')
         if project['max_number'] == len(form.appliers.data):
             create_directory_for_project(project['title'])
             change_status_of_project(project['title'])
@@ -911,7 +921,7 @@ def change_status_of_project(title_project):
     return
 
 # Route for displaying single project when you click on the final image
-@app.route('/projects/<string:title>', methods=['POST', 'GET'])
+@app.route('/image_project/<string:title>', methods=['POST', 'GET'])
 def image_project(title):
     project = mongo.db.project.find_one({'title': title})
 
@@ -965,6 +975,25 @@ def upload_file_project(title):
 @app.route('/projects/<string:title>/<string:file_name>')
 def send_file_of_project(title, file_name):
     return send_from_directory(UPLOAD_FOLDER_PROJECT + "/" + title, file_name)
+
+
+
+# Route for Complete works
+
+@app.route('/complete_works')
+def complete_works():
+
+    # Checking how many complete projects there are in db
+    result = mongo.db.project.find({'status':'finished'}).count()
+
+    if result > 0:
+        # Fetching all complete projects
+
+        projects = mongo.db.project.find({'status':'finished'})
+        return render_template('complete_works.html',projects=projects)
+    else:
+        flash('No project found', 'danger')
+        return render_template('complete_works.html')
 
 
 # Route for searching
