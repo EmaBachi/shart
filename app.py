@@ -805,7 +805,7 @@ def jobs():
 def projects():
 
     # Checking how many projects there are in db
-    result = mongo.db.project.find({'status':'WIP'}).count()
+    result = mongo.db.project.find({'$or':[{'status':'WIP'},{'status':'In search'}]}).count()
 
     if result > 0:
         # Fetching all projects
