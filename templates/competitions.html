@@ -5,7 +5,7 @@
    <div class="jumbotron-blog">
         <img src="{{url_for('static', filename='images/contest.jpg')}}" alt="blog image" style="width: 1150px;height: 300px;align: center;">
     </div>
-    {% for contest in contests %}
+    {% for contest in contests | sort%}
         <div>
             <a href="contest/{{contest.title}}"><h2>{{contest.title}}</h2></a>
             <h3>Contest for {{contest.type}}</h3>

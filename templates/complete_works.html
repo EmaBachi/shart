@@ -4,16 +4,40 @@
      <div class="jumbotron-blog">
         <img src="{{url_for('static', filename='images/team.jpg')}}" alt="blog image" style="width: 1150px;height: 300px;align: center;">
     </div>
+
+    <p></p>
+    <div class="container">
+
     {% for project in projects %}
-        <div>
-            <a href="/image_project/{{project.title}}"><h2>{{project.title}}</h2></a>
-            <p style="font-style: italic; font-size: small">Idea by <a href="/profile/{{project.author}}">{{project.author}}</a></p>
-            <div class="overflow-ellipsis">
-                {{project.description}}
-            </div>
+        <div class="gallery_product col-lg-3 col-md-4 col-sm-6 col-xs-6 mt-4 filter hdpe">
+        <div class="rela-block content">
+    <div class="rela-inline">
+
+                <div class="card">
+                    <a href="{{url_for('send_file_of_project', title=project.title, file_name=project.final_image)}}"> <img src="{{url_for('send_file_of_project', title=project.title, file_name=project.final_image)}}" class="card-img-top"></a>
+                    <div class="card-block">
+                        <h4 class="card-title"><a href="/image_project/{{project.title}}" >{{project.title}}</a></h4>
+
+                        <div class="card-text">
+                            {{ project.description }}
+
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <span class="float-right">This project was created by <a href="/profile/{{project.author}}">{{project.author}}</a></span>
+                        <span><i class=""></i> <p>Collaborators:
+                                {% for collaborator in project.collaborators %}
+                                    <a href="/profile/{{collaborator}}">{{collaborator}}</a>
+                                    {% endfor %}</p>
+                        </span>
+                    </div>
+                </div>
+
+    </div>
+ </div>
 
         </div>
-
     {% endfor %}
+    </div>
 
 {% endblock %}

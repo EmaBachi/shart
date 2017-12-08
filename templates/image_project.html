@@ -4,7 +4,7 @@
   <h1>{{ project.title }}</h1>
 
      <h2>{{ project.description }}</h2>
-    <img src="{{url_for('send_file_of_project', title=project.title, file_name=project.final_image)}}">
+    <a href="{{url_for('send_file_of_project', title=project.title, file_name=project.final_image)}}"> <img src="{{url_for('send_file_of_project', title=project.title, file_name=project.final_image)}}" class="image"></a>
 
     <p>This project was created by <a href="/profile/{{project.author}}">{{project.author}}</a></p>
     <p>Collaborators:

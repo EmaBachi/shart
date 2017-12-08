@@ -1001,7 +1001,7 @@ def complete_project(title):
 
         for file in project['files']:
             list = file['file_name'].split('.')
-            if len(list) > 1 and (list[1] == "jpg" or list[1] == 'jpeg' or list[1] == 'png'):
+            if len(list) > 1 and (list[1] == "jpg" or list[1] == "JPG" or list[1] == 'jpeg' or list[1] == 'png'):
                 files.append(file)
 
         return render_template('complete_project.html', files=files, project=project)
