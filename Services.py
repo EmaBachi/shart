@@ -1,10 +1,9 @@
 from flask import send_from_directory
 from passlib.hash import sha256_crypt
-import datetime
 import os
 
-from Repositories import UserRepository, ArticleRepository, ContestRepository
-from Domain import User, Article, Comment, Contest, File
+from Repositories import UserRepository, ArticleRepository, ContestRepository, ExclusiveVideoRepository
+from Domain import User, Article, Comment, Contest, File, ExclusiveVideo
 
 UPLOAD_FOLDER_CONTEST = '/home/emanuele/Scrivania/Shart_Contents/contests'
 
@@ -233,3 +232,29 @@ class ContestService:
     @staticmethod
     def unlike(title, name):
         ContestRepository.unlike(title, name)
+
+
+class ExclusiveVideoService:
+
+    # Method to save a video
+    @staticmethod
+    def save(description, video_name, url_video):
+        exclusive_video = ExclusiveVideo(url_video, description, video_name)
+        ExclusiveVideoRepository.save(exclusive_video)
+
+    # Method to find all exclusive videos
+    @staticmethod
+    def find_all():
+        video_dict = ExclusiveVideoRepository.find_all()
+        videos = []
+
+        for video in video_dict:
+            temp = ExclusiveVideo(video['url_video'], video['description'], video['video_name'])
+            videos.append(temp)
+
+        return videos
+
+    # Method to remove a video
+    @staticmethod
+    def remove(video_name):
+        ExclusiveVideoRepository.remove(video_name)

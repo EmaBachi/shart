@@ -48,7 +48,7 @@ class Job:
         self.job_type = job_type
 
 
-class ExclusiveVideos:
+class ExclusiveVideo:
 
     def __init__(self, url_video, description, video_name):
         self.url_video = url_video

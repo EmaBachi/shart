@@ -215,3 +215,25 @@ class ContestRepository:
                 {'files.$.unlike': 1}
             }
         )
+
+
+class ExclusiveVideoRepository:
+
+    # Method to save a video
+    @staticmethod
+    def save(exclusive_video):
+        db.exclusive_videos.insert({
+            'description': exclusive_video.description,
+            'video_name': exclusive_video.video_name,
+            'url_video': exclusive_video.url_video
+        })
+
+    # Method to find all videos
+    @staticmethod
+    def find_all():
+        return db.exclusive_videos.find()
+
+    # Method to remove a video
+    @staticmethod
+    def remove(video_name):
+        db.exclusive_videos.remove({"video_name": video_name})

@@ -17,7 +17,7 @@ from JobForm import JobForm
 from ProjectForm import ProjectForm
 from CollaboratorsForm import CollaboratorsForm
 
-from Services import UserService, ArticleService, ContestService
+from Services import UserService, ArticleService, ContestService, ExclusiveVideoService
 
 # Instantiate application object
 app = Flask(__name__)
@@ -388,11 +388,6 @@ def upload_project_contest(title):
 
             ContestService.upload_project_contest(session['username'], title, image_to_save, file)
 
-            #path = os.path.join(UPLOAD_FOLDER_CONTEST+"/"+title, image_to_save)
-
-            # to save the path in the folder
-            #file.save(path)
-
             flash('Project Uploaded. Cross your Fingers', 'success')
 
             return redirect(url_for('contest', title=title))
@@ -443,12 +438,8 @@ def add_exclusive_content():
         video_name = request.form['video_name']
         url_video = request.form['url_video']
 
-        mongo.db.exclusive_videos.insert({
-            'description': description,
-            'video_name': video_name,
-            'url_video': url_video
-        })
-        # to save the path in the folder
+        ExclusiveVideoService.save(description, video_name, url_video)
+
         return redirect(url_for('video_gallery'))
 
     return render_template("upload_video.html")
@@ -458,27 +449,20 @@ def add_exclusive_content():
 @app.route('/video_gallery')
 def video_gallery():
     # Checking how many videos there are in db
-    result = mongo.db.exclusive_videos.find().count()
-    if result > 0:
-        # Fetching all videos
-        videos = mongo.db.exclusive_videos.find()
-        today = datetime.date.today().strftime("%m/%d/%Y")
-        return render_template('video_gallery.html',videos=videos)
+    exclusive_videos = ExclusiveVideoService.find_all()
+    if len(exclusive_videos) > 0:
+        return render_template('video_gallery.html', videos=exclusive_videos)
     else:
         flash('No video found', 'danger')
         return render_template('video_gallery.html')
 
-# Route for deleting a video
 
+# Route for deleting a video
 @app.route('/delete_video/<string:title>', methods=['GET'])
 def delete_video(title):
 
-    # MongoDB query to delete an article starting from its title
-    mongo.db.exclusive_videos.remove({"video_name": title})
-
+    ExclusiveVideoService.remove(title)
     flash('Video deleted', 'success')
-
-    # Redirecting user to the blog page
     return redirect(url_for('video_gallery'))
 
 # ---!!! Exclusive contents development completed !!!---
