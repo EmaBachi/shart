@@ -1,9 +1,24 @@
+from flask import send_from_directory
 from passlib.hash import sha256_crypt
 import datetime
 import os
 
-from Repositories import UserRepository, ArticleRepository
-from Domain import User, Article, Comment
+from Repositories import UserRepository, ArticleRepository, ContestRepository
+from Domain import User, Article, Comment, Contest, File
+
+UPLOAD_FOLDER_CONTEST = '/home/emanuele/Scrivania/Shart_Contents/contests'
+
+
+def create_directory_for_contest(title):
+    directory = UPLOAD_FOLDER_CONTEST + "/" + title
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    return
+
+
+def save_image_in_server(title, image_to_save, file_to_save):
+    path = os.path.join(UPLOAD_FOLDER_CONTEST + "/" + title, image_to_save)
+    file_to_save.save(path)
 
 
 class UserService:
@@ -120,3 +135,101 @@ class ArticleService:
     @staticmethod
     def remove(article_title):
         ArticleRepository.remove(article_title)
+
+
+class ContestService:
+
+    # Method to find all contests
+    @staticmethod
+    def find_all_contests():
+        contests_dict = ContestRepository.find_all_contests()
+        contests = []
+
+        for contest in contests_dict:
+            temp = Contest(contest['title'], contest['author'], contest['body'],
+                           contest['presentation_deadline'], contest['enroll_deadline'],
+                           contest['type'], contest['folder'], contest['comments'], contest['competitors'],
+                           contest['files'])
+            contests.append(temp)
+
+        return contests
+
+    # Method to find one contest by its title
+    @staticmethod
+    def find_by_title(title):
+        contest = ContestRepository.find_by_title(title)
+        temp = Contest(contest['title'], contest['author'], contest['body'],
+                       contest['presentation_deadline'], contest['enroll_deadline'],
+                       contest['type'], contest['folder'], contest['comments'], contest['competitors'],
+                       contest['files'])
+        return temp
+
+    # Method to add one comment to a contest
+    @staticmethod
+    def add_comment_to_contest(contest, comment_author, comment_body, comment_date):
+        comment = Comment(comment_author, comment_body, str(comment_date))
+        ContestRepository.add_comment_to_contest(contest.title, comment)
+
+    # Method to add a contest
+    @staticmethod
+    def save(title, author, body, type, presentation_deadline, enroll_deadline):
+        contest = Contest(title, author, body, presentation_deadline, enroll_deadline,
+                       type, title, [], [], [])
+        ContestRepository.save(contest)
+        create_directory_for_contest(title)
+
+    # Method to edit a contest
+    @staticmethod
+    def edit(title, body, author):
+        temp = ContestRepository.find_by_title(title)
+        contest = Contest(title, author, body, temp['presentation_deadline'], temp['enroll_deadline'],
+                          temp['type'], temp['folder'], temp['comments'], temp['competitors'],
+                          temp['files'])
+        ContestRepository.edit(contest)
+
+    # Method to remove a contest
+    @staticmethod
+    def remove(title):
+        ContestRepository.remove(title)
+
+    # Method to join a contest
+    @staticmethod
+    def join_contest(title, username):
+        ContestRepository.join_contest(title, username)
+
+    # Method to upload a project in a contest
+    @staticmethod
+    def upload_project_contest(username, title, image_to_save, file_to_save):
+        file = File(username, image_to_save, UPLOAD_FOLDER_CONTEST, title, "", 0, 0, "")
+        ContestRepository.upload_project_contest(title, file)
+        save_image_in_server(title, image_to_save, file_to_save)
+
+    # Method to display the image
+    @staticmethod
+    def send_image(title, file_name):
+        return send_from_directory(UPLOAD_FOLDER_CONTEST+"/"+title, file_name)
+
+    # Method to find contest by username
+    @staticmethod
+    def find_contest_by_user(username):
+        contests_dict = ContestRepository.find_contest_by_user(username)
+        contests = []
+
+        for contest in contests_dict:
+            temp = Contest(contest['title'], contest['author'], contest['body'],
+                           contest['presentation_deadline'], contest['enroll_deadline'],
+                           contest['type'], contest['folder'], contest['comments'], contest['competitors'],
+                           contest['files'])
+            contests.append(temp)
+
+        return contests
+
+    # Method to like a project
+    @staticmethod
+    def like(title, name):
+        ContestRepository.like(title, name)
+
+    # Method to like a project
+    @staticmethod
+    def unlike(title, name):
+        ContestRepository.unlike(title, name)

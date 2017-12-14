@@ -17,7 +17,7 @@ from JobForm import JobForm
 from ProjectForm import ProjectForm
 from CollaboratorsForm import CollaboratorsForm
 
-from Services import UserService, ArticleService
+from Services import UserService, ArticleService, ContestService
 
 # Instantiate application object
 app = Flask(__name__)
@@ -225,7 +225,6 @@ def edit_article(title):
 @app.route('/delete_article/<string:title>', methods=['GET'])
 def delete_article(title):
 
-
     ArticleService.remove(title)
 
     flash('Article deleted', 'success')
@@ -245,22 +244,15 @@ def delete_article(title):
 def competitions():
 
     # Checking how many contests there are in db
-    result = mongo.db.contest.find().count()
+    contests = ContestService.find_all_contests()
 
-    if result > 0:
+    if len(contests) > 0:
         # Fetching all contests
-        contests = find_all_contests()
         today = datetime.date.today().strftime("%m/%d/%Y")
         return render_template('competitions.html', contests=contests, today=today)
     else:
         flash('No contest found', 'danger')
         return render_template('competitions.html')
-
-
-# Custom function to retrieve contests from db
-def find_all_contests():
-    contests = mongo.db.contest.find()
-    return contests
 
 
 # Route for a single contest
@@ -269,11 +261,11 @@ def contest(title):
         form = CommentForm(request.form)
 
         # Retrieving contest from db
-        contest = mongo.db.contest.find_one({'title': title})
+        contest = ContestService.find_by_title(title)
 
-        comments = contest['comments']
+        comments = contest.comments
 
-        files = contest['files']
+        files = contest.files_project
 
         images = []
 
@@ -294,24 +286,13 @@ def contest(title):
         if request.method == 'POST' and form.validate():
             comment_body = form.comment_body.data
             comment_author = session['username']
-            date_mongo = str(datetime.date.today())
 
-            add_comment_contest(contest, comment_body, comment_author, date_mongo)
+            ContestService.add_comment_to_contest(contest, comment_body, comment_author, datetime.date.today())
 
-            return redirect(url_for('contest', title=contest['title']))
+            return redirect(url_for('contest', title=contest.title))
 
         return render_template('contest.html', contest=contest, form=form, comments=comments,
                                today=today, files=files, not_allowed_to_upload=not_allowed_to_upload)
-
-
-def add_comment_contest(contest, comment_body, comment_author, date_mongo):
-
-    mongo.db.contest.update({'title': contest['title']},
-                            {'$push':   {"comments":
-                                                {"author": comment_author,
-                                                "body": comment_body,
-                                                "date": date_mongo}}})
-    return
 
 
 # Route for adding a contest
@@ -327,22 +308,7 @@ def add_contest():
         presentation_deadline = form.presentation_deadline.data.strftime("%m/%d/%Y")
         type = form.type.data
 
-        # Storing the contest in db
-        mongo.db.contest.insert({
-            'title': title,
-            'body': body,
-            'author': author,
-            'enroll_deadline': enroll_deadline,
-            'presentation_deadline': presentation_deadline,
-            'type': type,
-            'folder': title,
-            'files': [],
-            'competitors': [],
-            'comments': []
-        })
-
-        # Create a directory in the server to store all the projects related to the contest
-        create_directory_for_contest(title)
+        ContestService.save(title, author, body, type, presentation_deadline, enroll_deadline)
 
         flash('Contest created', 'success')
 
@@ -351,31 +317,19 @@ def add_contest():
     return render_template('add_contest.html', form=form)
 
 
-# Function for create a new directory in the contest path
-def create_directory_for_contest(title):
-    directory = UPLOAD_FOLDER_CONTEST+"/"+title
-    if not os.path.exists(directory):
-        os.makedirs(directory)
-    return
-
-
 # Route for editing a contest
 @app.route('/edit_contest/<string:title>', methods=['POST', 'GET'])
 def edit_contest(title):
     form = ContestForm(request.form)
 
-    if request.method == 'POST' and form.validate():
+    if request.method == 'POST':
+
+        print("SONO ENTRATO DENTRO EDIT POST")
         title = request.form['title']
         body = request.form['body']
         author = session['username']
-        date_mongo = str(datetime.date.today())
 
-        # MongoDB query to modify an article
-        mongo.db.contest.update({"title": title},
-                                {'$set':
-                                     {"body": body,
-                                      "author": author,
-                                      "date": date_mongo}})
+        ContestService.edit(title, body, author)
 
         flash('Contest edited', 'success')
 
@@ -383,11 +337,11 @@ def edit_contest(title):
         return redirect(url_for('competitions'))
     else:
         # Retrieving contest from db
-        contest = mongo.db.contest.find_one({'title': title})
+        contest = ContestService.find_by_title(title)
 
         # Filling form fields with data from db
-        form.title.data = contest['title']
-        form.body.data = contest['body']
+        form.title.data = contest.title
+        form.body.data = contest.body
 
         return render_template('edit_contest.html', form=form)
 
@@ -396,7 +350,7 @@ def edit_contest(title):
 @app.route('/delete_contest/<string:title>', methods=['GET'])
 def delete_contest(title):
 
-    mongo.db.contest.remove({"title": title})
+    ContestService.remove(title)
 
     flash('Contest deleted', 'success')
 
@@ -407,7 +361,7 @@ def delete_contest(title):
 @app.route('/join_contest/<string:title>')
 def join_contest(title):
 
-    mongo.db.contest.update({"title": title}, {'$push': {'competitors': session['username']}})
+    ContestService.join_contest(title, session['username'])
 
     flash('You have joined the contest. Now work hard to achieve the VICTORY', 'success')
 
@@ -432,24 +386,12 @@ def upload_project_contest(title):
             extension = parts[1]
             image_to_save = session['username']+"."+extension
 
-            # Storing file in contest document with some specific informations
-            mongo.db.contest.update({'title': title},
-                                    {'$push':
-                                         {'files':
-                                              { 'user': session['username'],
-                                                'primary_folder': UPLOAD_FOLDER_CONTEST,
-                                                'secondary_folder': title,
-                                                'file_name': image_to_save,
-                                                'like': 0,
-                                                'unlike': 0
-                                                }
-                                          }
-                                     })
+            ContestService.upload_project_contest(session['username'], title, image_to_save, file)
 
-            path = os.path.join(UPLOAD_FOLDER_CONTEST+"/"+title, image_to_save)
+            #path = os.path.join(UPLOAD_FOLDER_CONTEST+"/"+title, image_to_save)
 
             # to save the path in the folder
-            file.save(path)
+            #file.save(path)
 
             flash('Project Uploaded. Cross your Fingers', 'success')
 
@@ -460,14 +402,12 @@ def upload_project_contest(title):
 
 @app.route('/image_contest/<string:title>/<string:file_name>')
 def image_contest(title, file_name):
-    return send_from_directory(UPLOAD_FOLDER_CONTEST+"/"+title, file_name)
+    return ContestService.send_image(title, file_name)
 
 
 @app.route('/user_contest')
 def user_contest():
-    username = session['username']
-
-    contests = mongo.db.contest.find({'competitors': username})
+    contests = ContestService.find_contest_by_user(session['username'])
     today = datetime.date.today().strftime("%m/%d/%Y")
     return render_template('competitions.html', contests=contests, today=today)
 
@@ -475,7 +415,7 @@ def user_contest():
 @app.route('/contest/<string:title>/<string:name>/like')
 def like(title, name):
 
-    mongo.db.contest.update({'title': title, 'files.file_name': name}, {'$inc': {'files.$.like': 1}})
+    ContestService.like(title, name)
 
     return redirect(url_for('contest', title=title))
 
@@ -483,7 +423,7 @@ def like(title, name):
 @app.route('/contest/<string:title>/<string:name>/unlike')
 def unlike(title, name):
 
-    mongo.db.contest.update({'title': title, 'files.file_name': name}, {'$inc': {'files.$.unlike': 1}})
+    ContestService.unlike(title, name)
 
     return redirect(url_for('contest', title=title))
 

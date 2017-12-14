@@ -97,3 +97,121 @@ class ArticleRepository:
         db.article.remove({"title": article_title})
 
 
+class ContestRepository:
+
+    # Method to find all contests
+    @staticmethod
+    def find_all_contests():
+        return db.contest.find()
+
+    # Method to find one contest by its title
+    @staticmethod
+    def find_by_title(title):
+        return db.contest.find_one({'title': title})
+
+    # Method to add comment to a contest
+    @staticmethod
+    def add_comment_to_contest(title, comment):
+        db.contest.update(
+            {
+                'title': title
+            },
+            {'$push':
+                 {"comments":
+                      {"author": comment.author,
+                        "body": comment.body,
+                        "date": comment.date
+                       }
+                  }
+             }
+        )
+
+    # Method to add a contest
+    @staticmethod
+    def save(contest):
+        db.contest.insert(
+            {
+                'title': contest.title,
+                'body': contest.body,
+                'author': contest.author,
+                'enroll_deadline': contest.enroll_deadline,
+                'presentation_deadline': contest.presentation_deadline,
+                'type': contest.type,
+                'folder': contest.title,
+                'files': [],
+                'competitors': [],
+                'comments': []
+            }
+        )
+
+    # Method to edit a contest
+    @staticmethod
+    def edit(contest):
+        db.contest.update(
+            {"title": contest.title},
+            {'$set':
+                {"body": contest.body,
+                "author": contest.author,
+                 }
+             }
+        )
+
+    # Method to remove a contest
+    @staticmethod
+    def remove(title):
+        db.contest.remove({'title': title})
+
+    # Method to join a contest
+    @staticmethod
+    def join_contest(title, username):
+        db.contest.update(
+            {"title": title},
+            {'$push':
+                 {'competitors': username}
+             }
+        )
+
+    # Method to upload a project in a contest
+    @staticmethod
+    def upload_project_contest(title, file):
+        db.contest.update({'title': title},
+                          {'$push':
+                               {'files':
+                                    {'user': file.user,
+                                     'primary_folder': file.primary_folder,
+                                     'secondary_folder': file.secondary_folder,
+                                     'file_name': file.file_name,
+                                     'like': file.like,
+                                     'unlike': file.unlike
+                                     }
+                                }
+                           })
+
+    # Method to find contest by user
+    @staticmethod
+    def find_contest_by_user(username):
+        return db.contest.find({'competitors': username})
+
+    # Method to like a project
+    @staticmethod
+    def like(title, name):
+        db.contest.update(
+            {
+                'title': title,
+                'files.file_name': name},
+            {'$inc':
+                 {'files.$.like': 1}
+             }
+        )
+
+    # Method to like a project
+    @staticmethod
+    def unlike(title, name):
+        db.contest.update(
+            {
+                'title': title,
+                'files.file_name': name},
+            {'$inc':
+                {'files.$.unlike': 1}
+            }
+        )
