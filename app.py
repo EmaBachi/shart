@@ -1,22 +1,12 @@
 # External import
 from flask import Flask, render_template, request, flash, redirect, url_for, session, logging, send_from_directory
 from flask_pymongo import PyMongo
-from passlib.hash import sha256_crypt
 import datetime
 import os
 
 
 # Internal import
-from RegisterForm import RegisterForm
-from ArticleForm import ArticleForm
-from CommentForm import CommentForm
-from ContestForm import ContestForm
-from ChangePasswordForm import ChangePasswordForm
-from ChangeDescriptionForm import ChangeDescriptionForm
-from JobForm import JobForm
-from ProjectForm import ProjectForm
-from CollaboratorsForm import CollaboratorsForm
-
+from Form import RegisterForm, ArticleForm, CommentForm, ContestForm, ChangePasswordForm, ChangeDescriptionForm, JobForm, ProjectForm, CollaboratorsForm
 from Services import UserService, ArticleService, ContestService, ExclusiveVideoService, JobService
 
 # Instantiate application object
