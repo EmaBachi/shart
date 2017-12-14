@@ -17,7 +17,7 @@ from JobForm import JobForm
 from ProjectForm import ProjectForm
 from CollaboratorsForm import CollaboratorsForm
 
-from Repositories import mongo_db
+from Services import UserService, ArticleService
 
 # Instantiate application object
 app = Flask(__name__)
@@ -44,8 +44,6 @@ app.config["UPLOAD_FOLDER_PROJECT"] = UPLOAD_FOLDER_PROJECT
 app.config["MONGO1_DBNAME"] = 'shart'
 mongo = PyMongo(app, config_prefix='MONGO1')
 
-mongo_db.init_app(app)
-
 
 # Route for home
 @app.route('/')
@@ -67,26 +65,15 @@ def register():
         date_of_birth = form.date_of_birth.data.strftime("%m/%d/%Y")
         country = form.country.data
         email = form.email.data
-        password = sha256_crypt.encrypt(str(form.password.data))
-
-        already_username = mongo.db.user.find({'username': username}).count()
+        password = form.password.data
 
         # Error message
-        if already_username != 0:
+        if not UserService.create_user(first_name, surname, username, date_of_birth,
+                                        country, email, password, type):
+
             flash('Username already chosen', 'danger')
             return render_template('register.html', form=form)
         else:
-            # Commit
-            mongo.db.user.insert({'first_name': first_name,
-                                  'surname': surname,
-                                  'username': username,
-                                  'type': type,
-                                  'date_of_birth': date_of_birth,
-                                  'country': country,
-                                  'email': email,
-                                  'password': password,
-                                  'adm': False})
-
             # Using flash to print messages
             flash('You are now registered and can log in', 'success')
 
@@ -104,47 +91,35 @@ def login():
         username_candidate = request.form['username']
         password_candidate = request.form['password']
 
-        # Retrieving data from mongodb
-        user = mongo.db.user.find_one({'username': username_candidate})
+        user = UserService.login(username_candidate, password_candidate)
 
-        # Check if the username is correct
-        try:
-            len(user)
+        if user is not None:
 
-            password_user = user['password']
+            session['logged_in'] = True
+            session['username'] = user.username
 
-            # Check the password
-            if sha256_crypt.verify(password_candidate, password_user):
-                session['logged_in'] = True
-                session['username'] = username_candidate
+            session['adm'] = user.adm
 
-                if user['adm'] == True:
-                    session['adm'] = True
-                else:
-                    session['adm'] = False
-
-                if 'type' in user.keys() and user['type'] == 'Gallery Owner':
-                    session['scout'] = True
-                    session['artist'] = False
-                elif 'type' in user.keys() and user['type'] == 'Artist':
-                    session['artist'] = True
-                    session['scout'] = False
-                else:
-                    session['scout'] = False
-                    session['artist'] = False
-
-                flash('You are now logged in', 'success')
-                return redirect(url_for("index"))
-
+            if user.type == 'Gallery Owner':
+                session['scout'] = True
+                session['artist'] = False
+            elif user.type == 'Artist':
+                session['scout'] = False
+                session['artist'] = True
             else:
-                error = "Invalid password"
-                return render_template('login.html', error=error)
+                session['scout'] = False
+                session['artist'] = False
 
-        except TypeError:
-            error = "Invalid username"
+            flash('You are now logged in', 'success')
+            return redirect(url_for("index"))
+
+        else:
+
+            error = "Invalid username or password"
             return render_template('login.html', error=error)
 
-    return render_template('login.html')
+    else:
+        return render_template('login.html')
 
 
 @app.route('/logout')
@@ -170,22 +145,14 @@ def about():
 @app.route('/blog')
 def blog():
 
-    # Checking how many articles there are in db
-    result = mongo.db.article.find().count()
+    articles = ArticleService.find_all_articles()
 
-    if result > 0:
+    if len(articles) > 0:
         # Fetching all articles
-        articles = find_all_articles()
         return render_template('blog.html', articles=articles)
     else:
         flash('No article found', 'danger')
         return render_template('blog.html')
-
-
-# Custom function that retrieves all tha articles from DB
-def find_all_articles():
-    articles = mongo.db.article.find()
-    return articles
 
 
 # Route for a single article
@@ -194,31 +161,17 @@ def article(title):
     form = CommentForm(request.form)
 
     # Retrieving article from db
-    article = mongo.db.article.find_one({'title': title})
+    article = ArticleService.find_by_title(title)
 
     if request.method == 'POST' and form.validate():
         comment_body = form.comment_body.data
         comment_author = session['username']
-        date_mongo = str(datetime.date.today())
 
-        # Calling a custom function to add the comment
-        add_comment(article, comment_body, comment_author, date_mongo)
+        ArticleService.add_comment_to_article(article, comment_author, comment_body, datetime.date.today())
 
-        return redirect(url_for("article", title=article['title']))
+        return redirect(url_for("article", title=article.title))
 
-    return render_template('article.html', article=article, form=form, comments=article['comments'])
-
-
-# Custom function to add a comment to an article
-def add_comment(article, comment_body, comment_author, date_mongo):
-
-    # MongoDB query to push an item into an array
-    mongo.db.article.update({'title': article['title']},
-                            {'$push': {"comments": {"author": comment_author,
-                                                    "body": comment_body,
-                                                    "date": date_mongo}}})
-
-    return
+    return render_template('article.html', article=article, form=form, comments=article.comments)
 
 
 # Route for adding an article
@@ -231,16 +184,8 @@ def add_article():
         body = form.body.data
         author = session['username']
         date_python = datetime.date.today()
-        date_mongo = str(date_python)
 
-        # MongoDB query to insert a new article
-        mongo.db.article.insert({
-            'title': title,
-            'body': body,
-            'author': author,
-            'date': date_mongo,
-            'comments': []
-        })
+        ArticleService.save(title, body, author, date_python)
 
         flash('Article created', 'success')
 
@@ -259,23 +204,19 @@ def edit_article(title):
         title = request.form['title']
         body = request.form['body']
         author = session['username']
-        date_mongo = str(datetime.date.today())
 
         # MongoDB query to modify the body of the article
-        mongo.db.article.update({"title": title},
-                                {'$set':   {"body": body,
-                                            "author": author,
-                                            "date": date_mongo}})
+        ArticleService.edit(title, body, author, datetime.date.today())
 
         flash('article edited', 'success')
 
         return redirect(url_for('blog'))
 
     else:
-        article = mongo.db.article.find_one({'title': title})
+        article = ArticleService.find_by_title(title)
 
-        form.title.data = article['title']
-        form.body.data = article['body']
+        form.title.data = article.title
+        form.body.data = article.body
 
         return render_template('edit_article.html', form=form)
 
@@ -284,8 +225,8 @@ def edit_article(title):
 @app.route('/delete_article/<string:title>', methods=['GET'])
 def delete_article(title):
 
-    # MongoDB query to delete an article starting from its title
-    mongo.db.article.remove({"title": title})
+
+    ArticleService.remove(title)
 
     flash('Article deleted', 'success')
 
