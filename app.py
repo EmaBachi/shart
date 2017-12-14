@@ -17,18 +17,21 @@ from JobForm import JobForm
 from ProjectForm import ProjectForm
 from CollaboratorsForm import CollaboratorsForm
 
+from Repositories import mongo_db
+
 # Instantiate application object
 app = Flask(__name__)
+app.config.from_object('config')
 
 
 # Path to profile images
 UPLOAD_FOLDER_IMAGE = '/home/emanuele/Scrivania/Shart_Contents/images'
 
 # Path to contest folder
-UPLOAD_FOLDER_CONTEST = 'C:\Users\Alessia\Desktop\contest'
+UPLOAD_FOLDER_CONTEST = '/home/emanuele/Scrivania/Shart_Contents/contests'
 
 # Path to project folder
-UPLOAD_FOLDER_PROJECT = 'C:\Users\Alessia\Desktop\projects'
+UPLOAD_FOLDER_PROJECT = '/home/emanuele/Scrivania/Shart_Contents/projects'
 
 
 # Application Configuration
@@ -40,6 +43,9 @@ app.config["UPLOAD_FOLDER_PROJECT"] = UPLOAD_FOLDER_PROJECT
 # DB Configuration
 app.config["MONGO1_DBNAME"] = 'shart'
 mongo = PyMongo(app, config_prefix='MONGO1')
+
+mongo_db.init_app(app)
+
 
 # Route for home
 @app.route('/')
@@ -1056,7 +1062,7 @@ def search():
             flash('No user found', 'danger')
             return render_template('home.html')
 
+
 # Check name of application
 if __name__ == "__main__":
-    app.secret_key = 'secret123'
-    app.run(debug=True)
+    app.run()
