@@ -237,3 +237,23 @@ class ExclusiveVideoRepository:
     @staticmethod
     def remove(video_name):
         db.exclusive_videos.remove({"video_name": video_name})
+
+
+class JobRepository:
+
+    # Method to save a job
+    @staticmethod
+    def save(job):
+        db.job.insert({
+            'title': job.title,
+            'location': job.location,
+            'author': job.author,
+            'job_type': job.job_type,
+            'description': job.description,
+            'company_name': job.company_name
+        })
+
+    # Method to find all jobs
+    @staticmethod
+    def find_all():
+        return db.job.find()

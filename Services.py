@@ -2,8 +2,8 @@ from flask import send_from_directory
 from passlib.hash import sha256_crypt
 import os
 
-from Repositories import UserRepository, ArticleRepository, ContestRepository, ExclusiveVideoRepository
-from Domain import User, Article, Comment, Contest, File, ExclusiveVideo
+from Repositories import UserRepository, ArticleRepository, ContestRepository, ExclusiveVideoRepository, JobRepository
+from Domain import User, Article, Comment, Contest, File, ExclusiveVideo, Job
 
 UPLOAD_FOLDER_CONTEST = '/home/emanuele/Scrivania/Shart_Contents/contests'
 
@@ -258,3 +258,25 @@ class ExclusiveVideoService:
     @staticmethod
     def remove(video_name):
         ExclusiveVideoRepository.remove(video_name)
+
+
+class JobService:
+
+    # Method to save a job
+    @staticmethod
+    def save(title, location, author, job_type, description, company_name):
+        job = Job(author, title, description, company_name, location, job_type)
+        JobRepository.save(job)
+
+    # Method to find all jobs
+    @staticmethod
+    def find_all():
+        job_dict = JobRepository.find_all()
+        jobs = []
+
+        for job in job_dict:
+            temp = Job(job['author'], job['title'], job['description'], job['company_name'],
+                       job['location'], job['job_type'])
+            jobs.append(temp)
+
+        return jobs

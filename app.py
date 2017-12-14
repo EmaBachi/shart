@@ -17,7 +17,7 @@ from JobForm import JobForm
 from ProjectForm import ProjectForm
 from CollaboratorsForm import CollaboratorsForm
 
-from Services import UserService, ArticleService, ContestService, ExclusiveVideoService
+from Services import UserService, ArticleService, ContestService, ExclusiveVideoService, JobService
 
 # Instantiate application object
 app = Flask(__name__)
@@ -631,24 +631,15 @@ def add_job():
     if request.method == 'POST':
         title = form.title.data
         location = form.location.data
-        jobtype = form.jobtype.data
-        companyname = form.companyname.data
+        job_type = form.jobtype.data
+        company_name = form.companyname.data
         description = form.description.data
         author = session['username']
 
-        # MongoDB query to insert a new article
-        mongo.db.job.insert({
-            'title': title,
-            'location': location,
-            'author': author,
-            'jobtype' : jobtype,
-            'description' : description,
-            'companyname' : companyname
-        })
+        JobService.save(title, location, job_type, company_name, description, author)
 
         flash('Job posted', 'success')
 
-        # Redirecting user to the blog page
         return redirect(url_for('jobs'))
 
     return render_template("post_job.html",form=form)
@@ -656,12 +647,10 @@ def add_job():
 # Route for displaying all jobs
 @app.route('/jobs')
 def jobs():
-    # Checking how many jobs there are in db
-    result = mongo.db.job.find().count()
 
-    if result > 0:
-        # Fetching all contests
-        jobs = mongo.db.job.find()
+    jobs = JobService.find_all()
+
+    if len(jobs) > 0:
         return render_template('jobs.html', jobs=jobs)
     else:
         flash('No job found', 'danger')
