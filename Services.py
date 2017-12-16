@@ -2,10 +2,11 @@ from flask import send_from_directory
 from passlib.hash import sha256_crypt
 import os
 
-from Repositories import UserRepository, ArticleRepository, ContestRepository, ExclusiveVideoRepository, JobRepository
-from Domain import User, Article, Comment, Contest, File, ExclusiveVideo, Job
+from Repositories import UserRepository, ArticleRepository, ContestRepository, ExclusiveVideoRepository, JobRepository, ProjectRepository
+from Domain import User, Article, Comment, Contest, File, ExclusiveVideo, Job, Project
 
 UPLOAD_FOLDER_CONTEST = '/home/emanuele/Scrivania/Shart_Contents/contests'
+UPLOAD_FOLDER_PROJECT = '/home/emanuele/Scrivania/Shart_Contents/projects'
 
 
 def create_directory_for_contest(title):
@@ -15,9 +16,22 @@ def create_directory_for_contest(title):
     return
 
 
-def save_image_in_server(title, image_to_save, file_to_save):
+def save_image_contest_in_server(title, image_to_save, file_to_save):
     path = os.path.join(UPLOAD_FOLDER_CONTEST + "/" + title, image_to_save)
     file_to_save.save(path)
+
+
+def create_directory_for_project(title_project):
+    directory = UPLOAD_FOLDER_PROJECT + "/" + title_project
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    return
+
+
+def save_image_project_in_server(title, file_to_save):
+    path = os.path.join(UPLOAD_FOLDER_PROJECT + "/" + title, file_to_save.filename)
+    file_to_save.save(path)
+    return
 
 
 class UserService:
@@ -201,7 +215,7 @@ class ContestService:
     def upload_project_contest(username, title, image_to_save, file_to_save):
         file = File(username, image_to_save, UPLOAD_FOLDER_CONTEST, title, "", 0, 0, "")
         ContestRepository.upload_project_contest(title, file)
-        save_image_in_server(title, image_to_save, file_to_save)
+        save_image_contest_in_server(title, image_to_save, file_to_save)
 
     # Method to display the image
     @staticmethod
@@ -280,3 +294,107 @@ class JobService:
             jobs.append(temp)
 
         return jobs
+
+
+class ProjectService:
+
+    # Method to find all project with status wip or in search
+    @staticmethod
+    def find_all_wip():
+        project_dict = ProjectRepository.find_all_wip()
+
+        projects = []
+
+        for temp in project_dict:
+            project = Project(temp['author'], temp['title'], temp['description'], temp['max_number'],
+                              temp['skills'], temp['status'], temp['appliers'], temp['collaborators'],
+                              temp['files'], temp['final_image'])
+            projects.append(project)
+
+        return projects
+
+    # Method to find all project related to an user
+    @staticmethod
+    def find_all_by_username(username):
+        project_dict = ProjectRepository.find_all_by_username(username)
+
+        projects = []
+
+        for temp in project_dict:
+            project = Project(temp['author'], temp['title'], temp['description'], temp['max_number'],
+                              temp['skills'], temp['status'], temp['appliers'], temp['collaborators'],
+                              temp['files'], temp['final_image'])
+            projects.append(project)
+
+        return projects
+
+    # Method to save a project
+    @staticmethod
+    def save(title, author, description, max_number, skills, status, collaborators, appliers, files):
+        project = Project(author, title, description, max_number, skills, status, appliers, collaborators,
+                          files, "")
+        ProjectRepository.save(project)
+
+    # Method to join a project
+    @staticmethod
+    def join_project(title, username):
+        ProjectRepository.join_project(title, username)
+
+    # Method to find a project by its title
+    @staticmethod
+    def find_by_title(title):
+        temp = ProjectRepository.find_by_title(title)
+
+        project = Project(temp['author'], temp['title'], temp['description'], temp['max_number'],
+                          temp['skills'], temp['status'], temp['appliers'], temp['collaborators'],
+                          temp['files'], temp['final_image'])
+
+        return project
+
+    # Method to put some users into collaborators
+    @staticmethod
+    def put_in_collaborators(title, collaborators):
+        ProjectRepository.put_in_collaborators(title, collaborators)
+
+        temp = ProjectRepository.find_by_title(title)
+
+        project = Project(temp['author'], temp['title'], temp['description'], temp['max_number'],
+                          temp['skills'], temp['status'], temp['appliers'], temp['collaborators'],
+                          temp['files'], temp['final_image'])
+
+        if project.max_number == len(project.collaborators):
+            create_directory_for_project(project.title)
+            ProjectRepository.change_status(project.title, 'WIP')
+
+    # Method to store a file in a project
+    @staticmethod
+    def store_file_for_project(username, title, file_name, date, description, file_to_save):
+        file = File(username, file_name, UPLOAD_FOLDER_PROJECT, title, description, 0, 0, str(date))
+        ProjectRepository.store_file_for_project(title, file)
+        save_image_project_in_server(title, file_to_save)
+
+    # Method to send an image from directory
+    @staticmethod
+    def send_image(title, file_name):
+        return send_from_directory(UPLOAD_FOLDER_PROJECT + "/" + title, file_name)
+
+    # Method to store the final image of a project
+    @staticmethod
+    def store_final_image(title, final_image):
+        ProjectRepository.store_final_image(title, final_image)
+        ProjectRepository.change_status(title, 'finished')
+
+    # Method to find finished project
+    @staticmethod
+    def find_finished_project():
+        project_dict = ProjectRepository.find_finished_project()
+
+        projects = []
+
+        for temp in project_dict:
+            project = Project(temp['author'], temp['title'], temp['description'], temp['max_number'],
+                              temp['skills'], temp['status'], temp['appliers'], temp['collaborators'],
+                              temp['files'], temp['final_image'])
+            projects.append(project)
+
+        return projects

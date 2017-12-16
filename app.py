@@ -7,7 +7,7 @@ import os
 
 # Internal import
 from Form import RegisterForm, ArticleForm, CommentForm, ContestForm, ChangePasswordForm, ChangeDescriptionForm, JobForm, ProjectForm, CollaboratorsForm
-from Services import UserService, ArticleService, ContestService, ExclusiveVideoService, JobService
+from Services import UserService, ArticleService, ContestService, ExclusiveVideoService, JobService, ProjectService
 
 # Instantiate application object
 app = Flask(__name__)
@@ -654,25 +654,19 @@ def jobs():
 @app.route('/projects')
 def projects():
 
-    # Checking how many projects there are in db
-    result = mongo.db.project.find({'$or':[{'status':'WIP'},{'status':'In search'}]}).count()
+    projects = ProjectService.find_all_wip()
 
-    if result > 0:
-        # Fetching all projects
-
-        projects = mongo.db.project.find({'$or':[{'status':'WIP'},{'status':'In search'}]})
-        return render_template('projects.html',projects=projects)
+    if len(projects) > 0:
+        return render_template('projects.html', projects=projects)
     else:
         flash('No project found', 'danger')
         return render_template('projects.html')
 
 
-
-
 @app.route('/user_projects')
 def user_projects():
 
-    projects = mongo.db.project.find({'$or': [{'author': session['username']}, {'collaborators': {'$in': [session['username']]}}]})
+    projects = ProjectService.find_all_by_username(session['username'])
 
     return render_template('projects.html', projects=projects)
 
@@ -694,17 +688,7 @@ def add_project():
         status = 'In search'
         files = []
 
-        mongo.db.project.insert({
-            'title': title,
-            'description': description,
-            'author': author,
-            'max_number': max_number,
-            'skills': skills,
-            'appliers': appliers,
-            'collaborators': collaborators,
-            'status': status,
-            'files': files
-        })
+        ProjectService.save(title, author, description, max_number, skills, status, collaborators, appliers, files)
 
         return redirect(url_for('projects'))
 
@@ -725,56 +709,30 @@ def join_project(title):
 def single_project(title):
     form = CollaboratorsForm(request.form)
 
-    project = mongo.db.project.find_one({'title': title})
+    project = ProjectService.find_by_title(title)
 
-    appliers = project['appliers']
+    appliers = project.appliers
 
     if request.method == 'POST':
 
-        put_in_collaborators(form.appliers.data, project['title'])
-        flash('Great! Your collaborators are ready','success')
-        if project['max_number'] == len(form.appliers.data):
-            create_directory_for_project(project['title'])
-            change_status_of_project(project['title'], 'WIP')
+        ProjectService.put_in_collaborators(title, form.appliers.data)
+        flash('Great! Your collaborators are ready', 'success')
 
-        return redirect(url_for('single_project', title=project['title']))
+        return redirect(url_for('single_project', title=project.title))
 
     else:
 
-        files = project['files']
+        files = project.files
 
         form.push_appliers(appliers)
 
         return render_template('single_project.html', project=project, form=form, files=files)
 
 
-# Function for put in collaborators some aplliers
-def put_in_collaborators(appliers, title):
-
-    mongo.db.project.update({'title': title}, {'$push': {'collaborators': {'$each': appliers}}})
-    mongo.db.project.update({'title': title}, {'$pullAll': {'appliers': appliers}})
-
-    return
-
-
-# Function for create directory for the project
-def create_directory_for_project(title_project):
-    directory = UPLOAD_FOLDER_PROJECT + "/" + title_project
-    if not os.path.exists(directory):
-        os.makedirs(directory)
-    return
-
-
-# Function for change status of project from 'in search' to 'wip'
-def change_status_of_project(title_project, status):
-    mongo.db.project.update({'title': title_project}, {'$set': {'status': status}})
-    return
-
-
 # Route for displaying single project when you click on the final image
 @app.route('/image_project/<string:title>', methods=['POST', 'GET'])
 def image_project(title):
-    project = mongo.db.project.find_one({'title': title})
+    project = ProjectService.find_by_title(title)
 
     return render_template('image_project.html', project=project)
 
@@ -792,11 +750,8 @@ def upload_file_project(title):
             flash('No selected file', 'danger')
             return redirect(url_for('single_project', title=title))
         else:
-            date_mongo = str(datetime.date.today())
 
-            store_file_in_db(title, file.filename, date_mongo, request.form['description'])
-
-            store_file_in_machine(title, file)
+            ProjectService.store_file_for_project(session['username'], title, file.filename, datetime.date.today(), request.form['description'], file)
 
             flash('File Uploaded', 'success')
 
@@ -805,51 +760,21 @@ def upload_file_project(title):
     return render_template('upload_file_project.html')
 
 
-# Function for store file in db
-def store_file_in_db(title, file_name, date, description):
-    mongo.db.project.update(
-        {
-            'title': title
-        },
-        {
-            '$push': {
-                'files': {
-                    'primary_folder': UPLOAD_FOLDER_PROJECT,
-                    'secondary_folder': title,
-                    'file_name': file_name,
-                    'user': session['username'],
-                    'date': date,
-                    'description': description
-                }
-            }
-        }
-    )
-
-    return
-
-
-# Function for store file in the machine
-def store_file_in_machine(title, file):
-    path = os.path.join(UPLOAD_FOLDER_PROJECT + "/" + title, file.filename)
-    file.save(path)
-    return
-
-
 # Route for send files to user
 @app.route('/projects/<string:title>/<string:file_name>')
 def send_file_of_project(title, file_name):
-    return send_from_directory(UPLOAD_FOLDER_PROJECT + "/" + title, file_name)
+    return ProjectService.send_image(title, file_name)
 
 
 # Route for complete the project
 @app.route('/projects/<string:title>/complete_project', methods=['POST', 'GET'])
 def complete_project(title):
-    project = mongo.db.project.find_one({'title': title})
+    project = ProjectService.find_by_title(title)
 
     if request.method == 'GET':
         files = []
 
-        for file in project['files']:
+        for file in project.files:
             list = file['file_name'].split('.')
             if len(list) > 1 and (list[1] == "jpg" or list[1] == "JPG" or list[1] == 'jpeg' or list[1] == 'png'):
                 files.append(file)
@@ -857,23 +782,8 @@ def complete_project(title):
         return render_template('complete_project.html', files=files, project=project)
     else:
         file_name = request.form['file_name']
-        change_status_of_project(title, 'finished')
-        store_final_image(title, file_name)
+        ProjectService.store_final_image(title, file_name)
         return redirect(url_for('image_project', title=title))
-
-
-# storing final image in db
-def store_final_image(title, file_name):
-    mongo.db.project.update({
-        'title': title
-    },
-        {
-            "$set": {
-                'final_image': file_name
-            }
-        })
-
-    return
 
 
 # Route for Complete works
@@ -881,12 +791,10 @@ def store_final_image(title, file_name):
 def complete_works():
 
     # Checking how many complete projects there are in db
-    result = mongo.db.project.find({'status':'finished'}).count()
+    projects = ProjectService.find_finished_project()
 
-    if result > 0:
+    if len(projects) > 0:
         # Fetching all complete projects
-
-        projects = mongo.db.project.find({'status':'finished'})
         return render_template('complete_works.html',projects=projects)
     else:
         flash('No project found', 'danger')
@@ -894,7 +802,6 @@ def complete_works():
 
 
 # Route for searching
-
 @app.route('/search', methods=['POST','GET'])
 def search():
     if request.method == 'POST':

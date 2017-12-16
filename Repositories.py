@@ -257,3 +257,98 @@ class JobRepository:
     @staticmethod
     def find_all():
         return db.job.find()
+
+
+class ProjectRepository:
+
+    @staticmethod
+    def find_all_wip():
+        return db.project.find(
+            {'$or':
+                 [
+                     {'status': 'WIP'},
+                     {'status': 'In search'}
+                 ]
+            }
+        )
+
+    @staticmethod
+    def find_all_by_username(username):
+        return db.project.find({'$or': [{'author': username}, {'collaborators': {'$in': [username]}}]})
+
+    @staticmethod
+    def save(project):
+        db.project.insert({
+            'title': project.title,
+            'description': project.description,
+            'author': project.author,
+            'max_number': project.max_number,
+            'skills': project.skills,
+            'appliers': project.appliers,
+            'collaborators': project.collaborators,
+            'status': project.status,
+            'files': project.files,
+            'final_image': project.final_image
+        })
+
+    @staticmethod
+    def join_project(title, username):
+        db.project.update(
+            {'title': title},
+            {'$push':
+                 {'appliers': username}
+             }
+        )
+
+    @staticmethod
+    def find_by_title(title):
+        return db.project.find_one({'title': title})
+
+    # Method to put some users into collaborators
+    @staticmethod
+    def put_in_collaborators(title, collaborators):
+        db.project.update({'title': title}, {'$push': {'collaborators': {'$each': collaborators}}})
+        db.project.update({'title': title}, {'$pullAll': {'appliers': collaborators}})
+
+    # Method to change project status
+    @staticmethod
+    def change_status(title, status):
+        db.project.update({'title': title}, {'$set': {'status': status}})
+
+    # Method to store a file into a project
+    @staticmethod
+    def store_file_for_project(title, file):
+        db.project.update(
+            {
+                'title': title
+            },
+            {
+                '$push': {
+                    'files': {
+                        'primary_folder': file.primary_folder,
+                        'secondary_folder': file.secondary_folder,
+                        'file_name': file.file_name,
+                        'user': file.user,
+                        'date': file.date,
+                        'description': file.description
+                    }
+                }
+            }
+        )
+
+    # Method to store the final image of a project
+    @staticmethod
+    def store_final_image(title, final_image):
+        db.project.update({
+            'title': title
+        },
+            {
+                "$set": {
+                    'final_image': final_image
+                }
+            })
+
+    # Method to find finished project
+    @staticmethod
+    def find_finished_project():
+        return db.project.find({'status': 'finished'})
