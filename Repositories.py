@@ -251,6 +251,18 @@ class ContestRepository:
             }
         )
 
+    # Method to retrieve all contest's images of a user
+    @staticmethod
+    def retrieve_images_contest(username):
+        return db.contest.find({
+                            'files.user': username
+                                },
+                            {
+                                '_id': 0,
+                                'files': 1
+                            }
+        )
+
 
 class ExclusiveVideoRepository:
 

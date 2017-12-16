@@ -286,6 +286,21 @@ class ContestService:
     def unlike(title, name):
         ContestRepository.unlike(title, name)
 
+    # Method to retrieve user's images contest
+    @staticmethod
+    def retrieve_images_contest(username):
+
+        query = ContestRepository.retrieve_images_contest(username)
+
+        images = []
+
+        for item in query:
+            for file in item['files']:
+                if file['user'] == username:
+                    images.append(file)
+
+        return images
+
 
 class ExclusiveVideoService:
 

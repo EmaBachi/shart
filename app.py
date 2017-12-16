@@ -14,27 +14,6 @@ app = Flask(__name__)
 app.config.from_object('config')
 
 
-# Path to profile images
-UPLOAD_FOLDER_IMAGE = '/home/emanuele/Scrivania/Shart_Contents/images'
-
-# Path to contest folder
-UPLOAD_FOLDER_CONTEST = '/home/emanuele/Scrivania/Shart_Contents/contests'
-
-# Path to project folder
-UPLOAD_FOLDER_PROJECT = '/home/emanuele/Scrivania/Shart_Contents/projects'
-
-
-# Application Configuration
-app.config["UPLOAD_FOLDER_IMAGE"] = UPLOAD_FOLDER_IMAGE
-app.config["UPLOAD_FOLDER_CONTEST"] = UPLOAD_FOLDER_CONTEST
-app.config["UPLOAD_FOLDER_PROJECT"] = UPLOAD_FOLDER_PROJECT
-
-
-# DB Configuration
-app.config["MONGO1_DBNAME"] = 'shart'
-mongo = PyMongo(app, config_prefix='MONGO1')
-
-
 # Route for home
 @app.route('/')
 def index():
@@ -465,9 +444,9 @@ def delete_video(title):
 def other_profile(username):
     user = mongo.db.user.find_one({'username': username})
 
-    contest_images = retrieve_images_contests(user['username'])
+    contest_images = ContestService.retrieve_images_contest(user.username)
 
-    project_images = retrieve_images_projects(user['username'])
+    #project_images = retrieve_images_projects(user['username'])
 
     return render_template('account_profile.html', user=user, contest_images=contest_images)
 
@@ -478,37 +457,11 @@ def profile():
 
     user = UserService.find_user_by_username(session['username'])
 
-    contest_images = retrieve_images_contests(user.username)
+    contest_images = ContestService.retrieve_images_contest(user.username)
 
-    project_images = retrieve_images_projects(user.username)
+    #project_images = retrieve_images_projects(user.username)
 
     return render_template('account_profile.html', user=user, contest_images=contest_images)
-
-
-# Function for retrieving contests images
-def retrieve_images_contests(username):
-
-    query = mongo.db.contest.find({
-        'files.user': username
-    },
-        {
-            '_id': 0,
-            'files': 1
-        })
-
-    images = []
-
-    for item in query:
-        for file in item['files']:
-            if file['user'] == username:
-                images.append(file)
-
-    return images
-
-
-# Function for retrieving projects images
-def retrieve_images_projects(username):
-    return
 
 
 # Route for uploading profile image
