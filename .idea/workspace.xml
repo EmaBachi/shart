@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="906288f7-5b89-4bd7-88a4-aef7959933fe" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Repositories.py" afterPath="$PROJECT_DIR$/Repositories.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Services.py" afterPath="$PROJECT_DIR$/Services.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app.py" afterPath="$PROJECT_DIR$/app.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -19,8 +21,8 @@
       <file leaf-file-name="app.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="327">
-              <caret line="808" column="75" lean-forward="false" selection-start-line="808" selection-start-column="75" selection-end-line="808" selection-end-column="75" />
+            <state relative-caret-position="393">
+              <caret line="527" column="56" lean-forward="false" selection-start-line="527" selection-start-column="56" selection-end-line="527" selection-end-column="56" />
               <folding>
                 <element signature="e#18#132#0" expanded="true" />
               </folding>
@@ -31,8 +33,8 @@
       <file leaf-file-name="Services.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Services.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="450">
-              <caret line="31" column="73" lean-forward="false" selection-start-line="31" selection-start-column="73" selection-end-line="31" selection-end-column="73" />
+            <state relative-caret-position="683">
+              <caret line="140" column="13" lean-forward="true" selection-start-line="140" selection-start-column="13" selection-end-line="140" selection-end-column="13" />
               <folding>
                 <element signature="e#0#37#0" expanded="true" />
               </folding>
@@ -43,8 +45,8 @@
       <file leaf-file-name="Repositories.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Repositories.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="683">
-              <caret line="338" column="50" lean-forward="true" selection-start-line="338" selection-start-column="50" selection-end-line="338" selection-end-column="50" />
+            <state relative-caret-position="-541">
+              <caret line="75" column="0" lean-forward="true" selection-start-line="75" selection-start-column="0" selection-end-line="75" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -53,7 +55,7 @@
       <file leaf-file-name="Domain.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Domain.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="665">
+            <state relative-caret-position="1800">
               <caret line="100" column="38" lean-forward="true" selection-start-line="96" selection-start-column="8" selection-end-line="100" selection-end-column="38" />
               <folding />
             </state>
@@ -144,6 +146,11 @@
             <path>
               <item name="shart" type="b2602c69:ProjectViewProjectNode" />
               <item name="shart" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="shart" type="b2602c69:ProjectViewProjectNode" />
+              <item name="shart" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -250,20 +257,11 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
+      <option name="time" value="1" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4500">
-          <caret line="250" column="0" lean-forward="true" selection-start-line="250" selection-start-column="0" selection-end-line="250" selection-end-column="0" />
-          <folding>
-            <element signature="e#18#132#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/competitions.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="252">
@@ -502,34 +500,42 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Domain.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="665">
+        <state relative-caret-position="1800">
           <caret line="100" column="38" lean-forward="true" selection-start-line="96" selection-start-column="8" selection-end-line="100" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/account_profile.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="162">
+          <caret line="9" column="11" lean-forward="false" selection-start-line="9" selection-start-column="10" selection-end-line="9" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Repositories.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-541">
+          <caret line="75" column="0" lean-forward="true" selection-start-line="75" selection-start-column="0" selection-end-line="75" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Services.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="31" column="73" lean-forward="false" selection-start-line="31" selection-start-column="73" selection-end-line="31" selection-end-column="73" />
+        <state relative-caret-position="683">
+          <caret line="140" column="13" lean-forward="true" selection-start-line="140" selection-start-column="13" selection-end-line="140" selection-end-column="13" />
           <folding>
             <element signature="e#0#37#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Repositories.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="683">
-          <caret line="338" column="50" lean-forward="true" selection-start-line="338" selection-start-column="50" selection-end-line="338" selection-end-column="50" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="327">
-          <caret line="808" column="75" lean-forward="false" selection-start-line="808" selection-start-column="75" selection-end-line="808" selection-end-column="75" />
+        <state relative-caret-position="393">
+          <caret line="527" column="56" lean-forward="false" selection-start-line="527" selection-start-column="56" selection-end-line="527" selection-end-column="56" />
           <folding>
             <element signature="e#18#132#0" expanded="true" />
           </folding>

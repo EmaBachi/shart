@@ -7,6 +7,7 @@ from Domain import User, Article, Comment, Contest, File, ExclusiveVideo, Job, P
 
 UPLOAD_FOLDER_CONTEST = '/home/emanuele/Scrivania/Shart_Contents/contests'
 UPLOAD_FOLDER_PROJECT = '/home/emanuele/Scrivania/Shart_Contents/projects'
+UPLOAD_FOLDER_IMAGE = '/home/emanuele/Scrivania/Shart_Contents/images'
 
 
 def create_directory_for_contest(title):
@@ -32,6 +33,11 @@ def save_image_project_in_server(title, file_to_save):
     path = os.path.join(UPLOAD_FOLDER_PROJECT + "/" + title, file_to_save.filename)
     file_to_save.save(path)
     return
+
+
+def store_profile_image(file_to_save):
+    path = os.path.join(UPLOAD_FOLDER_IMAGE, file_to_save.filename)
+    file_to_save.save(path)
 
 
 class UserService:
@@ -101,6 +107,39 @@ class UserService:
         except TypeError:
 
             return None
+
+    # Method to set profile image
+    @staticmethod
+    def set_profile_image(username, file_to_save):
+        UserRepository.set_profile_image(username, UPLOAD_FOLDER_IMAGE, file_to_save.filename)
+        store_profile_image(file_to_save)
+
+    # Method to send profile image
+    @staticmethod
+    def send_file(image_name):
+        return send_from_directory(UPLOAD_FOLDER_IMAGE, image_name)
+
+    # Method to change description
+    @staticmethod
+    def change_description(username, description):
+        UserRepository.change_description(username, description)
+
+    # Method to change password
+    @staticmethod
+    def change_password(old_password, new_password, username):
+        user_dict = UserRepository.find_by_username(username)
+
+        user = User(user_dict['first_name'], user_dict['surname'], user_dict['username'],
+                    user_dict['date_of_birth'], user_dict['country'], user_dict['email'],
+                    user_dict['password'], user_dict['type'], user_dict['adm'], user_dict['path'],
+                    user_dict['image_name'], user_dict['description'])
+
+        if sha256_crypt.verify(old_password, user.password):
+            password = sha256_crypt.encrypt(str(new_password))
+            UserRepository.change_password(user.username, password)
+            return True
+        else:
+            return False
 
 
 class ArticleService:

@@ -38,6 +38,41 @@ class UserRepository:
         user_dict = db.user.find_one({'username': username_candidate})
         return user_dict
 
+    # Method to set profile image
+    @staticmethod
+    def set_profile_image(username, path, file_name):
+        db.user.update(
+            {"username": username},
+            {'$set':
+                {
+                    'path': path,
+                    'image_name': file_name
+                }
+            }
+        )
+
+    # Method to change description
+    @staticmethod
+    def change_description(username, description):
+        db.user.update(
+            {'username': username},
+            {'$set': {
+                        'description': description
+            }
+            }
+        )
+
+    # Method to change password
+    @staticmethod
+    def change_password(username, password):
+        db.user.update({"username": username},
+                           {'$set':
+                               {
+                                   'password': password
+                               }
+                           }
+                       )
+
 
 class ArticleRepository:
 

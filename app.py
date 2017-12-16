@@ -471,15 +471,16 @@ def other_profile(username):
 
     return render_template('account_profile.html', user=user, contest_images=contest_images)
 
+
 # Route for the profile
 @app.route('/profile')
 def profile():
-    username = session['username']
-    user = mongo.db.user.find_one({'username': username})
 
-    contest_images = retrieve_images_contests(user['username'])
+    user = UserService.find_user_by_username(session['username'])
 
-    project_images = retrieve_images_projects(user['username'])
+    contest_images = retrieve_images_contests(user.username)
+
+    project_images = retrieve_images_projects(user.username)
 
     return render_template('account_profile.html', user=user, contest_images=contest_images)
 
@@ -522,18 +523,10 @@ def upload_image():
             flash('No selected file')
             return
         else:
-            path = os.path.join(app.config['UPLOAD_FOLDER_IMAGE'],file.filename)
             username = session['username']
-            user = mongo.db.user.find_one({'username':username})
-            mongo.db.user.update({"username": username},
-                                    {'$set':
-                                         {
-                                            'path': path,
-                                            'image_name': file.filename}})
 
-            # to save the path in the folder
-            file.save(path)
-            print(path)
+            UserService.set_profile_image(username, file)
+
             return redirect(url_for('profile'))
 
     return render_template("upload_image.html")
@@ -541,7 +534,7 @@ def upload_image():
 
 @app.route('/<image_name>')
 def image(image_name):
-    return send_from_directory(UPLOAD_FOLDER_IMAGE, image_name)
+    return UserService.send_file(image_name)
 
 
 # Route to change the password
@@ -550,24 +543,14 @@ def change_password():
     form = ChangePasswordForm(request.form)
 
     if request.method == "POST":
-        username = session['username']
-        user = mongo.db.user.find_one({'username': username})
+
         if form.new_password.data == '':
             flash('No new password', 'danger')
             return redirect(request.url)
-        if sha256_crypt.verify(form.old_password.data, user['password']):
-            password = sha256_crypt.encrypt(str(form.new_password.data))
-            if password == '':
-                flash('Error: you have to insert a new password', 'danger')
-                return
-            else:
-                flash('Password successfully changed', 'success')
-                username = session['username']
-                mongo.db.user.update({"username": username},
-                                        {'$set':
-                                             {
-                                                'password': password}})
-            return render_template("account_profile.html", user=user)
+
+        if UserService.change_password(form.old_password.data, form.new_password.data, session['username']):
+            flash('Password successfully changed', 'success')
+            return redirect(url_for('profile'))
         else:
             flash('Your old password does not match', 'danger')
             return redirect(request.url)
@@ -595,16 +578,14 @@ def change_description():
 
         description = form.description.data
 
-        mongo.db.user.update({'username': username}, {'$set': {
-            'description': description
-        }})
+        UserService.change_description(username, description)
 
         return redirect(url_for('profile'))
 
-    user = mongo.db.user.find_one({'username': username})
+    user = UserService.find_user_by_username(username)
 
     try:
-        description = user['description']
+        description = user.description
         form.description.data = description
     except KeyError:
         form.description.data = ''
@@ -633,6 +614,7 @@ def add_job():
         return redirect(url_for('jobs'))
 
     return render_template("post_job.html",form=form)
+
 
 # Route for displaying all jobs
 @app.route('/jobs')
