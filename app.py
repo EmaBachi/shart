@@ -790,25 +790,23 @@ def complete_project(title):
 @app.route('/complete_works')
 def complete_works():
 
-    # Checking how many complete projects there are in db
     projects = ProjectService.find_finished_project()
 
     if len(projects) > 0:
-        # Fetching all complete projects
-        return render_template('complete_works.html',projects=projects)
+        return render_template('complete_works.html', projects=projects)
     else:
         flash('No project found', 'danger')
         return render_template('complete_works.html')
 
 
 # Route for searching
-@app.route('/search', methods=['POST','GET'])
+@app.route('/search', methods=['POST', 'GET'])
 def search():
     if request.method == 'POST':
         username = request.form['q']
-        user = mongo.db.user.find_one({'username': username})
+        user = UserService.find_user_by_username(username)
         if user is not None:
-            return redirect(url_for('other_profile',username=username))
+            return redirect(url_for('other_profile', username=user.username))
         else:
             flash('No user found', 'danger')
             return render_template('home.html')
