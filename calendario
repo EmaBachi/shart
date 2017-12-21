@@ -24,7 +24,12 @@
 
 IMPORTANTE:
     1) guardare tag nel marketing
-    2) finire works
-    3) Controllare il numero di colaboratori quando l'autore del progetto le seleziona
-    4) Controllare che il file inserito dagli utenti non esista ancora sul db
+    2) finire works (ovvero includere i progetti nel profilo)
+    3) Insirerire i contatori nel profilo
+    4) Immagine del profilo standard
+    5) Sicurezza nei profili (l'utente loggato può modificare solamente il suo profilo e non quello degli altri)
+    6) Like e unlike singolo	
+    7) Controllare il numero di collaboratori quando l'autore del progetto le seleziona
+    8) Controllare che il file inserito dagli utenti non esista ancora sul db
+    9) Migliorare il footer
 
