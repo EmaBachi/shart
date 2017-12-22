@@ -382,6 +382,21 @@ class ProjectService:
 
         return projects
 
+    # Method to find all project related to an user giving a certain status
+    @staticmethod
+    def find_all_by_username_and_status(username, status):
+        project_dict = ProjectRepository.find_all_by_username_and_status(username, status)
+
+        projects = []
+
+        for temp in project_dict:
+            project = Project(temp['author'], temp['title'], temp['description'], temp['max_number'],
+                              temp['skills'], temp['status'], temp['appliers'], temp['collaborators'],
+                              temp['files'], temp['final_image'])
+            projects.append(project)
+
+        return projects
+
     # Method to save a project
     @staticmethod
     def save(title, author, description, max_number, skills, status, collaborators, appliers, files):

@@ -440,13 +440,16 @@ def delete_video(title):
 # Route for the profile
 @app.route('/profile/<string:username>')
 def other_profile(username):
-    user = mongo.db.user.find_one({'username': username})
+    user = UserService.find_user_by_username(username)
 
     contest_images = ContestService.retrieve_images_contest(user.username)
 
-    #project_images = retrieve_images_projects(user['username'])
+    wip_projects = ProjectService.find_all_by_username_and_status(username, 'WIP')
 
-    return render_template('account_profile.html', user=user, contest_images=contest_images)
+    finished_projects = ProjectService.find_all_by_username_and_status(username, 'finished')
+
+    return render_template('account_profile.html', user=user, contest_images=contest_images,
+                           wip_projects=wip_projects, finished_projects=finished_projects)
 
 
 # Route for the profile
@@ -457,9 +460,12 @@ def profile():
 
     contest_images = ContestService.retrieve_images_contest(user.username)
 
-    #project_images = retrieve_images_projects(user.username)
+    wip_projects = ProjectService.find_all_by_username_and_status(session['username'], 'WIP')
 
-    return render_template('account_profile.html', user=user, contest_images=contest_images)
+    finished_projects = ProjectService.find_all_by_username_and_status(session['username'], 'finished')
+
+    return render_template('account_profile.html', user=user, contest_images=contest_images,
+                           wip_projects=wip_projects, finished_projects=finished_projects)
 
 
 # Route for uploading profile image
@@ -631,7 +637,7 @@ def add_project():
 @app.route('/join_project/<string:title>')
 def join_project(title):
 
-    mongo.db.project.update({'title': title}, {'$push': {'appliers': session['username']}})
+    ProjectService.join_project(title, session['username'])
 
     flash('You apply for the project', 'success')
 
