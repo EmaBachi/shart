@@ -420,6 +420,11 @@ class ProjectService:
 
         return project
 
+    # Method to check how many collaborators there are in a given projects
+    @staticmethod
+    def check_collaborators_number(title)
+    
+
     # Method to put some users into collaborators
     @staticmethod
     def put_in_collaborators(title, collaborators):
