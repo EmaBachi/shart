@@ -62,7 +62,7 @@
 }
 
 /* Icon color in about */
-.glyphicon-heart, .glyphicon-globe, .glyphicon-lock, .glyphicon-euro, .glyphicon-random, .glyphicon-leaf{
+.glyphicon-heart, .glyphicon-globe, .glyphicon-lock, .glyphicon-euro,.glyphicon-wrench, .glyphicon-random, .glyphicon-leaf{
   color: black;
 }
 
@@ -144,6 +144,49 @@
 }
 
 /* profile */
+.profile-sidebar {
+  padding: 20px 0 10px 0;
+  background: #fff;
+}
+.profile-usermenu {
+  margin-top: 30px;
+}
+
+.profile-usermenu ul li {
+  border-bottom: 1px solid #f0f4f7;
+}
+
+.profile-usermenu ul li:last-child {
+  border-bottom: none;
+}
+
+.profile-usermenu ul li a {
+  color: #93a3b5;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.profile-usermenu ul li a i {
+  margin-right: 8px;
+  font-size: 14px;
+}
+
+.profile-usermenu ul li a:hover {
+  background-color: #fafcfd;
+  color: #5b9bd1;
+}
+
+.profile-usermenu ul li.active {
+  border-bottom: none;
+}
+
+.profile-usermenu ul li.active a {
+  color: #5b9bd1;
+  background-color: #f6f9fb;
+  border-left: 2px solid #5b9bd1;
+  margin-left: -2px;
+}
+
 * {
   box-sizing: border-box;
   -webkit-transition: 0.3s cubic-bezier(0.75, 0, 0.2, 1), color 0.3s ease;
