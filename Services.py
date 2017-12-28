@@ -422,7 +422,17 @@ class ProjectService:
 
     # Method to check how many collaborators there are in a given projects
     @staticmethod
-    def check_collaborators_number(title)
+    def check_collaborators_number(title, form_length):
+        temp = ProjectRepository.find_by_title(title)
+
+        project = Project(temp['author'], temp['title'], temp['description'], temp['max_number'],
+                              temp['skills'], temp['status'], temp['appliers'], temp['collaborators'],
+                              temp['files'], temp['final_image'])
+
+        if project.max_number < form_length:
+            return False
+        else:
+            return True
     
 
     # Method to put some users into collaborators

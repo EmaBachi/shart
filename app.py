@@ -661,7 +661,7 @@ def single_project(title):
 
             return redirect(url_for('single_project', title=project.title))
         else :
-            flash('Ops! You are trying to choose more collaborators than needed')
+            flash('Ops! You are trying to choose more collaborators than needed', 'danger')
             return redirect(url_for('single_project', title=project.title)) 
     else:
 
