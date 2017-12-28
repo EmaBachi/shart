@@ -55,26 +55,43 @@
         </div>
     </div>
 
+ <h3 class="text-center">Works</h3>
+       <div class="rela-inline">
 
-    <h3>Works</h3>
-    <div class="rela-block content">
-    {% for project in finished_projects %}
-        <div class="rela-inline">
-                <img class="image" src="{{ url_for('send_file_of_project', title=project.title, file_name=project.final_image)}}" height="180px" width="240px">
-                <p></p>
-                <p>This project was created by <a href="/profile/{{project.author}}">{{project.author}}</a></p>
-                 <p>Collaborators:
+{% for project in finished_projects %}
+        <div class="gallery_product col-lg-3 col-md-4 col-sm-6 col-xs-6 mt-4 filter hdpe">
+        <div class="rela-block content">
 
-                {% for collaborator in project.collaborators %}
-                    <a href="/profile/{{collaborator}}">{{collaborator}} </a>
-                {% endfor %}
-                 </p>
-            </div>
-    {% endfor %}
+                <div class="card">
+                    <a href="{{url_for('send_file_of_project', title=project.title, file_name=project.final_image)}}"> <img src="{{url_for('send_file_of_project', title=project.title, file_name=project.final_image)}}" class="card-img-top"></a>
+                    <div class="card-block">
+                        <h4 class="card-title"><a href="/image_project/{{project.title}}" >{{project.title}}</a></h4>
+
+                        <div class="card-text">
+                            {{ project.description }}
+
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <span class="float-right">This project was created by <a href="/profile/{{project.author}}">{{project.author}}</a></span>
+                        <span><i class=""></i> <p>Collaborators:
+                                {% for collaborator in project.collaborators %}
+                                    <a href="/profile/{{collaborator}}">{{collaborator}}</a>
+                                    {% endfor %}</p>
+                        </span>
+                    </div>
+                </div>
+
     </div>
+ </div>
+
+        </div>
+    {% endfor %}
 
 
-    <h3>Contest</h3>
+
+
+    <h3 class="text-center">Contest</h3>
     <div id="contests" class="rela-block content">
     {% for contest_image in contest_images %}
         <div class="rela-inline">
