@@ -1,8 +1,43 @@
 <hr class="featurette-divider">
-
-<footer class="footer">
-    <p class="pull-right">Visit us on <a href="https://www.facebook.com" target="_blank"><img class="icon-social-network" src="https://image.flaticon.com/icons/png/512/124/124010.png"></a>
-        &middot; <a href="https://www.twitter.com" target="_blank"><img class="icon-social-network" src="https://cdn4.iconfinder.com/data/icons/flat-brand-logo-2/512/twitter-128.png"></a>
-        &middot; <a href="https://www.instagram.com" target="_blank"><img class="icon-social-network" src="http://pngimg.com/uploads/instagram/instagram_PNG11.png"></a></p>
-    <p>&copy; 2017 Shart, Inc. &middot; <a href="/about">About us</a> &middot; <a href="/terms">Terms</a></p>
-</footer>
+    <!----------- Footer ------------>
+    <footer class="footer-bs">
+        <div class="row">
+        	<div class="col-md-3 footer-brand animated fadeInLeft">
+                <p><img src="{{url_for('static', filename='images/logo.png')}}" width="150" height="35"></p>
+                <p>We share art across the world. Idea by students of Politecnico di Torino</p>
+                <p>© 2017 Shart Inc., All rights reserved</p>
+            </div>
+        	<div class="col-md-4 footer-nav animated fadeInUp">
+            	<h4>Menu</h4>
+            	<div class="col-md-6">
+                    <ul class="list">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/projetcs">Projects</a></li>
+                        <li><a href="/complete_works">Complete Works</a></li>
+                        <li><a href="/jobs">Jobs</a></li>
+                    </ul>
+                </div>
+            	<div class="col-md-6">
+                    <ul class="list">
+                        <li><a href="/blog">Blog</a></li>
+                        <li><a href="/competitions">Contests</a></li>
+                        <li><a href="/video_gallery">Exclusive Contents</a></li>
+                        <li><a href="/about">About us</a></li>
+                    </ul>
+                </div>
+            </div>
+        	<div class="col-md-2 footer-social animated fadeInDown">
+            	<h4>Follow Us</h4>
+            	<ul>
+                	<li><a href="https://www.facebook.com">Facebook</a></li>
+                	<li><a href="https://www.twitter.com">Twitter</a></li>
+                	<li><a href="https://www.instagram.com">Instagram</a></li>
+                    <li><a href="https://www.google.com">Google</a></li>
+                </ul>
+            </div>
+            <div class="col-md-3 footer-ns animated fadeInRight">
+                <p><img src="{{url_for('static', filename='images/polito.png')}}" width="150" height="150">
+                </p>
+            </div>
+        </div>
+    </footer>

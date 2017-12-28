@@ -324,6 +324,10 @@ class ProjectRepository:
         return db.project.find({'$or': [{'author': username}, {'collaborators': {'$in': [username]}}]})
 
     @staticmethod
+    def find_all_by_username_and_status(username, status):
+        return db.project.find({'$or': [{'author': username, 'status': status}, {'collaborators': {'$in': [username]}, 'status': status}]})
+
+    @staticmethod
     def save(project):
         db.project.insert({
             'title': project.title,

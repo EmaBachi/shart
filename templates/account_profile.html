@@ -9,21 +9,44 @@
             <img class="profile-pic" src="{{ url_for('image', image_name=user.image_name) }}"/>
         </div>
         <div class="rela-block profile-name-container">
+            {% if session.username == user.username %}
             <div class="rela-block"><a href="/upload_image" class="btn btn-default">Change Image</a></div>
             <p></p>
+            {% endif %}
             <div class="rela-block user-name" id="user_name">{{ user.username }}</div>
             <p></p>
             <div class="rela-block user-desc" id="user_description">{{ user.description}}
                 <p></p>
+            {% if session.username == user.username %}
             <p><a href="/change_description" class="btn btn-default">Change your Bio</a></p>
+            {% endif %}
             </div>
         </div>
         <div class="rela-block profile-card-stats">
-            <div class="floated profile-stat works" id="num_works">28<br></div>
-            <div class="floated profile-stat contests" id="num_followers">112<br></div>
-            <div class="floated profile-stat wip" id="num_following">245<br></div>
+            <div class="floated profile-stat works">{{ finished_projects|length }}<br></div>
+            <div class="floated profile-stat contests">{{ contest_images|length }}<br></div>
+            <div class="floated profile-stat wip">{{ wip_projects|length }}<br></div>
         </div>
     </div>
+
+    <h3>Projects</h3>
+    <div class="rela-block content">
+    {% for project in finished_projects %}
+        <div class="rela-inline">
+                <img class="image" src="{{ url_for('send_file_of_project', title=project.title, file_name=project.final_image)}}" height="180px" width="240px">
+                <p></p>
+                <p>This project was created by <a href="/profile/{{project.author}}">{{project.author}}</a></p>
+                 <p>Collaborators:
+
+                {% for collaborator in project.collaborators %}
+                    <a href="/profile/{{collaborator}}">{{collaborator}} </a>
+                {% endfor %}
+                 </p>
+            </div>
+    {% endfor %}
+    </div>
+
+
     <h3>Contests</h3>
     <div class="rela-block content">
     {% for contest_image in contest_images %}

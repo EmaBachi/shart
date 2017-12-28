@@ -1,8 +1,6 @@
 # External import
 from flask import Flask, render_template, request, flash, redirect, url_for, session, logging, send_from_directory
-from flask_pymongo import PyMongo
 import datetime
-import os
 
 
 # Internal import
@@ -442,13 +440,16 @@ def delete_video(title):
 # Route for the profile
 @app.route('/profile/<string:username>')
 def other_profile(username):
-    user = mongo.db.user.find_one({'username': username})
+    user = UserService.find_user_by_username(username)
 
     contest_images = ContestService.retrieve_images_contest(user.username)
 
-    #project_images = retrieve_images_projects(user['username'])
+    wip_projects = ProjectService.find_all_by_username_and_status(username, 'WIP')
 
-    return render_template('account_profile.html', user=user, contest_images=contest_images)
+    finished_projects = ProjectService.find_all_by_username_and_status(username, 'finished')
+
+    return render_template('account_profile.html', user=user, contest_images=contest_images,
+                           wip_projects=wip_projects, finished_projects=finished_projects)
 
 
 # Route for the profile
@@ -459,9 +460,12 @@ def profile():
 
     contest_images = ContestService.retrieve_images_contest(user.username)
 
-    #project_images = retrieve_images_projects(user.username)
+    wip_projects = ProjectService.find_all_by_username_and_status(session['username'], 'WIP')
 
-    return render_template('account_profile.html', user=user, contest_images=contest_images)
+    finished_projects = ProjectService.find_all_by_username_and_status(session['username'], 'finished')
+
+    return render_template('account_profile.html', user=user, contest_images=contest_images,
+                           wip_projects=wip_projects, finished_projects=finished_projects)
 
 
 # Route for uploading profile image
@@ -633,7 +637,7 @@ def add_project():
 @app.route('/join_project/<string:title>')
 def join_project(title):
 
-    mongo.db.project.update({'title': title}, {'$push': {'appliers': session['username']}})
+    ProjectService.join_project(title, session['username'])
 
     flash('You apply for the project', 'success')
 
@@ -650,11 +654,15 @@ def single_project(title):
 
     if request.method == 'POST':
 
-        ProjectService.put_in_collaborators(title, form.appliers.data)
-        flash('Great! Your collaborators are ready', 'success')
+        if ProjectService.check_collaborators_number(title, len(form.appliers.data)):
 
-        return redirect(url_for('single_project', title=project.title))
+            ProjectService.put_in_collaborators(title, form.appliers.data)
+            flash('Great! Your collaborators are ready', 'success')
 
+            return redirect(url_for('single_project', title=project.title))
+        else :
+            flash('Ops! You are trying to choose more collaborators than needed', 'danger')
+            return redirect(url_for('single_project', title=project.title)) 
     else:
 
         files = project.files

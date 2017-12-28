@@ -7,33 +7,33 @@ from Domain import User, Article, Comment, Contest, File, ExclusiveVideo, Job, P
 
 UPLOAD_FOLDER_CONTEST = '/home/emanuele/Scrivania/Shart_Contents/contests'
 UPLOAD_FOLDER_PROJECT = '/home/emanuele/Scrivania/Shart_Contents/projects'
-UPLOAD_FOLDER_IMAGE = '/home/emanuele/Scrivania/Shart_Contents/images'
+UPLOAD_FOLDER_IMAGE = 'C:\Users\Alessia\Desktop\images'
+UPLOAD_FOLDER_IMAGE_STATIC = 'C:\Users\Alessia\Desktop\shart_new\shart\static\images'
 
 
 def create_directory_for_contest(title):
-    directory = UPLOAD_FOLDER_CONTEST + "/" + title
+    directory = UPLOAD_FOLDER_CONTEST + "\\" + title
     if not os.path.exists(directory):
         os.makedirs(directory)
     return
 
 
 def save_image_contest_in_server(title, image_to_save, file_to_save):
-    path = os.path.join(UPLOAD_FOLDER_CONTEST + "/" + title, image_to_save)
+    path = os.path.join(UPLOAD_FOLDER_CONTEST + "\\" + title, image_to_save)
     file_to_save.save(path)
 
 
 def create_directory_for_project(title_project):
-    directory = UPLOAD_FOLDER_PROJECT + "/" + title_project
+    directory = UPLOAD_FOLDER_PROJECT + "\\" + title_project
     if not os.path.exists(directory):
         os.makedirs(directory)
     return
 
 
 def save_image_project_in_server(title, file_to_save):
-    path = os.path.join(UPLOAD_FOLDER_PROJECT + "/" + title, file_to_save.filename)
+    path = os.path.join(UPLOAD_FOLDER_PROJECT + "\\" + title, file_to_save.filename)
     file_to_save.save(path)
     return
-
 
 def store_profile_image(file_to_save):
     path = os.path.join(UPLOAD_FOLDER_IMAGE, file_to_save.filename)
@@ -52,7 +52,7 @@ class UserService:
             password = sha256_crypt.encrypt(str(password_no_crypt))
 
             user = User(first_name, surname, username, date_of_birth, country, email, password,
-                        type, False, "", "", "")
+                        type, False,UPLOAD_FOLDER_IMAGE_STATIC, "utente.png","")
 
             UserRepository.create_user(user)
 
@@ -382,6 +382,21 @@ class ProjectService:
 
         return projects
 
+    # Method to find all project related to an user giving a certain status
+    @staticmethod
+    def find_all_by_username_and_status(username, status):
+        project_dict = ProjectRepository.find_all_by_username_and_status(username, status)
+
+        projects = []
+
+        for temp in project_dict:
+            project = Project(temp['author'], temp['title'], temp['description'], temp['max_number'],
+                              temp['skills'], temp['status'], temp['appliers'], temp['collaborators'],
+                              temp['files'], temp['final_image'])
+            projects.append(project)
+
+        return projects
+
     # Method to save a project
     @staticmethod
     def save(title, author, description, max_number, skills, status, collaborators, appliers, files):
@@ -404,6 +419,21 @@ class ProjectService:
                           temp['files'], temp['final_image'])
 
         return project
+
+    # Method to check how many collaborators there are in a given projects
+    @staticmethod
+    def check_collaborators_number(title, form_length):
+        temp = ProjectRepository.find_by_title(title)
+
+        project = Project(temp['author'], temp['title'], temp['description'], temp['max_number'],
+                              temp['skills'], temp['status'], temp['appliers'], temp['collaborators'],
+                              temp['files'], temp['final_image'])
+
+        if project.max_number < form_length:
+            return False
+        else:
+            return True
+    
 
     # Method to put some users into collaborators
     @staticmethod
