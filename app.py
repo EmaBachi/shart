@@ -376,18 +376,33 @@ def user_contest():
 
 @app.route('/contest/<string:title>/<string:name>/like')
 def like(title, name):
+    username = session['username']
+    usernames_like = ContestService.find_usernames_like(title,name,username)
+    app.logger.info(username)
+    if usernames_like is not None:
+        if username in usernames_like:
 
-    ContestService.like(title, name)
-
-    return redirect(url_for('contest', title=title))
+            flash('you have already liked this project','danger')
+        else:
+            ContestService.like(title,name,username)
+        return redirect(url_for('contest', title=title))
+    return
 
 
 @app.route('/contest/<string:title>/<string:name>/unlike')
 def unlike(title, name):
+    username = session['username']
+    usernames_unlike = ContestService.find_usernames_unlike(title, name, username)
+    app.logger.info(usernames_unlike)
+    if usernames_unlike is not None:
+        if username in usernames_unlike:
 
-    ContestService.unlike(title, name)
+            flash('you have already unliked this project', 'danger')
+        else:
+            ContestService.unlike(title, name, username)
+        return redirect(url_for('contest', title=title))
+    return
 
-    return redirect(url_for('contest', title=title))
 
 
 # ---!!! Contests development completed !!!---

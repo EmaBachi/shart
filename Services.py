@@ -252,7 +252,7 @@ class ContestService:
     # Method to upload a project in a contest
     @staticmethod
     def upload_project_contest(username, title, image_to_save, file_to_save):
-        file = File(username, image_to_save, UPLOAD_FOLDER_CONTEST, title, "", 0, 0, "")
+        file = File(username, image_to_save, UPLOAD_FOLDER_CONTEST, title, "",0,[],[], 0, "")
         ContestRepository.upload_project_contest(title, file)
         save_image_contest_in_server(title, image_to_save, file_to_save)
 
@@ -278,13 +278,40 @@ class ContestService:
 
     # Method to like a project
     @staticmethod
-    def like(title, name):
-        ContestRepository.like(title, name)
+    def like(title, name,username):
+        ContestRepository.like(title, name,username)
+
+    # Method to find all people who liked the project, given a file_name
+    @staticmethod
+    def find_usernames_like(title,name,username):
+
+        query = ContestRepository.find_usernames_like(title,name)
+        files = []
+        for item in query:
+            for file in item['files']:
+                for user in file['usernames_like']:
+
+                        files.append(user)
+
+        return files
+
+    # Method to find all people who unliked the project, given a file_name
+    @staticmethod
+    def find_usernames_unlike(title, name, username):
+
+            query = ContestRepository.find_usernames_unlike(title, name)
+            files = []
+            for item in query:
+                for file in item['files']:
+                    for user in file['usernames_unlike']:
+                        files.append(user)
+
+            return files
 
     # Method to like a project
     @staticmethod
-    def unlike(title, name):
-        ContestRepository.unlike(title, name)
+    def unlike(title, name, username):
+        ContestRepository.unlike(title, name,username)
 
     # Method to retrieve user's images contest
     @staticmethod
