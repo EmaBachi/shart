@@ -55,7 +55,8 @@
         </div>
     </div>
 
- <h3 class="text-center">Works</h3>
+{% if finished_projects|length>0 %}
+ <h3 class="retroshd">Works</h3>
        <div class="rela-inline">
 
 {% for project in finished_projects %}
@@ -84,14 +85,15 @@
 
     </div>
  </div>
-
-        </div>
-    {% endfor %}
-
-
+ {% endfor %}
+       </div>
+    {% endif %}
 
 
-    <h3 class="text-center">Contest</h3>
+
+
+{% if contest_images|length>0 %}
+    <h3 class="retroshd">Contest</h3>
     <div id="contests" class="rela-block content">
     {% for contest_image in contest_images %}
         <div class="rela-inline">
@@ -112,6 +114,7 @@
             </div>
     {% endfor %}
     </div>
+    {% endif %}
 
 </div>
 

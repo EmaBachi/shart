@@ -579,7 +579,7 @@ def add_job():
         description = form.description.data
         author = session['username']
 
-        JobService.save(title, location, job_type, company_name, description, author)
+        JobService.save(title, location, author, job_type, description, company_name)
 
         flash('Job posted', 'success')
 

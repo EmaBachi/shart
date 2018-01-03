@@ -343,12 +343,13 @@ class JobRepository:
     @staticmethod
     def save(job):
         db.job.insert({
-            'title': job.title,
-            'location': job.location,
             'author': job.author,
-            'job_type': job.job_type,
+            'title': job.title,
             'description': job.description,
-            'company_name': job.company_name
+            'company_name': job.company_name,
+            'location': job.location,
+            'job_type': job.job_type
+
         })
 
     # Method to find all jobs
