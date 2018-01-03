@@ -708,13 +708,15 @@ def upload_file_project(title):
             flash('No selected file', 'danger')
             return redirect(url_for('single_project', title=title))
         else:
+            files = ProjectService.find_project_files(title)
+            if file.filename not in files:
+                ProjectService.store_file_for_project(session['username'], title, file.filename, datetime.date.today(), request.form['description'], file)
 
-            ProjectService.store_file_for_project(session['username'], title, file.filename, datetime.date.today(), request.form['description'], file)
+                flash('File Uploaded', 'success')
 
-            flash('File Uploaded', 'success')
-
-            return redirect(url_for('single_project', title=title))
-
+                return redirect(url_for('single_project', title=title))
+            else:
+                flash('this file has been already uploaded','danger')
     return render_template('upload_file_project.html')
 
 

@@ -454,3 +454,10 @@ class ProjectRepository:
     @staticmethod
     def find_finished_project():
         return db.project.find({'status': 'finished'})
+
+    # Method to find project files
+    @staticmethod
+    def find_project_files(title):
+           return db.project.find({'title': title},
+                                  {'_id':0,
+                                   'files':1})

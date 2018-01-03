@@ -480,9 +480,20 @@ class ProjectService:
     # Method to store a file in a project
     @staticmethod
     def store_file_for_project(username, title, file_name, date, description, file_to_save):
-        file = File(username, file_name, UPLOAD_FOLDER_PROJECT, title, description, 0, 0, str(date))
+        file = File(username, file_name, UPLOAD_FOLDER_PROJECT, title, description, 0,"","", 0, str(date))
         ProjectRepository.store_file_for_project(title, file)
         save_image_project_in_server(title, file_to_save)
+
+    # Method to find finished project
+    @staticmethod
+    def find_project_files(title):
+        query = ProjectRepository.find_project_files(title)
+        files = []
+        for item in query:
+            for file in item['files']:
+                files.append(file['file_name'])
+
+        return files
 
     # Method to send an image from directory
     @staticmethod
