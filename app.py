@@ -113,7 +113,6 @@ def about():
 def blog():
 
     articles = ArticleService.find_all_articles()
-
     if len(articles) > 0:
         # Fetching all articles
         return render_template('blog.html', articles=articles)
@@ -146,12 +145,12 @@ def article(title):
 def add_article():
     form = ArticleForm(request.form)
 
+
     if request.method == 'POST' and form.validate():
         title = form.title.data
         body = form.body.data
         author = session['username']
         date_python = datetime.date.today()
-
         ArticleService.save(title, body, author, date_python)
 
         flash('Article created', 'success')
