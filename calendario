@@ -22,10 +22,17 @@
 	2) dahsboard dei progetti
 	3) Rifiniture e sicurezza
 
-IMPORTANTE:
-    2) aggiungere author nei jobs (completato)
-    3) se non sei loggato non puoi fare join al contest (completato)
-    4) Immagine del profilo standard (completato)
-    6) Like e unlike singolo (completato) --> controllare i file (ho aggiunto due liste di usernames!)
-    8) Controllare che il file inserito dagli utenti non esista ancora sul db (completato)
 
+ERRORI TROVATI:
+    1) Quando la descrizione del lavoro postato è molto lunga, il sito non visualizza in modo decente l'offerta di lavoro
+    2) Quando posto un progetto e cic licco sopra vado nella pagina di dettaglio del progetto, Se premo "Seleziona collaboratori"
+            senza aver selezionato alcun utente il sito crasha.
+    3) Nella pagina di dettaglio del progetto, una descrizione lunga viene comunque tagliata dai puntini di sospensione
+    4) Modificare il modo in cui viene caricata l'immagine di profilo di default
+    5) Gli admin in questo momento possono fare join in un contest
+    6) Il menu a tendina del profilo degli amministratori e dei gallery owner è sbagliato: non dovrebbero esservi my contest e my projects
+    7) La pagina dei video non è molto bella
+    8) una volta scaduta la data dei contest bisognerebbe scrivere unn pezzo di codice che elegga automaticamente il vincitore in base al numero di like ottenuti
+    9) Bisognerebbe ripensare al profilo dei Gallery Owner mai includendo l'indirizzo della galleria o robe simili
+    10) Dal momento che abbiamo inserito le skills nei progetto sarebbe corretto secondo me che fossero visualizzate nella descrizione del progetto
+    11) sarebbe bello avere un pulsante per filtrare i progetti e i contest per tipo (su questo poi ci parliamo)

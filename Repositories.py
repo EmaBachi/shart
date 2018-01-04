@@ -265,7 +265,7 @@ class ContestRepository:
             }
         )
 
-     # Method to find all people who unliked the project, given a file_name and contest's title
+    # Method to find all people who unliked the project, given a file_name and contest's title
     @staticmethod
     def find_usernames_unlike(title, name):
             return db.contest.find(
@@ -279,8 +279,6 @@ class ContestRepository:
                     'files.usernames_unlike': 1
                 }
             )
-
-
 
     # Method to like a project
     @staticmethod

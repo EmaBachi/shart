@@ -5,35 +5,36 @@ import os
 from Repositories import UserRepository, ArticleRepository, ContestRepository, ExclusiveVideoRepository, JobRepository, ProjectRepository
 from Domain import User, Article, Comment, Contest, File, ExclusiveVideo, Job, Project
 
-UPLOAD_FOLDER_CONTEST = 'C:\Users\Alessia\Desktop\contests'
-UPLOAD_FOLDER_PROJECT = 'C:\Users\Alessia\Desktop\projects'
-UPLOAD_FOLDER_IMAGE = 'C:\Users\Alessia\Desktop\images'
+UPLOAD_FOLDER_CONTEST = '/home/emanuele/Scrivania/Shart_Contents/contests'
+UPLOAD_FOLDER_PROJECT = '/home/emanuele/Scrivania/Shart_Contents/projects'
+UPLOAD_FOLDER_IMAGE = '/home/emanuele/Scrivania/Shart_Contents/images'
 UPLOAD_FOLDER_IMAGE_STATIC = 'C:\Users\Alessia\Desktop\shart_new\shart\static\images'
 
 
 def create_directory_for_contest(title):
-    directory = UPLOAD_FOLDER_CONTEST + "\\" + title
+    directory = UPLOAD_FOLDER_CONTEST + "/" + title
     if not os.path.exists(directory):
         os.makedirs(directory)
     return
 
 
 def save_image_contest_in_server(title, image_to_save, file_to_save):
-    path = os.path.join(UPLOAD_FOLDER_CONTEST + "\\" + title, image_to_save)
+    path = os.path.join(UPLOAD_FOLDER_CONTEST + "/" + title, image_to_save)
     file_to_save.save(path)
 
 
 def create_directory_for_project(title_project):
-    directory = UPLOAD_FOLDER_PROJECT + "\\" + title_project
+    directory = UPLOAD_FOLDER_PROJECT + "/" + title_project
     if not os.path.exists(directory):
         os.makedirs(directory)
     return
 
 
 def save_image_project_in_server(title, file_to_save):
-    path = os.path.join(UPLOAD_FOLDER_PROJECT + "\\" + title, file_to_save.filename)
+    path = os.path.join(UPLOAD_FOLDER_PROJECT + "/" + title, file_to_save.filename)
     file_to_save.save(path)
     return
+
 
 def store_profile_image(file_to_save):
     path = os.path.join(UPLOAD_FOLDER_IMAGE, file_to_save.filename)
@@ -52,7 +53,7 @@ class UserService:
             password = sha256_crypt.encrypt(str(password_no_crypt))
 
             user = User(first_name, surname, username, date_of_birth, country, email, password,
-                        type, False,UPLOAD_FOLDER_IMAGE_STATIC, "utente.png","")
+                        type, False, UPLOAD_FOLDER_IMAGE_STATIC, "utente.png", "")
 
             UserRepository.create_user(user)
 
