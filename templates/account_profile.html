@@ -6,7 +6,7 @@
 <div class="rela-block container">
     <div class="rela-block profile-card">
         <div>
-            <img class="profile-pic" src="{{ url_for('image', image_name=user.image_name) }}"/>
+           <a href="#aboutModal" data-toggle="modal" data-target="#myModal"><img class="profile-pic" name="aboutme" src="{{ url_for('image', image_name=user.image_name) }}"/></a>
         </div>
         <div class="rela-block profile-name-container">
             {% if session.username == user.username %}
@@ -15,13 +15,39 @@
             {% endif %}
             <div class="rela-block user-name" id="user_name">{{ user.username }}</div>
             <p></p>
-            <div class="rela-block user-desc" id="user_description">{{ user.description}}
-                <p></p>
-            {% if session.username == user.username %}
-            <p><a href="/change_description" class="btn btn-default">Change your Bio</a></p>
-            {% endif %}
+            <em>click my face for more</em>
+        </div>
+        </div>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title" id="myModalLabel">More About {{ user.username }} </h4>
+                    </div>
+                <div class="modal-body">
+                    <img src="{{ url_for('image', image_name=user.image_name) }}" name="aboutme" width="140" height="140" border="0" class="img-circle"></a>
+                    <h3 class="media-heading">{{ user.username }} <small>{{ user.country }}</small></h3>
+                    <!--<span><strong>Skills: </strong></span>
+                        <span class="label label-warning">HTML5/CSS</span>
+                        <span class="label label-info">Adobe CS 5.5</span>
+                        <span class="label label-info">Microsoft Office</span>
+                        <span class="label label-success">Windows XP, Vista, 7</span>
+                    <hr>-->
+
+                    <p class="text-left"><strong>Bio: </strong><br>
+                        {{ user.description }}
+                        <br>
+                    </p>
+                    {% if session.username == user.username %}
+                    <p><a href="/change_description" class="btn btn-default">Change your Bio</a></p>
+                    {% endif %}
+
+
+                </div>
             </div>
         </div>
+    </div>
         <div class="rela-block profile-card-stats">
             <div class="floated profile-stat works">{{ finished_projects|length }}<br></div>
             <div class="floated profile-stat contests">{{ contest_images|length }}<br></div>
@@ -29,26 +55,46 @@
         </div>
     </div>
 
-    <h3>Projects</h3>
-    <div class="rela-block content">
-    {% for project in finished_projects %}
-        <div class="rela-inline">
-                <img class="image" src="{{ url_for('send_file_of_project', title=project.title, file_name=project.final_image)}}" height="180px" width="240px">
-                <p></p>
-                <p>This project was created by <a href="/profile/{{project.author}}">{{project.author}}</a></p>
-                 <p>Collaborators:
+{% if finished_projects|length>0 %}
+ <h3 class="retroshd">Works</h3>
+       <div class="rela-inline">
 
-                {% for collaborator in project.collaborators %}
-                    <a href="/profile/{{collaborator}}">{{collaborator}} </a>
-                {% endfor %}
-                 </p>
-            </div>
-    {% endfor %}
+{% for project in finished_projects %}
+        <div class="gallery_product col-lg-3 col-md-4 col-sm-6 col-xs-6 mt-4 filter hdpe">
+        <div class="rela-block content">
+
+                <div class="card">
+                    <a href="{{url_for('send_file_of_project', title=project.title, file_name=project.final_image)}}"> <img src="{{url_for('send_file_of_project', title=project.title, file_name=project.final_image)}}" class="card-img-top"></a>
+                    <div class="card-block">
+                        <h4 class="card-title"><a href="/image_project/{{project.title}}" >{{project.title}}</a></h4>
+
+                        <div class="card-text">
+                            {{ project.description }}
+
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <span class="float-right">This project was created by <a href="/profile/{{project.author}}">{{project.author}}</a></span>
+                        <span><i class=""></i> <p>Collaborators:
+                                {% for collaborator in project.collaborators %}
+                                    <a href="/profile/{{collaborator}}">{{collaborator}}</a>
+                                    {% endfor %}</p>
+                        </span>
+                    </div>
+                </div>
+
     </div>
+ </div>
+ {% endfor %}
+       </div>
+    {% endif %}
 
 
-    <h3>Contests</h3>
-    <div class="rela-block content">
+
+
+{% if contest_images|length>0 %}
+    <h3 class="retroshd">Contest</h3>
+    <div id="contests" class="rela-block content">
     {% for contest_image in contest_images %}
         <div class="rela-inline">
                 <img class="image" src="{{ url_for('image_contest', title=contest_image.secondary_folder, file_name=contest_image.file_name)}}" height="180px" width="240px">
@@ -68,6 +114,7 @@
             </div>
     {% endfor %}
     </div>
+    {% endif %}
 
 </div>
 

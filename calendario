@@ -23,8 +23,9 @@
 	3) Rifiniture e sicurezza
 
 IMPORTANTE:
-    1) guardare tag nel marketing
-    4) Immagine del profilo standard
-    6) Like e unlike singolo
-    8) Controllare che il file inserito dagli utenti non esista ancora sul db
+    2) aggiungere author nei jobs (completato)
+    3) se non sei loggato non puoi fare join al contest (completato)
+    4) Immagine del profilo standard (completato)
+    6) Like e unlike singolo (completato) --> controllare i file (ho aggiunto due liste di usernames!)
+    8) Controllare che il file inserito dagli utenti non esista ancora sul db (completato)
 

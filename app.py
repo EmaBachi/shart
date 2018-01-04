@@ -113,7 +113,6 @@ def about():
 def blog():
 
     articles = ArticleService.find_all_articles()
-
     if len(articles) > 0:
         # Fetching all articles
         return render_template('blog.html', articles=articles)
@@ -146,12 +145,12 @@ def article(title):
 def add_article():
     form = ArticleForm(request.form)
 
+
     if request.method == 'POST' and form.validate():
         title = form.title.data
         body = form.body.data
         author = session['username']
         date_python = datetime.date.today()
-
         ArticleService.save(title, body, author, date_python)
 
         flash('Article created', 'success')
@@ -376,18 +375,33 @@ def user_contest():
 
 @app.route('/contest/<string:title>/<string:name>/like')
 def like(title, name):
+    username = session['username']
+    usernames_like = ContestService.find_usernames_like(title,name,username)
+    app.logger.info(username)
+    if usernames_like is not None:
+        if username in usernames_like:
 
-    ContestService.like(title, name)
-
-    return redirect(url_for('contest', title=title))
+            flash('you have already liked this project','danger')
+        else:
+            ContestService.like(title,name,username)
+        return redirect(url_for('contest', title=title))
+    return
 
 
 @app.route('/contest/<string:title>/<string:name>/unlike')
 def unlike(title, name):
+    username = session['username']
+    usernames_unlike = ContestService.find_usernames_unlike(title, name, username)
+    app.logger.info(usernames_unlike)
+    if usernames_unlike is not None:
+        if username in usernames_unlike:
 
-    ContestService.unlike(title, name)
+            flash('you have already unliked this project', 'danger')
+        else:
+            ContestService.unlike(title, name, username)
+        return redirect(url_for('contest', title=title))
+    return
 
-    return redirect(url_for('contest', title=title))
 
 
 # ---!!! Contests development completed !!!---
@@ -564,7 +578,7 @@ def add_job():
         description = form.description.data
         author = session['username']
 
-        JobService.save(title, location, job_type, company_name, description, author)
+        JobService.save(title, location, author, job_type, description, company_name)
 
         flash('Job posted', 'success')
 
@@ -693,13 +707,15 @@ def upload_file_project(title):
             flash('No selected file', 'danger')
             return redirect(url_for('single_project', title=title))
         else:
+            files = ProjectService.find_project_files(title)
+            if file.filename not in files:
+                ProjectService.store_file_for_project(session['username'], title, file.filename, datetime.date.today(), request.form['description'], file)
 
-            ProjectService.store_file_for_project(session['username'], title, file.filename, datetime.date.today(), request.form['description'], file)
+                flash('File Uploaded', 'success')
 
-            flash('File Uploaded', 'success')
-
-            return redirect(url_for('single_project', title=title))
-
+                return redirect(url_for('single_project', title=title))
+            else:
+                flash('this file has been already uploaded','danger')
     return render_template('upload_file_project.html')
 
 

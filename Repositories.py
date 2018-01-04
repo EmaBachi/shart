@@ -217,6 +217,8 @@ class ContestRepository:
                                      'secondary_folder': file.secondary_folder,
                                      'file_name': file.file_name,
                                      'like': file.like,
+                                     'usernames_like': file.usernames_like,
+                                     'usernames_unlike': file.usernames_unlike,
                                      'unlike': file.unlike
                                      }
                                 }
@@ -229,19 +231,60 @@ class ContestRepository:
 
     # Method to like a project
     @staticmethod
-    def like(title, name):
+    def like(title, name,username):
         db.contest.update(
             {
                 'title': title,
                 'files.file_name': name},
+
             {'$inc':
-                 {'files.$.like': 1}
-             }
+                 {'files.$.like': 1}},
+
         )
+        db.contest.update(
+            {
+                'title': title,
+                'files.file_name': name},
+
+            {'$push':
+                 {'files.$.usernames_like': username}}
+        )
+    # Method to find all people who liked the project, given a file_name and contest's title
+    @staticmethod
+    def find_usernames_like(title, name):
+
+        return db.contest.find(
+            {
+                'title': title,
+                'files.file_name':name
+            },
+            {
+                '_id': 0,
+
+                'files.usernames_like': 1
+            }
+        )
+
+     # Method to find all people who unliked the project, given a file_name and contest's title
+    @staticmethod
+    def find_usernames_unlike(title, name):
+            return db.contest.find(
+                {
+                    'title': title,
+                    'files.file_name': name
+                },
+                {
+                    '_id': 0,
+
+                    'files.usernames_unlike': 1
+                }
+            )
+
+
 
     # Method to like a project
     @staticmethod
-    def unlike(title, name):
+    def unlike(title, name,username):
         db.contest.update(
             {
                 'title': title,
@@ -249,6 +292,14 @@ class ContestRepository:
             {'$inc':
                 {'files.$.unlike': 1}
             }
+        )
+        db.contest.update(
+            {
+                'title': title,
+                'files.file_name': name},
+
+            {'$push':
+                 {'files.$.usernames_unlike': username}}
         )
 
     # Method to retrieve all contest's images of a user
@@ -292,12 +343,13 @@ class JobRepository:
     @staticmethod
     def save(job):
         db.job.insert({
-            'title': job.title,
-            'location': job.location,
             'author': job.author,
-            'job_type': job.job_type,
+            'title': job.title,
             'description': job.description,
-            'company_name': job.company_name
+            'company_name': job.company_name,
+            'location': job.location,
+            'job_type': job.job_type
+
         })
 
     # Method to find all jobs
@@ -403,3 +455,10 @@ class ProjectRepository:
     @staticmethod
     def find_finished_project():
         return db.project.find({'status': 'finished'})
+
+    # Method to find project files
+    @staticmethod
+    def find_project_files(title):
+           return db.project.find({'title': title},
+                                  {'_id':0,
+                                   'files':1})

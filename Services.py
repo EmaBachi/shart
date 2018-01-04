@@ -5,35 +5,35 @@ import os
 from Repositories import UserRepository, ArticleRepository, ContestRepository, ExclusiveVideoRepository, JobRepository, ProjectRepository
 from Domain import User, Article, Comment, Contest, File, ExclusiveVideo, Job, Project
 
-UPLOAD_FOLDER_CONTEST = '/home/emanuele/Scrivania/Shart_Contents/contests'
-UPLOAD_FOLDER_PROJECT = '/home/emanuele/Scrivania/Shart_Contents/projects'
-UPLOAD_FOLDER_IMAGE = '/home/emanuele/Scrivania/Shart_Contents/images'
+UPLOAD_FOLDER_CONTEST = 'C:\Users\Alessia\Desktop\contests'
+UPLOAD_FOLDER_PROJECT = 'C:\Users\Alessia\Desktop\projects'
+UPLOAD_FOLDER_IMAGE = 'C:\Users\Alessia\Desktop\images'
+UPLOAD_FOLDER_IMAGE_STATIC = 'C:\Users\Alessia\Desktop\shart_new\shart\static\images'
 
 
 def create_directory_for_contest(title):
-    directory = UPLOAD_FOLDER_CONTEST + "/" + title
+    directory = UPLOAD_FOLDER_CONTEST + "\\" + title
     if not os.path.exists(directory):
         os.makedirs(directory)
     return
 
 
 def save_image_contest_in_server(title, image_to_save, file_to_save):
-    path = os.path.join(UPLOAD_FOLDER_CONTEST + "/" + title, image_to_save)
+    path = os.path.join(UPLOAD_FOLDER_CONTEST + "\\" + title, image_to_save)
     file_to_save.save(path)
 
 
 def create_directory_for_project(title_project):
-    directory = UPLOAD_FOLDER_PROJECT + "/" + title_project
+    directory = UPLOAD_FOLDER_PROJECT + "\\" + title_project
     if not os.path.exists(directory):
         os.makedirs(directory)
     return
 
 
 def save_image_project_in_server(title, file_to_save):
-    path = os.path.join(UPLOAD_FOLDER_PROJECT + "/" + title, file_to_save.filename)
+    path = os.path.join(UPLOAD_FOLDER_PROJECT + "\\" + title, file_to_save.filename)
     file_to_save.save(path)
     return
-
 
 def store_profile_image(file_to_save):
     path = os.path.join(UPLOAD_FOLDER_IMAGE, file_to_save.filename)
@@ -52,7 +52,7 @@ class UserService:
             password = sha256_crypt.encrypt(str(password_no_crypt))
 
             user = User(first_name, surname, username, date_of_birth, country, email, password,
-                        type, False, "", "", "")
+                        type, False,UPLOAD_FOLDER_IMAGE_STATIC, "utente.png","")
 
             UserRepository.create_user(user)
 
@@ -252,7 +252,7 @@ class ContestService:
     # Method to upload a project in a contest
     @staticmethod
     def upload_project_contest(username, title, image_to_save, file_to_save):
-        file = File(username, image_to_save, UPLOAD_FOLDER_CONTEST, title, "", 0, 0, "")
+        file = File(username, image_to_save, UPLOAD_FOLDER_CONTEST, title, "",0,[],[], 0, "")
         ContestRepository.upload_project_contest(title, file)
         save_image_contest_in_server(title, image_to_save, file_to_save)
 
@@ -278,13 +278,40 @@ class ContestService:
 
     # Method to like a project
     @staticmethod
-    def like(title, name):
-        ContestRepository.like(title, name)
+    def like(title, name,username):
+        ContestRepository.like(title, name,username)
+
+    # Method to find all people who liked the project, given a file_name
+    @staticmethod
+    def find_usernames_like(title,name,username):
+
+        query = ContestRepository.find_usernames_like(title,name)
+        files = []
+        for item in query:
+            for file in item['files']:
+                for user in file['usernames_like']:
+
+                        files.append(user)
+
+        return files
+
+    # Method to find all people who unliked the project, given a file_name
+    @staticmethod
+    def find_usernames_unlike(title, name, username):
+
+            query = ContestRepository.find_usernames_unlike(title, name)
+            files = []
+            for item in query:
+                for file in item['files']:
+                    for user in file['usernames_unlike']:
+                        files.append(user)
+
+            return files
 
     # Method to like a project
     @staticmethod
-    def unlike(title, name):
-        ContestRepository.unlike(title, name)
+    def unlike(title, name, username):
+        ContestRepository.unlike(title, name,username)
 
     # Method to retrieve user's images contest
     @staticmethod
@@ -453,9 +480,20 @@ class ProjectService:
     # Method to store a file in a project
     @staticmethod
     def store_file_for_project(username, title, file_name, date, description, file_to_save):
-        file = File(username, file_name, UPLOAD_FOLDER_PROJECT, title, description, 0, 0, str(date))
+        file = File(username, file_name, UPLOAD_FOLDER_PROJECT, title, description, 0,"","", 0, str(date))
         ProjectRepository.store_file_for_project(title, file)
         save_image_project_in_server(title, file_to_save)
+
+    # Method to find finished project
+    @staticmethod
+    def find_project_files(title):
+        query = ProjectRepository.find_project_files(title)
+        files = []
+        for item in query:
+            for file in item['files']:
+                files.append(file['file_name'])
+
+        return files
 
     # Method to send an image from directory
     @staticmethod

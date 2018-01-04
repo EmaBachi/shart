@@ -8,11 +8,11 @@
     <div>
         {{contest.body | safe}}
     </div>
-    <!--<p style="font-style: italic; font-size: small">Created by JINJAcontest.author}}</p>-->
+
 
     <p style="font-style: italic; font-size: small">Created by <a href="/profile/{{contest.author}}">{{contest.author}}</a></p>
     {% if session.logged_in %}
-
+    
     {% if session.username not in contest.competitors and contest.enroll_deadline >= today %}
     <a href="/join_contest/{{contest.title}}" class="btn btn-primary">Join Contest</a>
     {% endif %}
@@ -32,6 +32,7 @@
                 </p>
                 <p style="text-align: center">
                     <a href="/contest/{{contest.title}}/{{file.file_name}}/like">
+
                         <span class="glyphicon glyphicon-thumbs-up"></span>
                     </a>
                     <a href="/contest/{{contest.title}}/{{file.file_name}}/unlike">

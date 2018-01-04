@@ -1,7 +1,8 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-    <h1> JOB LIST </h1>
+    <h1  class="retroshd"> JOB LIST </h1>
+    <h4> you can click on the author's name to contact him for further information </h4>
     {% for job in jobs %}
 
 <div class="container">
@@ -22,19 +23,30 @@
 
                 <div class="col-sm-12 col-md-3 padding-top-2 padding-bottom-2 display-inline-grid" style="background: #fafafa;">
                     <div><p class="text-bold margin-bottom-0">Job Type</p>
-                    <p class="margin-bottom-0">{{ job.jobtype }}</p></div>
+                    <p class="margin-bottom-0">{{ job.job_type }}</p></div>
 
                 </div>
                 <div class="col-sm-12 col-md-3 padding-top-2 padding-bottom-2 display-inline-grid">
                     <div class="col-md-12 no-paddings">
                         <div class="col-md-6 no-paddings">
                         <p class="text-bold margin-bottom-0">Company Name</p>
-                        <p class="margin-bottom-0">{{ job.companyname }}</p>
-                    </div>
+                        <p class="margin-bottom-0">{{ job.company_name }}</p>
+                        </div>
                         <div class="col-md-6 no-paddings">
                         <p class="text-bold margin-bottom-0">Description</p>
                         <p class="margin-bottom-0">{{ job.description }}</p>
                         </div>
+
+                    </div>
+                </div>
+                 <div class="col-sm-12 col-md-3 padding-top-2 padding-bottom-2 display-inline-grid">
+                    <div class="col-md-12 no-paddings">
+
+                        <div class="col-md-6 no-paddings">
+                        <p class="text-bold margin-bottom-0">Author</p>
+                            <p class="margin-bottom-0"><a href="/profile/{{job.author}}">{{ job.author }}</a></p>
+                        </div>
+
                     </div>
                 </div>
              </div>

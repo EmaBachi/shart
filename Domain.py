@@ -74,13 +74,16 @@ class Contest:
 
 class File:
 
-    def __init__(self, user, file_name, primary_folder, secondary_folder, description, like, unlike, date):
+    def __init__(self, user, file_name, primary_folder, secondary_folder, description, like,usernames_like, usernames_unlike,
+         unlike, date):
         self.user = user
         self.file_name = file_name
         self.primary_folder = primary_folder
         self.secondary_folder = secondary_folder
         self.description = description
         self.like = like
+        self.usernames_like = usernames_like
+        self.usernames_unlike = usernames_unlike
         self.unlike = unlike
         self.date = date
 
