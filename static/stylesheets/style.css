@@ -786,3 +786,148 @@ div.text{
 .blue-btn:hover .first-link{
   margin-left: -300px;
 }
+
+/*video slider*/
+
+
+.swiper-container {
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+.swiper-container {
+  width: 100%;
+  height: 100%;
+}
+
+.swiper-container-android .swiper-slide, .swiper-wrapper {
+    -webkit-transform: translate3d(0,0,0);
+    -moz-transform: translate3d(0,0,0);
+    -o-transform: translate(0,0);
+    -ms-transform: translate3d(0,0,0);
+    transform: translate3d(0,0,0);
+}
+
+.swiper-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-transition-property: -webkit-transform;
+    -moz-transition-property: -moz-transform;
+    -o-transition-property: -o-transform;
+    -ms-transition-property: -ms-transform;
+    transition-property: transform;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+}
+
+.swiper-slide {
+    -webkit-flex-shrink: 0;
+    -ms-flex: 0 0 auto;
+    flex-shrink: 0;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+.swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: transparent;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+#lab_video_text_overlay {
+    position: absolute;
+    color: #FFF;
+    width: 100%;
+    top: 25%;
+}
+#lab_video_text_overlay .container {
+    text-align: center;
+    margin: 0px auto;
+}
+#lab_video_text_overlay .container {
+    text-align: center;
+    margin: 0px auto;
+    background-color: transparent;
+}
+
+#lab_video_text_overlay h2 {
+  font-size:4em
+}
+
+#lab_video_text_overlay .btn {
+  border-radius:0;
+  text-transform:uppercase;
+  font-weight:200;
+}
+#lab_video_text_overlay .btn-warning {
+  background-color:#F5D328;
+}
+
+#lab_video_text_overlay .container {
+    text-align: center;
+    margin: 0px auto;
+}
+#lab_video_text_overlay h2 {
+    font-size: 4em;
+}
+#lab_video_text_overlay .btn {
+    border-radius: 0;
+    text-transform: uppercase;
+    font-weight: 200;
+}
+#lab_video_text_overlay .btn-warning {
+    background-color: #F5D328;
+}
+#lab_video_text_overlay {
+    position: absolute;
+    color: #FFF;
+    width: 100%;
+    top: 25%;
+    z-index:99;
+}
+
+
+
+
+
+
+@media screen and (max-width:991px) {
+  #lab_video_text_wrap {
+    height: 300px;
+  }
+}
+
+@media screen and (max-width:650px) {
+  #lab_video_text_wrap {
+    height: 250px;
+  }
+  #lab_video_text_overlay h2 {
+    font-size: 2em;
+  }
+  #lab_video_text_overlay p {
+    font-size: .9em;
+  }
+}
+
+
+

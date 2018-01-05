@@ -1,10 +1,31 @@
 {% extends 'layout.html' %}
 
 {% block body %}
+       <section id="lab_video_slider">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="swiper-container">
+					<div class="swiper-wrapper">
+						<div id="slide_two" class="swiper-slide">
+							<div id="lab_video_text_overlay">
+								<div class="container">
+									<h2>Shart </h2>
+									<p>Spreading art worldwide</p> <a href="complete_works" class="btn btn-default">View Our Work</a> <a href="about" class="btn btn-warning">Learn About Us</a> </div>
+							</div>
+							<video class="slider-video" width="100%" preload="auto" loop="" autoplay="" style="visibility: visible; width: 100%;" poster="">
+								<source src="https://dl.dropboxusercontent.com/s/931244iox7i0fpk/working-with-espresso.mp4" type="video/mp4">
+							</video>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
 
 <div>
-    {%include "includes/_carousel.html" %}
     {%include "includes/_marketing.html" %}
+
+    {%include "includes/_carousel.html" %}
 </div>
 
 {% endblock %}
