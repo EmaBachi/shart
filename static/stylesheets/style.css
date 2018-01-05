@@ -127,17 +127,23 @@
 }
 
 /* Video Gallery */
-.video {
-  align: center;
-  margin-right: 200px;
-  margin-left: 350px;
-  margin-top: 60px;
+
+.video-right {
+    font-size: 1.2em;
+    margin-top:10%;
+    margin-bottom:10%;
+}
+.video-left {
+
+    margin-top: 10%;
+    margin-bottom:10%;
 
 }
-
-.iframe-video{
-  margin-top: 25px;
+.video-text{
+  margin-left: 200px;
 }
+
+
 
 /* profile */
 .profile-sidebar {
