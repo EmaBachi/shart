@@ -3,11 +3,19 @@
 {% block body %}
     <div>
         {% from "includes/_formhelpers.html" import render_field %}
-        <h2>{{project.title}}</h2>
+        <h2 class="retroshd">{{project.title}}</h2>
         <p style="font-style: italic; font-size: small">Idea by <a href="/profile/{{project.author}}">{{project.author}}</a></p>
-        <div class="overflow-ellipsis">
+
             {{project.description}}
-        </div>
+
+            <p><i>Skills required:</i>
+            {% for skill in project.skills %}
+
+                        <span class="tags">{{ skill }}</span>
+
+            {% endfor %}</p>
+
+
         <p></p>
         {% if project.collaborators|length < project.max_number and session.username == project.author %}
         <form method="POST" action="">

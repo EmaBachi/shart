@@ -718,3 +718,71 @@ p.site_para {
     text-align: center;
     letter-spacing: 4px;
 }
+
+/*tags*/
+span.tags
+{
+    background: #1abc9c;
+    border-radius: 2px;
+    color: #f5f5f5;
+    font-weight: bold;
+    padding: 2px 4px;
+    }
+/*long text*/
+div.text{
+    white-space:nowrap;
+    overflow:hidden;
+    width:100px;
+    text-overflow:ellipsis;
+    -o-text-overflow:ellipsis;
+}
+/*scrolling text*/
+.blue-btn{
+
+  position:absolute;
+  top:40%;
+}
+.blue-btn a{
+  color: black;
+  text-decoration:none;
+  margin-top: 0em;
+  text-align: center;
+  display:inline-block; /* important */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.blue-btn, .first-link{
+  -webkit-transition: all 4.3s;
+  -moz-transition: all 4.3s;
+  transition: all 4.3s;
+
+  -webkit-transition-timing-function: linear;
+  -moz-transition-timing-function: linear;
+  transition-timing-function: linear;
+}
+
+
+.blue-btn{
+  height: 64px;
+  overflow: hidden;
+  width: 100px;
+  background-color: white;
+}
+
+.blue-btn:hover{
+   background-color: white;
+}
+
+.blue-btn a:hover{
+  text-decoration: none;
+}
+
+.first-link{
+  margin-left: 0em;
+}
+
+.blue-btn:hover .first-link{
+  margin-left: -300px;
+}

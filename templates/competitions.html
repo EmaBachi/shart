@@ -18,7 +18,10 @@
                     {% if contest.enroll_deadline >= today %}
                         {% if session.logged_in %}
                         {% if session.username not in contest.competitors %}
+                            {% if session.adm  %}
+                            {% else %}
                             <a href="/join_contest/{{contest.title}}" class="btn btn-primary">Join Contest</a>
+                                {% endif %}
                         {% endif %}
                         {% endif %}
                     {% endif %}

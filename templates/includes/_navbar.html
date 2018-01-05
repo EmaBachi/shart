@@ -64,8 +64,11 @@
                   <ul class="dropdown-menu">
                     <li><a href="/profile">Profile</a></li>
                     <li><a href="/change_password">Change Password</a></li>
+                      {% if session.adm or session.scout %}
+                          {% else %}
                     <li><a href="/user_projects">My Projects</a></li>
                     <li><a href="/user_contest">My Contests</a></li>
+                          {% endif %}
                     <li role="separator" class="divider"></li>
                     <li><a href="/logout">Logout</a></li>
                   </ul>

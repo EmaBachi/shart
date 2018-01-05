@@ -48,11 +48,14 @@
             </div>
         </div>
     </div>
+        {% if session.adm or session.scout %}
+                          {% else %}
         <div class="rela-block profile-card-stats">
             <div class="floated profile-stat works">{{ finished_projects|length }}<br></div>
             <div class="floated profile-stat contests">{{ contest_images|length }}<br></div>
             <div class="floated profile-stat wip">{{ wip_projects|length }}<br></div>
         </div>
+        {% endif %}
     </div>
 
 {% if finished_projects|length>0 %}
