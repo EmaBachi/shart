@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="906288f7-5b89-4bd7-88a4-aef7959933fe" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Repositories.py" afterPath="$PROJECT_DIR$/Repositories.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Services.py" afterPath="$PROJECT_DIR$/Services.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/calendario" afterPath="$PROJECT_DIR$/calendario" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/stylesheets/style.css" afterPath="$PROJECT_DIR$/static/stylesheets/style.css" />
-    </list>
+    <list default="true" id="906288f7-5b89-4bd7-88a4-aef7959933fe" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -235,7 +229,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="618" y="1" width="1299" height="743" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16859123" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />

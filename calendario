@@ -1,38 +1,18 @@
-5/11 - 7/11:
-	1) Completare la home page -> Mancano dei pulsanti per arrivare direttamente alla pagina di registarzione
-	2) Ragionare sulla possibile aggiunta di nuovi campi nel login -> forse il tipo di profile a cui l'utente è interessato
-	3) Discutere sull'interfaccia grafica di login e register (Completato)
-	4) Inserire uno schema in about (Completato)
-
-7/11 - 14/11:
-	1) Completare completamente il blog (Completato)
-	2) Completare completamente la sezione del materiale esclusivo (completato)
-	3) Completare la sezione dei contest (Completato)
-
-14/11 - 21/11:
-	1) Profili artisti
-	2) Profili scout
-
-21/11 - 28/11:
-	1) Sezione cerca e pubblica lavoro
-	2) Immagini (Completato)
-
-28/11 - 5/12:
-	1) Lavoro di squara sui progetti
-	2) dahsboard dei progetti
-	3) Rifiniture e sicurezza
-
-
 ERRORI TROVATI:
     1) Quando la descrizione del lavoro postato è molto lunga, il sito non visualizza in modo decente l'offerta di lavoro
-    2) Quando posto un progetto e cic licco sopra vado nella pagina di dettaglio del progetto, Se premo "Seleziona collaboratori"
+		SOLUZIONE: mettere un limite alla descrizione
+    2) Quando posto un progetto e clicco sopra vado nella pagina di dettaglio del progetto, Se premo "Seleziona collaboratori"
             senza aver selezionato alcun utente il sito crasha.
     3) Nella pagina di dettaglio del progetto, una descrizione lunga viene comunque tagliata dai puntini di sospensione
     4) Modificare il modo in cui viene caricata l'immagine di profilo di default
     5) Gli admin in questo momento possono fare join in un contest
+		SOLUZIONE: controllo con jinjia
     6) Il menu a tendina del profilo degli amministratori e dei gallery owner è sbagliato: non dovrebbero esservi my contest e my projects
+		SOLUZIONE: controllo con jinjia
     7) La pagina dei video non è molto bella
-    8) una volta scaduta la data dei contest bisognerebbe scrivere unn pezzo di codice che elegga automaticamente il vincitore in base al numero di like ottenuti
+    8) una volta scaduta la data dei contest bisognerebbe scrivere unn pezzo di codice che elegga automaticamente il vincitore in base al 			numero di like ottenuti
+		SOLUZIONE: nuovo campo "winner" su contest che viene calcolato automaticamente
     9) Bisognerebbe ripensare al profilo dei Gallery Owner mai includendo l'indirizzo della galleria o robe simili
-    10) Dal momento che abbiamo inserito le skills nei progetto sarebbe corretto secondo me che fossero visualizzate nella descrizione del progetto
+    10) Dal momento che abbiamo inserito le skills nei progetto sarebbe corretto secondo me che fossero visualizzate nella descrizione del 			progetto
+		SOLUZIONE: molto semplicemente le aggiungiamo con html
     11) sarebbe bello avere un pulsante per filtrare i progetti e i contest per tipo (su questo poi ci parliamo)
