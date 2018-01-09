@@ -1,14 +1,13 @@
 from flask import send_from_directory
 from passlib.hash import sha256_crypt
-import os
+import os, datetime
 
 from Repositories import UserRepository, ArticleRepository, ContestRepository, ExclusiveVideoRepository, JobRepository, ProjectRepository
 from Domain import User, Article, Comment, Contest, File, ExclusiveVideo, Job, Project
 
-UPLOAD_FOLDER_CONTEST = 'C:\Users\Alessia\Desktop\contests'
-UPLOAD_FOLDER_PROJECT = 'C:\Users\Alessia\Desktop\projects'
-UPLOAD_FOLDER_IMAGE = 'C:\Users\Alessia\Desktop\images'
-UPLOAD_FOLDER_IMAGE_STATIC = 'C:\Users\Alessia\Desktop\shart_new\shart\static\images'
+UPLOAD_FOLDER_CONTEST = '/home/emanuele/Scrivania/Shart_Contents/contests'
+UPLOAD_FOLDER_PROJECT = '/home/emanuele/Scrivania/Shart_Contents/projects'
+UPLOAD_FOLDER_IMAGE = '/home/emanuele/Scrivania/Shart_Contents/images'
 
 
 def create_directory_for_contest(title):
@@ -53,7 +52,7 @@ class UserService:
             password = sha256_crypt.encrypt(str(password_no_crypt))
 
             user = User(first_name, surname, username, date_of_birth, country, email, password,
-                        type, False, UPLOAD_FOLDER_IMAGE_STATIC, "utente.png", "")
+                        type, False, UPLOAD_FOLDER_IMAGE, "user_default.png", "")
 
             UserRepository.create_user(user)
 
@@ -118,6 +117,7 @@ class UserService:
     # Method to send profile image
     @staticmethod
     def send_file(image_name):
+        print("send_file")
         return send_from_directory(UPLOAD_FOLDER_IMAGE, image_name)
 
     # Method to change description
@@ -202,7 +202,7 @@ class ContestService:
             temp = Contest(contest['title'], contest['author'], contest['body'],
                            contest['presentation_deadline'], contest['enroll_deadline'],
                            contest['type'], contest['folder'], contest['comments'], contest['competitors'],
-                           contest['files'])
+                           contest['files'], contest['winner'])
             contests.append(temp)
 
         return contests
@@ -211,10 +211,25 @@ class ContestService:
     @staticmethod
     def find_by_title(title):
         contest = ContestRepository.find_by_title(title)
+
         temp = Contest(contest['title'], contest['author'], contest['body'],
                        contest['presentation_deadline'], contest['enroll_deadline'],
                        contest['type'], contest['folder'], contest['comments'], contest['competitors'],
-                       contest['files'])
+                       contest['files'], contest['winner'])
+
+        if datetime.date.today().strftime("%m/%d/%Y") > temp.presentation_deadline:
+
+            print("dentro")
+
+            candidate_winner = ""
+            max = 0
+
+            for file in temp.files_project:
+                if (int(file.like) - int(file.unlike)) > max:
+                    candidate_winner = file.user
+
+            ContestRepository.set_winner(temp.title, candidate_winner)
+
         return temp
 
     # Method to add one comment to a contest
@@ -227,7 +242,7 @@ class ContestService:
     @staticmethod
     def save(title, author, body, type, presentation_deadline, enroll_deadline):
         contest = Contest(title, author, body, presentation_deadline, enroll_deadline,
-                       type, title, [], [], [])
+                       type, title, [], [], [], "")
         ContestRepository.save(contest)
         create_directory_for_contest(title)
 
@@ -237,7 +252,7 @@ class ContestService:
         temp = ContestRepository.find_by_title(title)
         contest = Contest(title, author, body, temp['presentation_deadline'], temp['enroll_deadline'],
                           temp['type'], temp['folder'], temp['comments'], temp['competitors'],
-                          temp['files'])
+                          temp['files'], contest['winner'])
         ContestRepository.edit(contest)
 
     # Method to remove a contest
@@ -272,21 +287,21 @@ class ContestService:
             temp = Contest(contest['title'], contest['author'], contest['body'],
                            contest['presentation_deadline'], contest['enroll_deadline'],
                            contest['type'], contest['folder'], contest['comments'], contest['competitors'],
-                           contest['files'])
+                           contest['files'], contest['winner'])
             contests.append(temp)
 
         return contests
 
     # Method to like a project
     @staticmethod
-    def like(title, name,username):
-        ContestRepository.like(title, name,username)
+    def like(title, name, username):
+        ContestRepository.like(title, name, username)
 
     # Method to find all people who liked the project, given a file_name
     @staticmethod
-    def find_usernames_like(title,name,username):
+    def find_usernames_like(title, name, username):
 
-        query = ContestRepository.find_usernames_like(title,name)
+        query = ContestRepository.find_usernames_like(title, name)
         files = []
         for item in query:
             for file in item['files']:

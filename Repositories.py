@@ -175,7 +175,8 @@ class ContestRepository:
                 'folder': contest.title,
                 'files': [],
                 'competitors': [],
-                'comments': []
+                'comments': [],
+                'winner': ""
             }
         )
 
@@ -249,6 +250,8 @@ class ContestRepository:
             {'$push':
                  {'files.$.usernames_like': username}}
         )
+
+
     # Method to find all people who liked the project, given a file_name and contest's title
     @staticmethod
     def find_usernames_like(title, name):
@@ -310,6 +313,16 @@ class ContestRepository:
                                 '_id': 0,
                                 'files': 1
                             }
+        )
+
+    #Method to find the winner of the project
+    @staticmethod
+    def set_winner(title, winner):
+        db.contest.update(
+            {"title": title},
+            {"$set": {
+                "winner": winner
+            }}
         )
 
 

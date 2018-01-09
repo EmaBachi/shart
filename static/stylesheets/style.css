@@ -58,7 +58,7 @@
 }
 
 /* Icon color in about */
-.glyphicon-heart, .glyphicon-globe, .glyphicon-lock, .glyphicon-euro, .glyphicon-briefcase, .glyphicon-random, .glyphicon-leaf{
+.glyphicon-star .glyphicon-heart, .glyphicon-globe, .glyphicon-lock, .glyphicon-euro, .glyphicon-briefcase, .glyphicon-random, .glyphicon-leaf{
   color: black;
 }
 
@@ -436,7 +436,7 @@ h3 {
   margin: 0rem;
 }
 .text-bold {
-  font-weight: 600;
+  font-weight: bold;
   color: #2a2c36;
 }
 .padding-left-1 {

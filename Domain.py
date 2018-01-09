@@ -59,7 +59,7 @@ class ExclusiveVideo:
 class Contest:
 
     def __init__(self, title, author, body, presentation_deadline, enroll_deadline, type, folder,
-                 comments, competitors, files_project):
+                 comments, competitors, files_project, winner):
         self.title = title
         self.author = author
         self.body = body
@@ -70,6 +70,7 @@ class Contest:
         self.comments = comments
         self.competitors = competitors
         self.files_project = files_project
+        self.winner = winner
 
 
 class File:

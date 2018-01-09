@@ -3,7 +3,12 @@
 {% block body %}
     <h1>{{contest.title}}</h1>
     <h3>Contest for {{contest.type}}</h3>
+    <br>
+    {% if contest.winner != "" %}
+    <h4><span class="glyphicon glyphicon-star"></span> winner of the contest is {{ contest.winner }} <span class="glyphicon glyphicon-star"></span></h4>
+    {% else %}
     <p>Enroll Deadline: <strong>{{contest.enroll_deadline}}</strong>; Presentation Deadline: <strong>{{contest.presentation_deadline}}</strong></p>
+    {% endif %}
     <hr>
     <div>
         {{contest.body | safe}}

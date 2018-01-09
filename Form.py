@@ -60,7 +60,10 @@ class JobForm(Form):
         validators.Length(min=2, max=20)
     ])
 
-    description = TextAreaField('description')
+    description = TextAreaField('description', [
+        validators.DataRequired(),
+        validators.Length(min=2, max=70)
+    ])
 
     companyname = StringField('company name')
 
@@ -76,7 +79,7 @@ class ProjectForm(Form):
         validators.Length(min=1, max=30)
     ])
 
-    description = StringField('Description', [
+    description = TextAreaField('Description', [
         validators.DataRequired(),
         validators.Length(min=1, max=200)
     ])

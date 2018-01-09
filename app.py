@@ -212,7 +212,7 @@ def competitions():
     contests = ContestService.find_all_contests()
 
     if len(contests) > 0:
-        # Fetching all contests
+
         today = datetime.date.today().strftime("%m/%d/%Y")
         return render_template('competitions.html', contests=contests, today=today)
     else:
@@ -373,7 +373,6 @@ def user_contest():
 def like(title, name):
     username = session['username']
     usernames_like = ContestService.find_usernames_like(title,name,username)
-    app.logger.info(username)
     if usernames_like is not None:
         if username in usernames_like:
 
@@ -467,6 +466,9 @@ def other_profile(username):
 def profile():
 
     user = UserService.find_user_by_username(session['username'])
+
+    print(user.image_name)
+    print(user.path)
 
     contest_images = ContestService.retrieve_images_contest(user.username)
 
@@ -566,7 +568,7 @@ def change_description():
 def add_job():
     form = JobForm(request.form)
 
-    if request.method == 'POST':
+    if request.method == 'POST' and form.validate():
         title = form.title.data
         location = form.location.data
         job_type = form.jobtype.data

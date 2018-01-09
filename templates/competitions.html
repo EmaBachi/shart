@@ -8,7 +8,7 @@
     {% for contest in contests | sort%}
         <div>
             <a href="contest/{{contest.title}}"><h2>{{contest.title}}</h2></a>
-            <h3>Contest for {{contest.type}}</h3>
+            <p>Contest for {{contest.type}}</p>
             <p>Enroll Deadline: <strong>{{contest.enroll_deadline}}</strong>; Presentation Deadline: <strong>{{contest.presentation_deadline}}</strong></p>
             <div class="overflow-ellipsis">
                 {{contest.body | safe}}
