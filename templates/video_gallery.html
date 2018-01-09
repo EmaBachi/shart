@@ -1,24 +1,26 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-    <h1 class="retroshd">  Video Gallery</h1>
-    <ul class="list-group">
+
             {% for video in videos %}
 
-                <div class="video">
-	            <li style="list-style-type: none"><h3>{{video.video_name}}</h3>
-                    <p></p>
-                    <p>{{video.description}}</p>
-                    {% if session.adm %}
-                     <div class="pull-right">
-                        <a href="/delete_video/{{video.video_name}}" class="btn btn-danger">Delete</a>
-                    </div>
-                    {% endif %}
-                    <iframe class="iframe-video" width="420" height="315" src="{{video.url_video}}" frameborder="0" allowfullscreen></iframe>
-                </li>
-                </div>
-                <hr>
+<div class="about-section">
+		<div class="container-fluid bg-1 text-center">
+
+			<div class="col-sm-6 video-left">
+            <iframe class="iframe-video" width="420" height="315" src="{{video.url_video}}" frameborder="0" allowfullscreen></iframe>
+
+            </div>
+
+			<div class="col-sm-6 video-right">
+
+				 {{ video.description }}
+
+			</div>
+		</div>
+    <hr>
+	</div>
 
             {% endfor %}
-    </ul>
+
 {% endblock %}

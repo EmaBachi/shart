@@ -12,9 +12,14 @@
 
     <p style="font-style: italic; font-size: small">Created by <a href="/profile/{{contest.author}}">{{contest.author}}</a></p>
     {% if session.logged_in %}
-    
-    {% if session.username not in contest.competitors and contest.enroll_deadline >= today %}
-    <a href="/join_contest/{{contest.title}}" class="btn btn-primary">Join Contest</a>
+
+    {% if session.username not in contest.competitors and contest.enroll_deadline >= today  %}
+
+        {% if session.adm  %}
+            {% else %}
+        <a href="/join_contest/{{contest.title}}" class="btn btn-primary">Join Contest</a>
+
+        {% endif %}
     {% endif %}
     {% if session.username in contest.competitors and not_allowed_to_upload == false %}
     <a href="/upload_project_contest/{{contest.title}}" class="btn btn-primary">Upload Project in Contest</a>
@@ -26,6 +31,7 @@
                 <a href="/image_contest/{{ contest.title }}/{{ file.file_name }}"><img class="image" src="{{ url_for('image_contest', title=contest.title, file_name=file.file_name)}}" height="180px" width="240px"></a>
                 <p></p>
                 {% set list1 = file.file_name.split('.') %}
+
                 <p style="text-align: center">Project by <a href="/profile/{{list1[0]}}"> {{list1[0]}}</a></p>
                 <p style="text-align: center">
                     <strong>{{file.like | int}}</strong> Like  <strong>{{file.unlike | int}}</strong> Unlike

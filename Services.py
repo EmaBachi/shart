@@ -5,9 +5,9 @@ import os
 from Repositories import UserRepository, ArticleRepository, ContestRepository, ExclusiveVideoRepository, JobRepository, ProjectRepository
 from Domain import User, Article, Comment, Contest, File, ExclusiveVideo, Job, Project
 
-UPLOAD_FOLDER_CONTEST = '/home/emanuele/Scrivania/Shart_Contents/contests'
-UPLOAD_FOLDER_PROJECT = '/home/emanuele/Scrivania/Shart_Contents/projects'
-UPLOAD_FOLDER_IMAGE = '/home/emanuele/Scrivania/Shart_Contents/images'
+UPLOAD_FOLDER_CONTEST = 'C:\Users\Alessia\Desktop\contests'
+UPLOAD_FOLDER_PROJECT = 'C:\Users\Alessia\Desktop\projects'
+UPLOAD_FOLDER_IMAGE = 'C:\Users\Alessia\Desktop\images'
 UPLOAD_FOLDER_IMAGE_STATIC = 'C:\Users\Alessia\Desktop\shart_new\shart\static\images'
 
 
@@ -461,7 +461,8 @@ class ProjectService:
             return False
         else:
             return True
-    
+
+
 
     # Method to put some users into collaborators
     @staticmethod

@@ -668,7 +668,11 @@ def single_project(title):
 
     if request.method == 'POST':
 
-        if ProjectService.check_collaborators_number(title, len(form.appliers.data)):
+        if form.appliers.data is None:
+            flash('you should select your collaborators','danger')
+            return redirect(url_for('single_project',title=project.title))
+
+        elif ProjectService.check_collaborators_number(title, len(form.appliers.data)):
 
             ProjectService.put_in_collaborators(title, form.appliers.data)
             flash('Great! Your collaborators are ready', 'success')
