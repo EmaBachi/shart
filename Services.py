@@ -1,6 +1,7 @@
 from flask import send_from_directory
 from passlib.hash import sha256_crypt
 import os, datetime
+from geopy.geocoders import Nominatim
 
 from Repositories import UserRepository, ArticleRepository, ContestRepository, ExclusiveVideoRepository, JobRepository, ProjectRepository
 from Domain import User, Article, Comment, Contest, File, ExclusiveVideo, Job, Project
@@ -83,6 +84,11 @@ class UserService:
     # Method that login one user
     @staticmethod
     def login(username_candidate, password_candidate):
+
+        geolocator = Nominatim()
+        location = geolocator.geocode("237 Via Filadelfia, Turin, Italy")
+        print(location.address)
+        print((location.latitude, location.longitude))
 
         user_dict = UserRepository.find_by_username(username_candidate)
 

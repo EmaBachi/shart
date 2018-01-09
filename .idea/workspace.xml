@@ -4,17 +4,7 @@
     <list default="true" id="906288f7-5b89-4bd7-88a4-aef7959933fe" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Domain.py" afterPath="$PROJECT_DIR$/Domain.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Form.py" afterPath="$PROJECT_DIR$/Form.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Repositories.py" afterPath="$PROJECT_DIR$/Repositories.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Services.py" afterPath="$PROJECT_DIR$/Services.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app.py" afterPath="$PROJECT_DIR$/app.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/calendario" afterPath="$PROJECT_DIR$/calendario" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/stylesheets/style.css" afterPath="$PROJECT_DIR$/static/stylesheets/style.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/competitions.html" afterPath="$PROJECT_DIR$/templates/competitions.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/contest.html" afterPath="$PROJECT_DIR$/templates/contest.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/jobs.html" afterPath="$PROJECT_DIR$/templates/jobs.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/projects.html" afterPath="$PROJECT_DIR$/templates/projects.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/single_project.html" afterPath="$PROJECT_DIR$/templates/single_project.html" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -92,11 +82,11 @@
       <file leaf-file-name="Services.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Services.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="450">
-              <caret line="244" column="49" lean-forward="false" selection-start-line="244" selection-start-column="49" selection-end-line="244" selection-end-column="49" />
+            <state relative-caret-position="1584">
+              <caret line="88" column="71" lean-forward="false" selection-start-line="88" selection-start-column="71" selection-end-line="88" selection-end-column="71" />
               <folding>
                 <element signature="e#0#37#0" expanded="true" />
-                <marker date="1515531973003" expanded="true" signature="16706:19054" ph="..." />
+                <marker date="1515534183073" expanded="true" signature="16939:19287" ph="..." />
               </folding>
             </state>
           </provider>
@@ -105,9 +95,11 @@
       <file leaf-file-name="app.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="236">
+            <state relative-caret-position="6732">
               <caret line="374" column="76" lean-forward="false" selection-start-line="374" selection-start-column="76" selection-end-line="374" selection-end-column="76" />
-              <folding />
+              <folding>
+                <element signature="e#18#132#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -115,8 +107,8 @@
       <file leaf-file-name="Domain.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Domain.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="288">
-              <caret line="61" column="59" lean-forward="false" selection-start-line="61" selection-start-column="59" selection-end-line="61" selection-end-column="59" />
+            <state relative-caret-position="54">
+              <caret line="6" column="57" lean-forward="true" selection-start-line="6" selection-start-column="57" selection-end-line="6" selection-end-column="57" />
               <folding />
             </state>
           </provider>
@@ -166,9 +158,7 @@
         <option value="$PROJECT_DIR$/templates/edit_contest.html" />
         <option value="$PROJECT_DIR$/templates/jobs.html" />
         <option value="$PROJECT_DIR$/templates/competitions.html" />
-        <option value="$PROJECT_DIR$/Domain.py" />
         <option value="$PROJECT_DIR$/Repositories.py" />
-        <option value="$PROJECT_DIR$/Services.py" />
         <option value="$PROJECT_DIR$/templates/contest.html" />
         <option value="$PROJECT_DIR$/static/stylesheets/style.css" />
         <option value="$PROJECT_DIR$/calendario" />
@@ -176,6 +166,8 @@
         <option value="$PROJECT_DIR$/templates/projects.html" />
         <option value="$PROJECT_DIR$/templates/single_project.html" />
         <option value="$PROJECT_DIR$/app.py" />
+        <option value="$PROJECT_DIR$/Services.py" />
+        <option value="$PROJECT_DIR$/Domain.py" />
       </list>
     </option>
   </component>
@@ -560,30 +552,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Domain.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="61" column="59" lean-forward="false" selection-start-line="61" selection-start-column="59" selection-end-line="61" selection-end-column="59" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/competitions.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="306">
           <caret line="17" column="61" lean-forward="true" selection-start-line="17" selection-start-column="61" selection-end-line="17" selection-end-column="61" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Services.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="244" column="49" lean-forward="false" selection-start-line="244" selection-start-column="49" selection-end-line="244" selection-end-column="49" />
-          <folding>
-            <element signature="e#0#37#0" expanded="true" />
-            <marker date="1515531973003" expanded="true" signature="16706:19054" ph="..." />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -619,6 +592,14 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/templates/single_project.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="162">
+          <caret line="9" column="15" lean-forward="false" selection-start-line="9" selection-start-column="15" selection-end-line="9" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/calendario">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="36">
@@ -643,19 +624,32 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/single_project.html">
+    <entry file="file://$PROJECT_DIR$/Services.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="9" column="15" lean-forward="false" selection-start-line="9" selection-start-column="15" selection-end-line="9" selection-end-column="15" />
+        <state relative-caret-position="1584">
+          <caret line="88" column="71" lean-forward="false" selection-start-line="88" selection-start-column="71" selection-end-line="88" selection-end-column="71" />
+          <folding>
+            <element signature="e#0#37#0" expanded="true" />
+            <marker date="1515534183073" expanded="true" signature="16939:19287" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Domain.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="54">
+          <caret line="6" column="57" lean-forward="true" selection-start-line="6" selection-start-column="57" selection-end-line="6" selection-end-column="57" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="236">
+        <state relative-caret-position="6732">
           <caret line="374" column="76" lean-forward="false" selection-start-line="374" selection-start-column="76" selection-end-line="374" selection-end-column="76" />
-          <folding />
+          <folding>
+            <element signature="e#18#132#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

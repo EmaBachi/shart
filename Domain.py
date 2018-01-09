@@ -19,6 +19,17 @@ class User:
         self.description = description
 
 
+class Gallery:
+
+    def __init__(self, gallery_name, city, address, lat, long, website):
+        self.gallery_name = gallery_name
+        self.city = city
+        self.address = address
+        self.lat = lat,
+        self.long = long,
+        self.website = website
+
+
 class Article:
 
     def __init__(self, author, title, body, date, comments):
