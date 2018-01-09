@@ -166,8 +166,8 @@ def add_article():
 def edit_article(title):
     form = ArticleForm(request.form)
 
-    if request.method == 'POST' and form.validate():
-        title = request.form['title']
+    if request.method == 'POST':
+
         body = request.form['body']
         author = session['username']
 
@@ -181,10 +181,9 @@ def edit_article(title):
     else:
         article = ArticleService.find_by_title(title)
 
-        form.title.data = article.title
         form.body.data = article.body
 
-        return render_template('edit_article.html', form=form)
+        return render_template('edit_article.html', form=form, article=article)
 
 
 # Route for deleting an article
@@ -290,8 +289,6 @@ def edit_contest(title):
 
     if request.method == 'POST':
 
-        print("SONO ENTRATO DENTRO EDIT POST")
-        title = request.form['title']
         body = request.form['body']
         author = session['username']
 
@@ -306,10 +303,9 @@ def edit_contest(title):
         contest = ContestService.find_by_title(title)
 
         # Filling form fields with data from db
-        form.title.data = contest.title
         form.body.data = contest.body
 
-        return render_template('edit_contest.html', form=form)
+        return render_template('edit_contest.html', form=form, contest=contest)
 
 
 # Route for deleting a contest
