@@ -1,0 +1,19 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    <h1> Upload new video</h1>
+    <form method="POST" enctype="multipart/form-data">
+        <label>Name</label>
+        <p><input type="text" name="gallery_name" class="form-control"></p>
+        <label>Address</label>
+        <p><input type="text" name="address" class="form-control"></p>
+        <label>City</label>
+        <p><input type="text" name="city" class="form-control"></p>
+        <label>Country</label>
+        <p><input type="text" name="country" class="form-control"></p>
+        <label>Website</label>
+        <p><input type="text" name="website" class="form-control"></p>
+
+        <p><input type="submit" value="save" class="btn btn-primary"></p>
+    </form>
+{% endblock %}

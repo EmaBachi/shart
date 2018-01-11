@@ -562,6 +562,27 @@ def change_description():
     return render_template('change_description.html', form=form)
 
 
+# Route to save the gallery owner's gallery
+@app.route('/save_gallery', methods=['GET', 'POST'])
+def save_gallery():
+
+    username = session['username']
+
+    if request.method == "POST":
+
+        gallery_name = request.form['gallery_name']
+        address = request.form['address']
+        city = request.form['city']
+        country = request.form['country']
+        website = request.form['website']
+
+        UserService.save_gallery_to_user(username, gallery_name, city, address, country, website)
+
+        return redirect(url_for('profile'))
+
+    return render_template("save_gallery.html")
+
+
 # ---!!! job section developing !!!---
 
 @app.route('/add_job', methods=['GET','POST'])

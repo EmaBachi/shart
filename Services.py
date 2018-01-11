@@ -4,7 +4,7 @@ import os, datetime
 from geopy.geocoders import Nominatim
 
 from Repositories import UserRepository, ArticleRepository, ContestRepository, ExclusiveVideoRepository, JobRepository, ProjectRepository
-from Domain import User, Article, Comment, Contest, File, ExclusiveVideo, Job, Project
+from Domain import User, Article, Comment, Contest, File, ExclusiveVideo, Job, Project, Gallery
 
 UPLOAD_FOLDER_CONTEST = '/home/emanuele/Scrivania/Shart_Contents/contests'
 UPLOAD_FOLDER_PROJECT = '/home/emanuele/Scrivania/Shart_Contents/projects'
@@ -53,7 +53,7 @@ class UserService:
             password = sha256_crypt.encrypt(str(password_no_crypt))
 
             user = User(first_name, surname, username, date_of_birth, country, email, password,
-                        type, False, UPLOAD_FOLDER_IMAGE, "user_default.png", "")
+                        type, False, UPLOAD_FOLDER_IMAGE, "user_default.png", "", "")
 
             UserRepository.create_user(user)
 
@@ -73,7 +73,7 @@ class UserService:
             user = User(user_dict['first_name'], user_dict['surname'], user_dict['username'],
                         user_dict['date_of_birth'], user_dict['country'], user_dict['email'],
                         user_dict['password'], user_dict['type'], user_dict['adm'], user_dict['path'],
-                        user_dict['image_name'], user_dict['description'])
+                        user_dict['image_name'], user_dict['description'], user_dict['gallery'])
 
             return user
 
@@ -84,11 +84,6 @@ class UserService:
     # Method that login one user
     @staticmethod
     def login(username_candidate, password_candidate):
-
-        geolocator = Nominatim()
-        location = geolocator.geocode("237 Via Filadelfia, Turin, Italy")
-        print(location.address)
-        print((location.latitude, location.longitude))
 
         user_dict = UserRepository.find_by_username(username_candidate)
 
@@ -103,7 +98,7 @@ class UserService:
                 user = User(user_dict['first_name'], user_dict['surname'], user_dict['username'],
                             user_dict['date_of_birth'], user_dict['country'], user_dict['email'],
                             user_dict['password'], user_dict['type'], user_dict['adm'], user_dict['path'],
-                            user_dict['image_name'], user_dict['description'])
+                            user_dict['image_name'], user_dict['description'], user_dict['gallery'])
 
                 return user
 
@@ -139,7 +134,7 @@ class UserService:
         user = User(user_dict['first_name'], user_dict['surname'], user_dict['username'],
                     user_dict['date_of_birth'], user_dict['country'], user_dict['email'],
                     user_dict['password'], user_dict['type'], user_dict['adm'], user_dict['path'],
-                    user_dict['image_name'], user_dict['description'])
+                    user_dict['image_name'], user_dict['description'], user_dict['gallery'])
 
         if sha256_crypt.verify(old_password, user.password):
             password = sha256_crypt.encrypt(str(new_password))
@@ -147,6 +142,17 @@ class UserService:
             return True
         else:
             return False
+
+    # Method to add a gallery to the gallery owner
+    @staticmethod
+    def save_gallery_to_user(username, gallery_name, city, address, country, website):
+
+        geo_locator = Nominatim()
+        location = geo_locator.geocode(address + "," + city + "," + country)
+
+        gallery = Gallery(gallery_name, city, address, location.latitude, location.longitude, website)
+
+        UserRepository.save_gallery_to_user(username, gallery)
 
 
 class ArticleService:

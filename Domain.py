@@ -4,7 +4,7 @@
 class User:
 
     def __init__(self, first_name, surname, username, date_of_birth, country, email, password,
-                 type, adm, path, image_name, description):
+                 type, adm, path, image_name, description, gallery):
         self.first_name = first_name
         self.surname = surname
         self.username = username
@@ -17,6 +17,7 @@ class User:
         self.path = path
         self.image_name = image_name
         self.description = description
+        self.gallery = gallery
 
 
 class Gallery:

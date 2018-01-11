@@ -43,13 +43,30 @@
                     <p><a href="/change_description" class="btn btn-default">Change your Bio</a></p>
                     {% endif %}
 
+                    {% if session.scout and (session.username == user.username) %}
+                    <p><a href="/save_gallery" class="btn btn-default">Update your Gallery</a> </p>
+                    {% endif %}
 
                 </div>
             </div>
         </div>
     </div>
-        {% if session.adm or session.scout %}
-                          {% else %}
+        {% if session.adm %}
+    {% elif session.scout %}
+
+    <div class="rela-inline">
+        <p>Gallery name: <strong>{{ user.gallery.gallery}}</strong></p>
+        <p>Web site: <strong><a href="https://{{user.gallery.website}}">{{ user.gallery.website}}</a></strong></p>
+        <p>Address: <strong>{{user.gallery.address}} {{user.gallery.city}} {{user.gallery.country}}</strong></p>
+        <p>Email: <strong>{{user.email}}</strong></p>
+
+
+    </div>
+
+    <div id="map" style="width:400px;height:400px;background:white">
+    </div>
+
+    {% elif session.adm and session.scout %}
         <div class="rela-block profile-card-stats">
             <div class="floated profile-stat works">{{ finished_projects|length }}<br></div>
             <div class="floated profile-stat contests">{{ contest_images|length }}<br></div>
@@ -120,6 +137,20 @@
     {% endif %}
 
 </div>
+
+<script>
+function myMap() {
+  var myCenter = new google.maps.LatLng({{user.gallery.lat}},{{user.gallery.long}});
+  var mapCanvas = document.getElementById("map");
+  var mapOptions = {center: myCenter, zoom: 15};
+  var map = new google.maps.Map(mapCanvas, mapOptions);
+  var marker = new google.maps.Marker({position:myCenter});
+  marker.setMap(map);
+}
+
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?callback=myMap"></script>
 
 
 {% endblock %}

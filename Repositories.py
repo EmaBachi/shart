@@ -28,7 +28,8 @@ class UserRepository:
                 'adm': user.adm,
                 'path': user.path,
                 'image_name': user.image_name,
-                'description': user.description
+                'description': user.description,
+                'gallery': user.gallery
             }
         )
 
@@ -72,6 +73,25 @@ class UserRepository:
                                }
                            }
                        )
+
+    # Method to save a gallery to a gallery owner
+    @staticmethod
+    def save_gallery_to_user(username, gallery):
+        db.user.update({
+            "username": username
+        },
+            {
+              "$set": {
+                  "gallery": {
+                      "gallery": gallery.gallery_name,
+                      "city": gallery.city,
+                      "address": gallery.address,
+                      "lat": gallery.lat,
+                      "long": gallery.long,
+                      "website": gallery.website
+                  }
+              }
+            })
 
 
 class ArticleRepository:
