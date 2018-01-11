@@ -231,8 +231,8 @@ class ContestService:
             max = 0
 
             for file in temp.files_project:
-                if (int(file.like) - int(file.unlike)) > max:
-                    candidate_winner = file.user
+                if (file['like'] - file['unlike']) > max:
+                    candidate_winner = file['user']
 
             ContestRepository.set_winner(temp.title, candidate_winner)
 

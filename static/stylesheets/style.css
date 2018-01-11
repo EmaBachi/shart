@@ -58,7 +58,7 @@
 }
 
 /* Icon color in about */
-.glyphicon-star .glyphicon-heart, .glyphicon-globe, .glyphicon-lock, .glyphicon-euro, .glyphicon-briefcase, .glyphicon-random, .glyphicon-leaf{
+.glyphicon-star, .glyphicon-heart, .glyphicon-globe, .glyphicon-lock, .glyphicon-euro, .glyphicon-briefcase, .glyphicon-random, .glyphicon-leaf{
   color: black;
 }
 
