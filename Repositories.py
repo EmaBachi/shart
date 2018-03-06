@@ -1,6 +1,7 @@
 from pymongo import MongoClient
 
-client = MongoClient(maxPoolSize=5)
+
+client = MongoClient("mongodb://emaBachi:1LGr3co1994?@shart-shard-00-00-q1do7.mongodb.net:27017,shart-shard-00-01-q1do7.mongodb.net:27017,shart-shard-00-02-q1do7.mongodb.net:27017/test?ssl=true&replicaSet=shart-shard-0&authSource=admin")
 db = client.shart
 
 
