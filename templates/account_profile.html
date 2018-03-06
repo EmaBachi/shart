@@ -10,30 +10,24 @@
         </div>
         <div class="rela-block profile-name-container">
             {% if session.username == user.username %}
-            <div class="rela-block"><a href="/upload_image" class="btn btn-default">Change Image</a></div>
-            <p></p>
+                <div class="rela-block"><a href="/upload_image" class="btn btn-default">Change Image</a></div>
+                <p></p>
             {% endif %}
-            <div class="rela-block user-name" id="user_name">{{ user.username }}</div>
-            <p></p>
-            <em>click my face for more</em>
+                <div class="rela-block user-name" id="user_name">{{ user.username }}</div>
+                <p></p>
+                <em>click my face for more</em>
         </div>
-        </div>
+
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
                     <h4 class="modal-title" id="myModalLabel">More About {{ user.username }} </h4>
-                    </div>
+                </div>
                 <div class="modal-body">
                     <img src="{{ url_for('image', image_name=user.image_name) }}" name="aboutme" width="140" height="140" border="0" class="img-circle"></a>
                     <h3 class="media-heading">{{ user.username }} <small>{{ user.country }}</small></h3>
-                    <!--<span><strong>Skills: </strong></span>
-                        <span class="label label-warning">HTML5/CSS</span>
-                        <span class="label label-info">Adobe CS 5.5</span>
-                        <span class="label label-info">Microsoft Office</span>
-                        <span class="label label-success">Windows XP, Vista, 7</span>
-                    <hr>-->
 
                     <p class="text-left"><strong>Bio: </strong><br>
                         {{ user.description }}
@@ -51,40 +45,51 @@
             </div>
         </div>
     </div>
-        {% if session.adm %}
-    {% elif session.scout %}
-
-    <div class="rela-inline">
-        <p>Gallery name: <strong>{{ user.gallery.gallery}}</strong></p>
-        <p>Web site: <strong><a href="https://{{user.gallery.website}}">{{ user.gallery.website}}</a></strong></p>
-        <p>Address: <strong>{{user.gallery.address}} {{user.gallery.city}} {{user.gallery.country}}</strong></p>
-        <p>Email: <strong>{{user.email}}</strong></p>
-
-
     </div>
 
-    <div id="map" style="width:400px;height:400px;background:white">
-    </div>
 
-    {% elif session.adm and session.scout %}
+    {% if session.username != user.username %}
+
+        {% if user.type == "Gallery Owner" %}
+
+        <div class="rela-inline">
+            <p>Gallery name: <strong>{{ user.gallery.gallery}}</strong></p>
+            <p>Web site: <strong><a href="https://{{user.gallery.website}}">{{ user.gallery.website}}</a></strong></p>
+            <p>Address: <strong>{{user.gallery.address}} {{user.gallery.city}} {{user.gallery.country}}</strong></p>
+            <p>Email: <strong>{{user.email}}</strong></p>
+        </div>
+
+        <div id="map" style="width:400px;height:400px;background:white">
+        </div>
+
+        {% endif %}
+
+    {% elif user.type == "Artist" %}
+
         <div class="rela-block profile-card-stats">
             <div class="floated profile-stat works">{{ finished_projects|length }}<br></div>
             <div class="floated profile-stat contests">{{ contest_images|length }}<br></div>
             <div class="floated profile-stat wip">{{ wip_projects|length }}<br></div>
         </div>
-        {% endif %}
-    </div>
+
+    {% endif %}
+
+
 
 {% if finished_projects|length>0 %}
- <h3 class="retroshd">Works</h3>
-       <div class="rela-inline">
+
 
 {% for project in finished_projects %}
+        <h3 class="retroshd">Works</h3>
         <div class="gallery_product col-lg-3 col-md-4 col-sm-6 col-xs-6 mt-4 filter hdpe">
         <div class="rela-block content">
+        <div class="rela-inline">
 
                 <div class="card">
-                    <a href="{{url_for('send_file_of_project', title=project.title, file_name=project.final_image)}}"> <img src="{{url_for('send_file_of_project', title=project.title, file_name=project.final_image)}}" class="card-img-top"></a>
+                    <a href="{{url_for('send_file_of_project', title=project.title, file_name=project.final_image)}}">
+                        <img src="{{url_for('send_file_of_project', title=project.title, file_name=project.final_image)}}"
+                             alt="This file is a text file"
+                             class="card-img-top"></a>
                     <div class="card-block">
                         <h4 class="card-title"><a href="/image_project/{{project.title}}" >{{project.title}}</a></h4>
 
@@ -96,18 +101,19 @@
                     <div class="card-footer">
                         <span class="float-right">This project was created by <a href="/profile/{{project.author}}">{{project.author}}</a></span>
                         <span><i class=""></i> <p>Collaborators:
-                                {% for collaborator in project.collaborators %}
-                                    <a href="/profile/{{collaborator}}">{{collaborator}}</a>
-                                    {% endfor %}</p>
+                            {% for collaborator in project.collaborators %}
+                            <a href="/profile/{{collaborator}}">{{collaborator}}</a>
+                            {% endfor %}</p>
                         </span>
                     </div>
                 </div>
 
-    </div>
- </div>
+        </div>
+        </div>
+        </div>
  {% endfor %}
        </div>
-    {% endif %}
+{% endif %}
 
 
 
@@ -131,12 +137,13 @@
                     </a>
                 </p>
 
-            </div>
+        </div>
     {% endfor %}
     </div>
     {% endif %}
 
 </div>
+
 
 <script>
 function myMap() {
