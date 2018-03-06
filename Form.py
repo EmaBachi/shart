@@ -84,7 +84,7 @@ class ProjectForm(Form):
         validators.Length(min=1, max=200)
     ])
 
-    my_choices = [('Designer', 'Designer'), ('Architect', 'Architect')]
+    my_choices = [('Designer', 'Designer'), ('Architect', 'Architect'), ('Painter', 'Painter'), ('Writer', 'Writer')]
 
     skills = SelectMultipleField(choices=my_choices)
 

@@ -25,7 +25,9 @@
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Extra <span class="caret"></span></a>
                   <ul class="dropdown-menu">
                     <li><a href="/competitions">Contest</a></li>
-                    <li><a href="/video_gallery">Exclusive Contents</a></li>
+                    {% if not session.scout %}
+                      <li><a href="/video_gallery">Exclusive Contents</a></li>
+                    {% endif %}
                     <li><a href="/blog">Blog</a></li>
                   </ul>
                 </li>
@@ -66,7 +68,8 @@
                     <li><a href="/change_password">Change Password</a></li>
                       {% if session.adm or session.scout %}
                           {% else %}
-                    <li><a href="/user_projects">My Projects</a></li>
+                    <li><a href="/user_wip_projects">My WIP Projects</a></li>
+                    <li><a href="/complete_works/{{session.username}}">My Complete Projects</a></li>
                     <li><a href="/user_contest">My Contests</a></li>
                           {% endif %}
                     <li role="separator" class="divider"></li>

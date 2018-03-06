@@ -489,8 +489,6 @@ class ProjectService:
         else:
             return True
 
-
-
     # Method to put some users into collaborators
     @staticmethod
     def put_in_collaborators(title, collaborators):
@@ -531,8 +529,8 @@ class ProjectService:
 
     # Method to store the final image of a project
     @staticmethod
-    def store_final_image(title, final_image):
-        ProjectRepository.store_final_image(title, final_image)
+    def store_final_image(title, file):
+        ProjectRepository.store_final_image(title, file)
         ProjectRepository.change_status(title, 'finished')
 
     # Method to find finished project

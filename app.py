@@ -635,10 +635,24 @@ def projects():
         return render_template('projects.html')
 
 
-@app.route('/user_projects')
-def user_projects():
+@app.route('/user_wip_projects')
+def user_wip_projects():
 
-    projects = ProjectService.find_all_by_username(session['username'])
+    projects = []
+
+    projects_wip = ProjectService.find_all_by_username_and_status(session['username'], 'WIP')
+    projects_in_search = ProjectService.find_all_by_username_and_status(session['username'], 'In search')
+
+    projects.extend(projects_wip)
+    projects.extend(projects_in_search)
+
+    return render_template('projects.html', projects=projects)
+
+
+@app.route('/user_complete_projects')
+def user_complete_projects():
+
+    projects = ProjectService.find_all_by_username_and_status(session['username'], 'finished')
 
     return render_template('projects.html', projects=projects)
 
@@ -758,7 +772,9 @@ def complete_project(title):
 
         for file in project.files:
             list = file['file_name'].split('.')
-            if len(list) > 1 and (list[1] == "jpg" or list[1] == "JPG" or list[1] == 'jpeg' or list[1] == 'png' or list[1] == 'pdf'):
+            if len(list) > 1 and (list[1] == "jpg" or list[1] == "JPG" or list[1] == 'jpeg'
+                                  or list[1] == 'png' or list[1] == 'pdf' or list[1] == 'txt'
+                                  or list[1] == 'doc' or list[1] == 'docx'):
                 files.append(file)
 
         return render_template('complete_project.html', files=files, project=project)
@@ -773,6 +789,19 @@ def complete_project(title):
 def complete_works():
 
     projects = ProjectService.find_finished_project()
+
+    if len(projects) > 0:
+        return render_template('complete_works.html', projects=projects)
+    else:
+        flash('No project found', 'danger')
+        return render_template('complete_works.html')
+
+
+# Route for Complete works
+@app.route('/complete_works/<string:user>')
+def complete_works_by_user(user):
+
+    projects = ProjectService.find_all_by_username_and_status(session['username'], 'finished')
 
     if len(projects) > 0:
         return render_template('complete_works.html', projects=projects)

@@ -44,7 +44,15 @@
 
                         <div class="col-md-6 no-paddings">
                         <p class="text-bold margin-bottom-0">Author</p>
-                            <p class="margin-bottom-0"><a href="/profile/{{job.author}}">{{ job.author }}</a></p>
+                            <p class="margin-bottom-0">
+                                {% if session.logged_in %}
+                                    <a href="/profile/{{job.author}}">{{ job.author }}</a>
+                                {% else %}
+                                    {{ job. author }}.
+                                <br>If you want to contact recruiter,<a href="/register">register</a>
+                                or <a href="/login">login</a>
+                                {% endif %}
+                            </p>
                         </div>
 
                     </div>

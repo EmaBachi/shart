@@ -2,6 +2,12 @@
 
 {% block body %}
 
+{% if not session.logged_in %}
+
+<p>If you want to check out our exclusive videos, please <a href="/register">register</a> in our website as an artist.
+<br>If you already have an artist account, <a href="/login">login</a> </p>
+
+{% endif %}
             {% for video in videos %}
 
 <div class="about-section">

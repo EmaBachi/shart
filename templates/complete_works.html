@@ -14,7 +14,10 @@
     <div class="rela-inline">
 
                 <div class="card">
-                    <a href="{{url_for('send_file_of_project', title=project.title, file_name=project.final_image)}}"> <img src="{{url_for('send_file_of_project', title=project.title, file_name=project.final_image)}}" class="card-img-top"></a>
+                    <a href="{{url_for('send_file_of_project', title=project.title, file_name=project.final_image)}}">
+                        <img src="{{url_for('send_file_of_project', title=project.title, file_name=project.final_image)}}"
+                             alt="This file is a text file"
+                             class="card-img-top"></a>
                     <div class="card-block">
                         <h4 class="card-title"><a href="/image_project/{{project.title}}" >{{project.title}}</a></h4>
 
