@@ -6,9 +6,9 @@ from geopy.geocoders import Nominatim
 from Repositories import UserRepository, ArticleRepository, ContestRepository, ExclusiveVideoRepository, JobRepository, ProjectRepository
 from Domain import User, Article, Comment, Contest, File, ExclusiveVideo, Job, Project, Gallery
 
-UPLOAD_FOLDER_CONTEST = '/home/emanuele/Scrivania/Shart_Contents/contests'
-UPLOAD_FOLDER_PROJECT = '/home/emanuele/Scrivania/Shart_Contents/projects'
-UPLOAD_FOLDER_IMAGE = '/home/emanuele/Scrivania/Shart_Contents/images'
+UPLOAD_FOLDER_CONTEST = '/home/ubuntu/Shart_Contents/contests'
+UPLOAD_FOLDER_PROJECT = '/home/ubuntu/Shart_Contents/projects'
+UPLOAD_FOLDER_IMAGE = '/home/ubuntu/Shart_Contents/images'
 
 
 def create_directory_for_contest(title):
