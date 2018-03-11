@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="906288f7-5b89-4bd7-88a4-aef7959933fe" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Repositories.py" afterPath="$PROJECT_DIR$/Repositories.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Services.py" afterPath="$PROJECT_DIR$/Services.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -40,20 +40,20 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Services.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Services.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Services.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="540">
-              <caret line="30" column="0" lean-forward="false" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
+            <state relative-caret-position="180">
+              <caret line="10" column="28" lean-forward="false" selection-start-line="10" selection-start-column="28" selection-end-line="10" selection-end-column="28" />
               <folding>
                 <element signature="e#0#37#0" expanded="true" />
-                <marker date="1520759727402" expanded="true" signature="17222:19555" ph="..." />
+                <marker date="1520768512993" expanded="true" signature="17156:19489" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Repositories.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Repositories.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Repositories.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="90">
@@ -176,10 +176,10 @@
         <option value="$PROJECT_DIR$/templates/includes/_navbar.html" />
         <option value="$PROJECT_DIR$/templates/complete_works.html" />
         <option value="$PROJECT_DIR$/templates/account_profile.html" />
-        <option value="$PROJECT_DIR$/Services.py" />
         <option value="$PROJECT_DIR$/config.py" />
         <option value="$PROJECT_DIR$/shart_app.wsgi" />
         <option value="$PROJECT_DIR$/Repositories.py" />
+        <option value="$PROJECT_DIR$/Services.py" />
       </list>
     </option>
   </component>
@@ -663,17 +663,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Services.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="30" column="0" lean-forward="false" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#37#0" expanded="true" />
-            <marker date="1520759727402" expanded="true" signature="17222:19555" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Form.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1710">
@@ -715,6 +704,17 @@
         <state relative-caret-position="90">
           <caret line="5" column="34" lean-forward="false" selection-start-line="5" selection-start-column="34" selection-end-line="5" selection-end-column="34" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Services.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="10" column="28" lean-forward="false" selection-start-line="10" selection-start-column="28" selection-end-line="10" selection-end-column="28" />
+          <folding>
+            <element signature="e#0#37#0" expanded="true" />
+            <marker date="1520768512993" expanded="true" signature="17156:19489" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
