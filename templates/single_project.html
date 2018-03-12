@@ -66,7 +66,7 @@
           {% if project.status != 'finished' %}
           <td><a href="/projects/{{project.title}}/upload_file_project" class="btn btn-primary">Page to Upload Files</a></td>
           {% endif %}
-          {% if session.username == project.author and project.status != 'finished' %}
+          {% if session.username == project.author and project.status != 'finished' and files|length > 0 %}
           <td><a href="/projects/{{project.title}}/complete_project" class="btn btn-primary">Complete the Project</a></td>
           {% endif %}
       </tr>
