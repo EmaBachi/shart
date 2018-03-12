@@ -72,6 +72,19 @@
             <div class="floated profile-stat wip">{{ wip_projects|length }}<br></div>
         </div>
 
+    {% elif user.type == "Gallery Owner" %}
+
+        <div class="rela-inline">
+            <p>Gallery name: <strong>{{ user.gallery.gallery}}</strong></p>
+            <p>Web site: <strong><a href="https://{{user.gallery.website}}">{{ user.gallery.website}}</a></strong></p>
+            <p>Address: <strong>{{user.gallery.address}} {{user.gallery.city}} {{user.gallery.country}}</strong></p>
+            <p>Email: <strong>{{user.email}}</strong></p>
+        </div>
+
+        <div id="map" style="width:400px;height:400px;background:white">
+        </div>
+
+
     {% endif %}
 
 
