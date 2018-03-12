@@ -2,8 +2,13 @@ from wtforms import Form, StringField, TextAreaField, validators, SelectMultiple
 
 
 class ArticleForm(Form):
-    title = StringField('Title', [validators.Length(min=1, max=30)])
-    body = TextAreaField('Body')
+    title = StringField('Title', [
+        validators.DataRequired(),
+        validators.Length(min=1, max=30)
+    ])
+    body = TextAreaField('Body', [
+        validators.DataRequired()
+    ])
 
 
 class ChangeDescriptionForm(Form):
@@ -35,7 +40,10 @@ class CollaboratorsForm(Form):
 
 
 class CommentForm(Form):
-    comment_body = TextAreaField('Leave a Comment:', [validators.Length(min=1, max=250)])
+    comment_body = TextAreaField('Leave a Comment:', [
+        validators.DataRequired(),
+        validators.Length(min=1, max=250)
+    ])
 
 
 class ContestForm(Form):
