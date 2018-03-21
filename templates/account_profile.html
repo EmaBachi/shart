@@ -33,6 +33,11 @@
                         {{ user.description }}
                         <br>
                     </p>
+
+                     <p class="text-left"><strong>Email: </strong><br>
+                        {{ user.email }}
+                        <br>
+                    </p>
                     {% if session.username == user.username %}
                     <p><a href="/change_description" class="btn btn-default">Change your Bio</a></p>
                     {% endif %}
