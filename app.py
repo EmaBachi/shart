@@ -779,7 +779,8 @@ def complete_project(title):
 
         return render_template('complete_project.html', files=files, project=project)
     else:
-        file_name = request.form['file_name']
+        file_name = request.form['image_radio']
+
         ProjectService.store_final_image(title, file_name)
         return redirect(url_for('image_project', title=title))
 

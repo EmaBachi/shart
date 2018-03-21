@@ -34,10 +34,11 @@
                         <br>
                     </p>
 
-                     <p class="text-left"><strong>Email: </strong><br>
+                    <p class="text-left"><strong>Email: </strong><br>
                         {{ user.email }}
                         <br>
                     </p>
+
                     {% if session.username == user.username %}
                     <p><a href="/change_description" class="btn btn-default">Change your Bio</a></p>
                     {% endif %}
@@ -92,17 +93,16 @@
 
     {% endif %}
 
-
+<div class="container">
 
 {% if finished_projects|length>0 %}
-
+<h3 class="retroshd">Works</h3>
 
 {% for project in finished_projects %}
-        <h3 class="retroshd">Works</h3>
+
         <div class="gallery_product col-lg-3 col-md-4 col-sm-6 col-xs-6 mt-4 filter hdpe">
         <div class="rela-block content">
         <div class="rela-inline">
-
                 <div class="card">
                     <a href="{{url_for('send_file_of_project', title=project.title, file_name=project.final_image)}}">
                         <img src="{{url_for('send_file_of_project', title=project.title, file_name=project.final_image)}}"
@@ -125,21 +125,24 @@
                         </span>
                     </div>
                 </div>
-
         </div>
         </div>
         </div>
- {% endfor %}
-       </div>
+    {% endfor %}
 {% endif %}
 
+    </div>
 
 
+    <div class="container">
 
 {% if contest_images|length>0 %}
     <h3 class="retroshd">Contest</h3>
-    <div id="contests" class="rela-block content">
+
     {% for contest_image in contest_images %}
+
+        <div class="gallery_product col-lg-3 col-md-4 col-sm-6 col-xs-6 mt-4 filter hdpe">
+        <div id="contests" class="rela-block content">
         <div class="rela-inline">
                 <img class="image" src="{{ url_for('image_contest', title=contest_image.secondary_folder, file_name=contest_image.file_name)}}" height="180px" width="240px">
                 <p></p>
@@ -156,10 +159,12 @@
                 </p>
 
         </div>
+        </div>
+        </div>
     {% endfor %}
-    </div>
     {% endif %}
 
+    </div>
 </div>
 
 
